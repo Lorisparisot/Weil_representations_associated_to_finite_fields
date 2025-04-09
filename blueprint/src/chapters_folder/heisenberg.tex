@@ -18,7 +18,7 @@
     $(z_1,x_1,y_1)*(z_2,x_2,y_2) = (z_1+z_2+y_1(x_2),x_1+x_2,y_1+y_2)$.
 \end{definition}
 
-\begin{definition}{Inverse d'un élément d'Heisenberg}
+\begin{definition}[Inverse d'un élément d'Heisenberg]
     \label{inv_H}
     \uses{heisenberg}
     \lean{}
@@ -27,3 +27,11 @@
     L'inverse d'un élément $(z,x,y)$ de l'ensemble d'Heisenberg est donné par 
     $(-z- y(-x), - x ,- y)$.
 \end{definition}
+
+\begin{proposition}[Groupe d'Heisenberg]
+    \label{group_H}
+    \uses{heisenberg,mul_H,inv_H}
+    \lean{}
+    \leanok
+    Muni de sa multiplication, Heisenberg est un groupe.
+\end{proposition}
