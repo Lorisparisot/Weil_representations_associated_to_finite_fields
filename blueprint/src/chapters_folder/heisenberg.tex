@@ -1,0 +1,29 @@
+\begin{definition}[Ensemble d'Heisenberg]
+    \label{heisenberg}
+    \lean{}
+    \leanok
+
+    Etant donné $k$ un corps, $V$ un espace vectoriel de dimension finie sur
+    $k$ et $V^*$ le dual de $V$, on définit l'ensemble d'Heisenberg par 
+    ${(z,x,y) \in k\times V\times V^*}$.
+\end{definition}
+
+\begin{definition}[Multiplication sur l'ensemble d'Heisenberg]
+    \label{mul_H}
+    \uses{heisenberg}
+    \lean{}
+    \leanok 
+
+    On définit la multiplication sur l'ensemble d'Heisenberg par :
+    $(z_1,x_1,y_1)*(z_2,x_2,y_2) = (z_1+z_2+y_1(x_2),x_1+x_2,y_1+y_2)$.
+\end{definition}
+
+\begin{definition}{Inverse d'un élément d'Heisenberg}
+    \label{inv_H}
+    \uses{heisenberg}
+    \lean{}
+    \leanok 
+
+    L'inverse d'un élément $(z,x,y)$ de l'ensemble d'Heisenberg est donné par 
+    $(-z- y(-x), - x ,- y)$.
+\end{definition}
