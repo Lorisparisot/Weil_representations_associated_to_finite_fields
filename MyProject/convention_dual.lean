@@ -1,4 +1,7 @@
-import Mathlib
+import Mathlib.Algebra.AddTorsor.Defs
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.LinearAlgebra.BilinearForm.Properties
+import Mathlib.LinearAlgebra.FreeModule.PID
 
 variable (V k : Type*) [Field k] [Fintype k] [AddCommGroup V] [Module k V] [Module.IsReflexive k V]
 

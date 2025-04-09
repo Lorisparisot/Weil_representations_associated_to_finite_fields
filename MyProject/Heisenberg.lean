@@ -1,5 +1,7 @@
 import MyProject.convention_dual
-import Mathlib
+import Mathlib.Algebra.Exact
+import Mathlib.Algebra.Group.Commutator
+import MyProject.convention_dual
 
 variable (V k : Type*) [Field k] [Fintype k] [AddCommGroup V] [Module k V] [Module.IsReflexive k V]
 
@@ -174,3 +176,5 @@ theorem commutator (H1 H2 : Heisenberg V k) :
   rw[mul,mul, mul, inverse, inverse]
   simp
   ring
+
+#min_imports
