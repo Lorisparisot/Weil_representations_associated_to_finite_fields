@@ -69,7 +69,6 @@ variable {V K}
 instance center_is_subgroup : Subgroup (Heisenberg V k) :=
 { carrier := center V k,
   one_mem' := by
-    simp
     change ⟨0,0,0⟩ ∈ center V k
     constructor
     · simp

@@ -60,7 +60,6 @@ instance Heisen_center.is_subgroup {k V : Type*} [Field k] [Fintype k] [AddCommG
   Subgroup (Heisenberg k V) :=
 { carrier := Heisen_center k V,
   one_mem' := by
-    simp
     change (⟨0,0,0⟩  ∈ Heisen_center k V)
     constructor
     · simp
