@@ -3,9 +3,9 @@ import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.LinearAlgebra.BilinearForm.Properties
 import Mathlib.LinearAlgebra.FreeModule.PID
 
-variable (V k : Type*) [Field k] [Fintype k] [AddCommGroup V] [Module k V] [Module.IsReflexive k V]
+variable (V k : Type*) [Field k] [AddCommGroup V] [Module k V]
 
-local notation "q" => Fintype.card k
+--local notation "q" => Fintype.card k
 
 /- Ce projet LEAN se veut être une tentative de formalisation du papier
 "Weil representations associated to finite fields" de Paul Gérardin.
@@ -37,11 +37,11 @@ def bracket_bilinear : (Module.Dual k V) →ₗ[k] (Module.Dual k (Module.Dual k
 --def identification : Module.Dual k V ≃ₗ[k] Module.Dual k (Module.Dual k V) := by
 
 
-def form_commutator_H (k V : Type*) [Field k] [Fintype k] [AddCommGroup V] [Module k V]
+def form_commutator_H (k V : Type*) [Field k] [AddCommGroup V] [Module k V]
   (H1 : V × Module.Dual k V) (H2 : V × Module.Dual k V) : k :=
   H1.2.toFun H2.1 - H2.2.toFun H1.1
 
-def form_commutator_H1 (k V : Type*) [Field k] [Fintype k] [AddCommGroup V] [Module k V] :
+def form_commutator_H1 (k V : Type*) [Field k] [AddCommGroup V] [Module k V] :
   (V × Module.Dual k V) →ₗ[k] (V × Module.Dual k V) →ₗ[k] k := by
   refine LinearMap.mk₂ k (form_commutator_H k V) ?_ ?_ ?_ ?_
   · intro m1 m2 n
@@ -61,7 +61,7 @@ def form_commutator_H1 (k V : Type*) [Field k] [Fintype k] [AddCommGroup V] [Mod
     simp
     ring
 
-instance non_degenerate_form_H (k V : Type*) [Field k] [Fintype k] [AddCommGroup V] [Module k V] [FiniteDimensional k V]:
+instance non_degenerate_form_H (k V : Type*) [Field k]  [AddCommGroup V] [Module k V] [FiniteDimensional k V]:
   LinearMap.BilinForm.Nondegenerate (form_commutator_H1 k V) := by
   rw[LinearMap.BilinForm.Nondegenerate ]
   by_contra hf

@@ -3,9 +3,9 @@ import Mathlib.Algebra.Exact
 import Mathlib.Algebra.Group.Commutator
 import MyProject.convention_dual
 
-variable (V k : Type*) [Field k] [Fintype k] [AddCommGroup V] [Module k V] [Module.IsReflexive k V]
+variable (V k : Type*) [Field k] [AddCommGroup V] [Module k V] [FiniteDimensional k V]
 
-local notation "q" => Fintype.card k
+--local notation "q" => Fintype.card k
 
 /- On trouvera ici les propriétés relatives aux groupes d'Heisenberg-/
 
@@ -169,12 +169,12 @@ def Heisen_exact_sequence :
 
 variable{V k}
 --Définition du commutateur de deux éléments
-theorem commutator (H1 H2 : Heisenberg V k) :
+/-theorem commutator (H1 H2 : Heisenberg V k) :
   ⁅H1, H2⁆ = ⟨ H1.y (H2.x) - H2.y (H1.x), 0, 0 ⟩ := by
   rw [@commutatorElement_def]
   change ((mul (mul (mul H1 H2) (inverse H1)) (inverse H2)) = { z := H1.y H2.x - H2.y H1.x, x := 0, y := 0 })
   rw[mul,mul, mul, inverse, inverse]
   simp
-  ring
+  ring-/
 
 #min_imports
