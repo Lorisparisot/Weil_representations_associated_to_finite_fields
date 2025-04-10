@@ -1,3 +1,5 @@
+\section{Construction}
+
 \begin{definition}[Ensemble d'Heisenberg]
     \label{def:heisenberg}
     \lean{Heisenberg}
@@ -41,6 +43,8 @@
     \end{proof}
 \end{proposition}
 
+\section{Centre}
+
 \begin{definition}[Centre d'Heisenberg]
     \label{def:center_H}
     \uses{def:heisenberg}
@@ -61,5 +65,20 @@
     de $\mathcal{H}(V)$.
     \begin{proof}
     On vérifie les axiomes et on fait les calculs. Pas de difficultés notoires.
+    \end{proof}
+\end{proposition}
+
+\section{Commutateurs et nilpotence}
+
+\begin{proposition}[Commutateur]
+    \label{prop:commutator_H}
+    \uses{prop:group_H}
+    \lean{Heisenberg.commutator}
+    \leanok 
+
+    Soient $H_1:=(z_1,x_1,y_1)$ et $H_2:=(z_2,x_2,y_2)$ deux éléments de 
+    $\mathcal{H}(V)$. Le commutateur $[H_1,H_2]$ est $(y_1(x_2)-y_2(x_1),0,0)$.
+    \begin{proof}
+        On calcule $H_1*H_2*H_1^{-1}*H_2^{-1}$.
     \end{proof}
 \end{proposition}
