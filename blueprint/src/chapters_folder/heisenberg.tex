@@ -1,7 +1,7 @@
 \begin{definition}[Ensemble d'Heisenberg]
     \label{def:heisenberg}
     \lean{Heisenberg}
-    %\leanok
+    \leanok
 
     Etant donné $k$ un corps, $V$ un espace vectoriel de dimension finie sur
     $k$ et $V^*$ le dual de $V$, on définit l'ensemble d'Heisenberg par 
@@ -12,7 +12,7 @@
     \label{def:mul_H}
     \uses{def:heisenberg}
     \lean{Heisenberg.mul}
-    %\leanok 
+    \leanok 
 
     On définit la multiplication sur l'ensemble d'Heisenberg par :
     $(z_1,x_1,y_1)*(z_2,x_2,y_2) = (z_1+z_2+y_1(x_2),x_1+x_2,y_1+y_2)$.
@@ -22,7 +22,7 @@
     \label{def:inv_H}
     \uses{def:heisenberg}
     \lean{Heisenberg.inverse}
-    %\leanok 
+    \leanok 
 
     L'inverse d'un élément $(z,x,y)$ de l'ensemble d'Heisenberg est donné par 
     $(-z- y(-x), - x ,- y)$.
@@ -32,9 +32,10 @@
     \label{prop:group_H}
     \uses{def:heisenberg,def:mul_H,def:inv_H}
     \lean{Heisenberg.group}
-    %\leanok
+    \leanok
     Muni de sa multiplication, Heisenberg est un groupe.
     \begin{proof}
-        On vérifie les axiomes, calculs.
+        On vérifie les axiomes et on fait les calculs. Pas de difficultés
+        notoires
     \end{proof}
 \end{proposition}
