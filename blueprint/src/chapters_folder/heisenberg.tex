@@ -5,7 +5,7 @@
 
     Etant donné $k$ un corps, $V$ un espace vectoriel de dimension finie sur
     $k$ et $V^*$ le dual de $V$, on définit l'ensemble d'Heisenberg par 
-    ${(z,x,y) \in k\times V\times V^*}$.
+    $\mathcal{H}(V):={(z,x,y) \in k\times V\times V^*}$.
 \end{definition}
 
 \begin{definition}[Multiplication sur l'ensemble d'Heisenberg]
@@ -14,8 +14,9 @@
     \lean{Heisenberg.mul}
     \leanok 
 
-    On définit la multiplication sur l'ensemble d'Heisenberg par :
-    $(z_1,x_1,y_1)*(z_2,x_2,y_2) = (z_1+z_2+y_1(x_2),x_1+x_2,y_1+y_2)$.
+    On définit une loi interne sur l'ensemble d'Heisenberg par :
+    $(z_1,x_1,y_1)*(z_2,x_2,y_2) = (z_1+z_2+y_1(x_2),x_1+x_2,y_1+y_2)$ pour
+    tout $(z_1,x_1,y_1),(z_2,x_2,y_2)\in\mathcal{H}(V)$.
 \end{definition}
 
 \begin{definition}[Inverse d'un élément d'Heisenberg]
@@ -24,7 +25,7 @@
     \lean{Heisenberg.inverse}
     \leanok 
 
-    L'inverse d'un élément $(z,x,y)$ de l'ensemble d'Heisenberg est donné par 
+    L'inverse d'un élément $(z,x,y)\in\mathcal{H}(V)$ est donné par 
     $(-z- y(-x), - x ,- y)$.
 \end{definition}
 
@@ -33,9 +34,32 @@
     \uses{def:heisenberg,def:mul_H,def:inv_H}
     \lean{Heisenberg.group}
     \leanok
-    Muni de sa multiplication, Heisenberg est un groupe.
+    Muni de la loi de composition interne, Heisenberg est un groupe.
     \begin{proof}
         On vérifie les axiomes et on fait les calculs. Pas de difficultés
-        notoires
+        notoires.
+    \end{proof}
+\end{proposition}
+
+\begin{definition}[Centre d'Heisenberg]
+    \label{def:center_H}
+    \uses{def:heisenberg}
+    \lean{Heisenberg.center}
+    \leanok 
+
+    On définit le centre d'Heisenberg comme étant l'ensemble des éléments
+    $\mathcal{Z}_{\mathcal{H}(V)}:={(z,0,0)\in\mathcal{H}(V),\ z\in k}$
+\end{definition}
+
+\begin{proposition}[Centre est un sous-groupe]
+    \label{prop:center_H_subgroup}
+    \uses{def:heisenberg, prop:group_H}
+    \lean{Heisenberg.center_is_subgroup}
+    \leanok
+
+    Le centre d'Heisenberg $\mathcal{Z}_{\mathcal{H}(V)}$ est un sous-groupe
+    de $\mathcal{H}(V)$.
+    \begin{proof}
+    On vérifie les axiomes et on fait les calculs. Pas de difficultés notoires.
     \end{proof}
 \end{proposition}
