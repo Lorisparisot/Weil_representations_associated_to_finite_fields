@@ -28,14 +28,14 @@ def bracket_bilinear : (Module.Dual k V) →ₗ[k] (Module.Dual k (Module.Dual k
   · intro c m n
     simp
 
-def bracketbis : LinearMap.BilinForm k ((Module.Dual k V)) := by
-  sorry
+--def bracketbis : LinearMap.BilinForm k ((Module.Dual k V)) := by
+
 
 
 #check bracket_bilinear
 
-def identification : Module.Dual k V ≃ₗ[k] Module.Dual k (Module.Dual k V) := by
-  sorry
+--def identification : Module.Dual k V ≃ₗ[k] Module.Dual k (Module.Dual k V) := by
+
 
 def form_commutator_H (k V : Type*) [Field k] [Fintype k] [AddCommGroup V] [Module k V]
   (H1 : V × Module.Dual k V) (H2 : V × Module.Dual k V) : k :=
