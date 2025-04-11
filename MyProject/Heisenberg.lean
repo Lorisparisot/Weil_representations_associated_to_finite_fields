@@ -170,7 +170,7 @@ def Heisen_exact_sequence :
 
 variable{V k}
 --Définition du commutateur de deux éléments
- omit [FiniteDimensional k V] in theorem commutator (H1 H2 : Heisenberg V k) :
+ omit [FiniteDimensional k V] in theorem commutator_of_elements (H1 H2 : Heisenberg V k) :
   ⁅H1, H2⁆ = ⟨ H1.y (H2.x) - H2.y (H1.x), 0, 0 ⟩ := by
   rw [@commutatorElement_def]
   change ((mul (mul (mul H1 H2) (inverse H1)) (inverse H2)) = { z := H1.y H2.x - H2.y H1.x, x := 0, y := 0 })
@@ -179,7 +179,7 @@ variable{V k}
   ring
 
 
-variable (V k)[inst5 : Nontrivial V]
+variable (V k) [inst5 : Nontrivial V]
 --Le sous-groupe engendré par les commutateurs est non trivial.
 theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
   simp
@@ -192,6 +192,48 @@ theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
   rw[Heisenberg.center_eq,Heisenberg.center_is_subgroup,Subgroup.mem_mk,Heisenberg.center,Set.mem_setOf_eq] at hf
   simp at hf
   contradiction
+
+-- Si p est dans le commutateur, alors il est de la forme (z,0,0)
+variable {V k}
+omit inst5 in theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Heisenberg V k)) → (p.x=0 ∧ p.y=0) :=by
+  intro h
+  rw [commutator_def,← @SetLike.mem_coe,@Subgroup.commutator_def,Subgroup.closure] at h
+  simp only [Subgroup.mem_top, true_and, Subgroup.coe_sInf, Set.mem_setOf_eq, Set.mem_iInter,
+    SetLike.mem_coe] at h
+  specialize h (Subgroup.center (Heisenberg V k))
+  rw[Heisenberg.center_eq,center_is_subgroup,Subgroup.coe_set_mk, Subgroup.mem_mk,center] at h
+  simp only [Set.setOf_subset_setOf, forall_exists_index, Set.mem_setOf_eq] at h
+  apply h
+  intro a x x1
+  rw[Heisenberg.commutator_of_elements]
+  intro h
+  rw[<-h]
+  simp
+
+--Heisenberg est un groupe nilpotent d'ordre 2
+theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ lowerCentralSeries (Heisenberg V k) 2 = ⊥ :=by
+  constructor
+  · exact commutator_ne_bot V k
+  · rw [@Subgroup.eq_bot_iff_forall]
+    intro x hx
+    rw [@mem_lowerCentralSeries_succ_iff] at hx
+    simp at hx
+    rw[_root_.commutator] at hx
+    change( x ∈ Subgroup.closure {x | ∃ p ∈ ⁅⊤, ⊤⁆, ∃ q, ⁅p, q⁆ = x}) at hx
+    rw[Subgroup.closure] at hx
+    simp at hx
+    specialize hx ⊥
+    rw [← @Subgroup.mem_bot]
+    apply hx
+    intro u hu
+    obtain ⟨p, hp, q, hq⟩ := hu
+    rw[Heisenberg.commutator_of_elements] at hq
+    simp
+    change (u = ⟨0,0,0⟩)
+    rw[<-hq]
+    simp
+    rw[((Heisenberg.commutator_caracterisation p) hp).1, ((Heisenberg.commutator_caracterisation p) hp).2]
+    simp
 
 
 #min_imports

@@ -68,6 +68,18 @@
     \end{proof}
 \end{proposition}
 
+\begin{proposition}[Caractérisation du centre]
+    \label{prop:center_H_is_center}
+    \uses{prop:center_H_subgroup}
+    \lean{Heisenberg.center_eq}
+    \leanok
+
+    Le centre définit plus haut est bien le centre de $\mathcal{H}(V)$.
+    \begin{proof}
+        Par double inclusion. Le sens réciproque utilise la non dégénérence de la forme
+        quadratique \textit{voir plus tard}.
+    \end{proof}
+
 \section{Commutateurs et nilpotence}
 
 \begin{proposition}[Commutateur]
@@ -97,3 +109,28 @@
         $(0,x,0)$ y appartiendrait. Mais par définition du centre, $x$ est nul. Contradiction.
     \end{proof}
 \end{proposition}
+
+\begin{proposition}[Caractérisation du commutateur]
+        \label{prop:commutator_H_caracterisation}
+        \uses{prop:commutator_H, prop:center_H_subgroup,prop:center_H_is_center}
+        \lean{Heisenberg.commutator_caracterisation}
+        \leanok
+    
+        Si $h:=(z,x,y)$ est un élément du commutateur, alors $x=0$ et $y=0$.
+    \begin{proof}
+        On calcule.
+    \end{proof}
+
+\begin{thm}[Nilpotence du groupe d'Heisenberg]
+    \label{thm:two_step_nil}
+    \uses{prop:commutator_H_nontrivial,prop:commutator_H,prop:commutator_H_caracterisation}
+    \lean{Heisenberg.two_step_nilpotent}
+    \leanok
+
+    Si $V$ est non trivial, le groupe $\mathcal{H}(V)$ est nilpotent de pas 2.
+
+    \begin{proof}
+        Il faut montrer que le commutateur est non trivial et que $[[\mathcal{H}(V),\mathcal{H}(V)],\mathcal{H}(V)]$
+        est trivial. Le premier point est fait en \ref{prop:commutator_H_nontrivial}.
+        Le second est calculatoire, en utilisant \ref{prop:commutator_H_caracterisation}.
+    \end{proof}

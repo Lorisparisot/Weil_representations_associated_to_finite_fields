@@ -1,4 +1,4 @@
-import Mathlib
+/-import Mathlib
 
 variable (V k : Type*) [Field k] [Fintype k] [AddCommGroup V] [Module k V]
 
@@ -318,3 +318,4 @@ theorem Heisenberg_commutator_set_ne_zero (k V : Type*) [Field k] [Fintype k] [A
 #min_imports
 --def tau (k V : Type*) [Field k] [Fintype k] [AddCommGroup V] [Module k V] [FiniteDimensional k V] (ζ : (FDRep k ↥(Subgroup.center (Heisenberg k V))).character) (hζ : ζ ≠ 1):
   --AddChar k (k) := by
+-/
