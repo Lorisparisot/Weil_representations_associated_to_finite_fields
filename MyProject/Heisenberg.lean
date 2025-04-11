@@ -1,9 +1,11 @@
-import MyProject.convention_dual
 import Mathlib.Algebra.Exact
 import Mathlib.Algebra.Group.Commutator
 import MyProject.convention_dual
+import Mathlib.GroupTheory.Nilpotent
+import Mathlib.Algebra.Group.Subgroup.Defs
 
-variable (V k : Type*) [Field k] [AddCommGroup V] [Module k V] [FiniteDimensional k V]
+
+variable (V k : Type*) [inst1 : Field k] [inst2 : AddCommGroup V] [inst3 : Module k V] [inst4 : FiniteDimensional k V]
 
 --local notation "q" => Fintype.card k
 
@@ -66,7 +68,7 @@ variable (V k)
 def center := {H : Heisenberg V k | H.x = 0 ∧ H.y = 0}
 #check center
 
-variable {V K}
+
 --Le centre du groupe d'Heisenberg définit ci-dessus est un sous-groupe de Heisenberg
 instance center_is_subgroup : Subgroup (Heisenberg V k) :=
 { carrier := center V k,
@@ -99,11 +101,11 @@ instance center_is_subgroup : Subgroup (Heisenberg V k) :=
 
 --Le centre définit ci-dessus est bien le centre du groupe d'Heisenberg
 instance center_eq :
-  Subgroup.center (Heisenberg V k) = center V k := by
+  Subgroup.center (Heisenberg V k) = Heisenberg.center_is_subgroup V k := by
   ext h
   constructor
   · intro h1
-    rw [SetLike.mem_coe, Subgroup.mem_center_iff] at h1
+    rw [Subgroup.mem_center_iff] at h1
     change ( ∀ (g : Heisenberg V k), mul g h = mul h g) at h1
     unfold mul at h1
     simp at h1
@@ -132,7 +134,6 @@ instance center_eq :
     simp at h13
     rw[<-h13]
   · intro H
-    simp
     rw[Subgroup.mem_center_iff]
     intro g
     change (mul g h = mul h g)
@@ -142,7 +143,7 @@ instance center_eq :
     simp
     rw [@AddCommMonoidWithOne.add_comm]
 
-variable (V)
+
 --Fonction de k dans Heisenberg
 def kHV_map :
   k → Heisenberg V k := fun z => ⟨z, 0, 0⟩
@@ -176,5 +177,22 @@ variable{V k}
   rw[mul,mul, mul, inverse, inverse]
   simp
   ring
+
+
+variable (V k)[inst5 : Nontrivial V]
+--Le sous-groupe engendré par les commutateurs est non trivial.
+theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
+  simp
+  rw[_root_.commutator]
+  by_contra hf
+  rw [@Subgroup.commutator_eq_bot_iff_le_centralizer,Subgroup.coe_top, top_le_iff, Subgroup.centralizer_eq_top_iff_subset,
+    Set.univ_subset_iff, Subgroup.coe_eq_univ,@Subgroup.eq_top_iff'] at hf
+  have h1 := (nontrivial_iff_exists_ne 0).mp inst5
+  obtain ⟨h11,h12⟩ := h1
+  specialize hf ⟨0,h11,0⟩
+  rw[Heisenberg.center_eq,Heisenberg.center_is_subgroup,Subgroup.mem_mk,Heisenberg.center,Set.mem_setOf_eq] at hf
+  simp at hf
+  contradiction
+
 
 #min_imports
