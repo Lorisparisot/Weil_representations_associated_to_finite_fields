@@ -83,7 +83,7 @@
     \end{proof}
 \end{proposition}
 
-\begin{proposition}[Commutteur non trivial]
+\begin{proposition}[Commutateur non trivial]
     \label{prop:commutator_H_nontrivial}
     \uses{prop:center_H_subgroup}
     \lean{Heisenberg.commutator_ne_bot}
@@ -91,7 +91,8 @@
 
     Si $V$ est non trivial, le sous-groupe de $\mathcal{H}(V)$ engendré par les commutateurs est non trivial.
     \begin{proof}
-        On procède par l'absurde. S'il était trivial, tout élément y appartiendrait.
+        On procède par l'absurde. S'il était trivial, tout élément de $\mathcal{H}(V)$
+        appartiendrait à son centre.
         Comme $V$ non trivial, $\exists x\in V,\ x\ne0$. En particulier,
         $(0,x,0)$ y appartiendrait. Mais par définition du centre, $x$ est nul. Contradiction.
     \end{proof}

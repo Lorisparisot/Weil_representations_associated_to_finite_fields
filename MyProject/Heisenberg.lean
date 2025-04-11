@@ -187,8 +187,7 @@ theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
   by_contra hf
   rw [@Subgroup.commutator_eq_bot_iff_le_centralizer,Subgroup.coe_top, top_le_iff, Subgroup.centralizer_eq_top_iff_subset,
     Set.univ_subset_iff, Subgroup.coe_eq_univ,@Subgroup.eq_top_iff'] at hf
-  have h1 := (nontrivial_iff_exists_ne 0).mp inst5
-  obtain ⟨h11,h12⟩ := h1
+  obtain ⟨h11,h12⟩ := (nontrivial_iff_exists_ne 0).mp inst5
   specialize hf ⟨0,h11,0⟩
   rw[Heisenberg.center_eq,Heisenberg.center_is_subgroup,Subgroup.mem_mk,Heisenberg.center,Set.mem_setOf_eq] at hf
   simp at hf
