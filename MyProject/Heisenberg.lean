@@ -144,29 +144,53 @@ instance center_eq :
     rw [@AddCommMonoidWithOne.add_comm]
 
 
---Fonction de k dans Heisenberg
-def kHV_map :
-  k → Heisenberg V k := fun z => ⟨z, 0, 0⟩
+--Morphisme de k dans Heisenberg
+def Hom_k_to_H : AddMonoidHom k (Additive (Heisenberg V k)) :=by
+  refine AddMonoidHom.mk' (fun z => ⟨z,0,0⟩) ?_
+  intro a b
+  simp only
+  change ((⟨a + b, 0, 0⟩ : Heisenberg V k) = mul ⟨a, 0, 0⟩ ⟨b, 0, 0⟩)
+  simp only [mul,LinearMap.zero_apply, add_zero]
 
---Fonction de Heisenberg dans V × V*
-def HVVVstar_map :
-  Heisenberg V k → V × Module.Dual k V := fun H => ⟨H.x, H.y⟩
+-- Injectivité de Hom_k_to_H
+instance injective_Hom_k_to_H : Function.Injective (Hom_k_to_H V k) := by
+  intro k1 k2
+  rw[Hom_k_to_H,AddMonoidHom.mk'_apply]
+  intro h
+  change ((⟨k1,0,0⟩ : Heisenberg V k) = ⟨k2,0,0⟩) at h
+  simp only [mk.injEq, and_self, and_true] at h
+  exact h
+
+
+--Morphisme de Heisenberg dans V × V*
+def Hom_H_to_V_x_Dual : AddMonoidHom (Additive (Heisenberg V k)) (V × Module.Dual k V ):=by
+  refine AddMonoidHom.mk' (fun H => (H.x, H.y)) ?_
+  intro H1 H2
+  rw [Prod.mk_add_mk, Prod.mk.injEq]
+  change ((mul H1 H2).x = H1.x + H2.x ∧ (mul H1 H2).y = H1.y + H2.y)
+  rw[mul]
+  simp only [and_self]
+
+--Surjectivité de Hom_H_to_V_x_Dual
+instance surjective_Hom_H_to_V_x_Dual : Function.Surjective (Hom_H_to_V_x_Dual V k) := by
+  intro H
+  rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
+  use ⟨0, H.1, H.2⟩
 
 --Définition de la suite exact 0 → k → Heisenberg → V × V* → 0
-def Heisen_exact_sequence :
-  Function.Exact (kHV_map V k) (HVVVstar_map V k) := by
+def exact_sequence :
+  Function.Exact (Hom_k_to_H V k) (Hom_H_to_V_x_Dual V k) := by
   refine Function.Exact.of_comp_of_mem_range rfl ?_
   intro H h1
   rw [@Set.mem_range]
-  rw[HVVVstar_map] at h1
+  rw[Hom_H_to_V_x_Dual] at h1
   use H.z
-  rw[kHV_map]
+  rw[Hom_k_to_H]
   change ((H.x, H.y) = (0,0)) at h1
   apply Prod.mk.inj at h1
-  ext
-  · simp
-  · rw[h1.1]
-  · rw[h1.2]
+  rw [AddMonoidHom.mk'_apply]
+  rw[<-h1.1,<-h1.2]
+  exact rfl
 
 variable{V k}
 --Définition du commutateur de deux éléments

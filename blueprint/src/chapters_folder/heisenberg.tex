@@ -136,3 +136,69 @@
         Le second est calculatoire, en utilisant \ref{prop:commutator_H_caracterisation}, pas de difficultés nototires.
     \end{proof}
 \end{theorem}
+
+\section{Suite exacte}
+
+\begin{proposition}[Morphisme de $k$ vers $\mathcal{H}(V)$]
+    \label{prop:map_k_H}
+    \uses{prop:group_H}
+    \lean{Heisenberg.Hom_k_to_H}
+    \leanok 
+
+    L'application $\varphi:z\mapsto (z,0,0)$ définie un morphisme de 
+    $(k,+)$ dans $\mathcal{H}(V)$.
+    \begin{proof}
+        C'est clair.
+    \end{proof}
+\end{proposition}
+
+\begin{proposition}[]
+    \label{prop:inj_map_k_H}
+    \uses{prop:map_k_H}
+    \lean{Heisenberg.injective_Hom_k_to_H}
+    \leanok 
+
+    Le morphisme définit en \ref{prop:map_k_H} est injectif.
+    \begin{proof}
+        On suppose $\varphi(x)=\varphi(y)$ et on montre $x=y$. Pas de 
+        difficultés notoires.
+    \end{proof}
+\end{proposition}
+
+\begin{proposition}[Morphisme de $\mathcal{H}(V)$ vers $V\times V^*$]
+    \label{prop:map_H_VxV*}
+    \uses{prop:group_H}
+    \lean{Heisenberg.Hom_H_to_V_x_Dual}
+    \leanok 
+
+    L'application $\psi:(z,x,y)\mapsto (x,y)$ définie un morphisme de 
+    $\mathcal{H}(V)$ dans $V\times V^*$.
+    \begin{proof}
+        C'est clair.
+    \end{proof}
+\end{proposition}
+
+\begin{proposition}[]
+    \label{prop:surj_map_H_VxV*}
+    \uses{prop:map_H_VxV*}
+    \lean{Heisenberg.Hom_H_to_V_x_Dual}
+    \leanok 
+
+    Le morphisme définit en \ref{prop:map_H_VxV*} est surjectif.
+    \begin{proof}
+        C'est clair.
+    \end{proof}
+\end{proposition}
+
+\begin{proposition}[Suite exacte]
+    \label{exact_seq_h}
+    \uses{prop:map_k_H,prop:map_H_VxV*}
+    \lean{Heisenberg.exact_sequence}
+    \leanok 
+
+    On a une suite exacte $0\rightarrow k \rightarrow \mathcal{H}(V) \rightarrow
+    V\times V^*$ \rightarrow 0$.
+    \begin{proof}
+        C'est clair par ce qui est montrée en \ref{prop:map_k_H} et en \ref{prop:map_H_VxV*}.
+    \end{proof}
+\end{proposition}
