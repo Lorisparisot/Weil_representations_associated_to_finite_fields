@@ -219,6 +219,27 @@ def Hom_H_to_V_x_Dual_sub_V : Subgroup (Heisenberg V k) := by
     rw[Hom_H_to_V_x_Dual, AddMonoidHom.mk'_apply, Prod.mk.injEq] at h
     exact h.2.symm
 
+--C'est un sous-groupe commutatif
+instance Hom_H_to_V_x_Dual_sub_V_commutative : CommGroup (Hom_H_to_V_x_Dual_sub_V V k) :=by
+  refine CommGroup.mk ?_
+  intro a b
+  obtain ⟨a,ha⟩ := a
+  obtain ⟨b,hb⟩ := b
+  rw [MulMemClass.mk_mul_mk, Subtype.mk.injEq]
+  change (mul a b = mul b a)
+  rw[mul, mul, mk.injEq]
+  rw [Hom_H_to_V_x_Dual_sub_V] at ha hb
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq] at ha hb
+  obtain ⟨xa, hxa⟩ := ha
+  obtain ⟨xb, hxb⟩ := hb
+  rw [Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply, Prod.mk.injEq] at hxa hxb
+  rw[<-hxa.2, <- hxb.2]
+  simp
+  constructor
+  · rw [@AddCommMonoid.add_comm]
+  · rw [@AddCommMonoid.add_comm]
+
+
 --Sous-groupe définie par ψ⁻¹(V*).
 def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
   refine Subgroup.mk ?_ ?_
@@ -248,7 +269,26 @@ def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
     rw[h.1]
     simp only [and_self]
 
-
+--C'est un sous-groupe commutatif
+instance Hom_H_to_V_x_Dual_sub_Dual_commutative : CommGroup (Hom_H_to_V_x_Dual_sub_Dual V k) :=by
+  refine CommGroup.mk ?_
+  intro a b
+  obtain ⟨a,ha⟩ := a
+  obtain ⟨b,hb⟩ := b
+  rw [MulMemClass.mk_mul_mk, Subtype.mk.injEq]
+  change (mul a b = mul b a)
+  rw[mul, mul, mk.injEq]
+  rw [Hom_H_to_V_x_Dual_sub_Dual] at ha hb
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq] at ha hb
+  obtain ⟨xa, hxa⟩ := ha
+  obtain ⟨xb, hxb⟩ := hb
+  rw [Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply, Prod.mk.injEq] at hxa hxb
+  rw[<-hxa.2, <- hxb.2, <-hxa.1, <-hxb.1, map_zero, add_zero]
+  simp only [true_and]
+  constructor
+  · rw [map_zero, add_zero]
+    rw [@AddCommMonoidWithOne.add_comm]
+  · rw [@AddCommMonoid.add_comm]
 
 variable{V k}
 --Définition du commutateur de deux éléments
