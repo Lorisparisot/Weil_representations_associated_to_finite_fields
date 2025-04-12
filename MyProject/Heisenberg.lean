@@ -192,6 +192,64 @@ def exact_sequence :
   rw[<-h1.1,<-h1.2]
   exact rfl
 
+
+--Sous-groupe définie par ψ⁻¹(V).
+def Hom_H_to_V_x_Dual_sub_V : Subgroup (Heisenberg V k) := by
+  refine Subgroup.mk ?_ ?_
+  · refine Submonoid.mk ?_ ?_
+    · refine Subsemigroup.mk (Set.preimage (Hom_H_to_V_x_Dual V k) ({⟨x,0⟩ | (x : V)})) ?_
+      · simp
+        intro a b x1 hx1 x2 hx2
+        rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply, Prod.mk.injEq] at hx1 hx2
+        use (a.x + b.x)
+        change ((a.x + b.x, 0) = (Hom_H_to_V_x_Dual V k) (mul a b))
+        rw[Hom_H_to_V_x_Dual, mul,AddMonoidHom.mk'_apply,Prod.mk.injEq]
+        simp only [true_and]
+        rw[<-hx1.2, <-hx2.2,add_zero]
+    · simp only [Set.preimage_setOf_eq, Set.mem_setOf_eq]
+      use 0
+      change ((0, 0) = (Hom_H_to_V_x_Dual V k) ⟨0,0,0⟩)
+      rw[Hom_H_to_V_x_Dual,Prod.mk_zero_zero, AddMonoidHom.mk'_apply,Prod.mk_zero_zero]
+  · simp
+    intro x x1 h
+    use ((inverse x).x)
+    change ((x.inverse.x, 0) = (Hom_H_to_V_x_Dual V k) x.inverse)
+    rw[Hom_H_to_V_x_Dual,inverse,map_neg, sub_neg_eq_add, AddMonoidHom.mk'_apply, Prod.mk.injEq, zero_eq_neg]
+    simp only [true_and]
+    rw[Hom_H_to_V_x_Dual, AddMonoidHom.mk'_apply, Prod.mk.injEq] at h
+    exact h.2.symm
+
+--Sous-groupe définie par ψ⁻¹(V*).
+def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
+  refine Subgroup.mk ?_ ?_
+  · refine Submonoid.mk ?_ ?_
+    · refine Subsemigroup.mk (Set.preimage (Hom_H_to_V_x_Dual V k) ({⟨0,y⟩ | (y : Module.Dual k V)})) ?_
+      simp
+      intro a b x1 hx1 x2 hx2
+      use (a.y + b.y)
+      change ((0, a.y + b.y) = (Hom_H_to_V_x_Dual V k) (mul a b))
+      rw[Hom_H_to_V_x_Dual, mul,AddMonoidHom.mk'_apply,Prod.mk.injEq]
+      simp only [true_and]
+      rw [Hom_H_to_V_x_Dual] at hx1 hx2
+      simp at hx1 hx2
+      rw[<-hx1.1, <-hx2.1,add_zero]
+      simp only [and_self]
+    · simp only [Set.preimage_setOf_eq, Set.mem_setOf_eq]
+      use 0
+      change ((0, 0) = (Hom_H_to_V_x_Dual V k) ⟨0,0,0⟩)
+      rw[Hom_H_to_V_x_Dual,Prod.mk_zero_zero, AddMonoidHom.mk'_apply,Prod.mk_zero_zero]
+  · simp
+    intro x x1 h
+    use ((inverse x).y)
+    change ((0, x.inverse.y) = (Hom_H_to_V_x_Dual V k) x.inverse)
+    rw[Hom_H_to_V_x_Dual,inverse,map_neg, sub_neg_eq_add, AddMonoidHom.mk'_apply, Prod.mk.injEq, zero_eq_neg]
+    simp only [true_and]
+    rw[Hom_H_to_V_x_Dual, AddMonoidHom.mk'_apply, Prod.mk.injEq] at h
+    rw[h.1]
+    simp only [and_self]
+
+
+
 variable{V k}
 --Définition du commutateur de deux éléments
  omit [FiniteDimensional k V] in theorem commutator_of_elements (H1 H2 : Heisenberg V k) :
