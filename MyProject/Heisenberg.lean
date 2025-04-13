@@ -239,13 +239,34 @@ instance Hom_H_to_V_x_Dual_sub_V_commutative : CommGroup (Hom_H_to_V_x_Dual_sub_
   · rw [@AddCommMonoid.add_comm]
   · rw [@AddCommMonoid.add_comm]
 
+--C'est un sous-groupe distingué
+instance Hom_H_to_V_x_Dual_sub_V_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub_V V k) :=by
+  refine Subgroup.Normal.mk ?_
+  intro x hx g
+  rw[Hom_H_to_V_x_Dual_sub_V,] at hx
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq] at hx
+  rw[Hom_H_to_V_x_Dual_sub_V]
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+  rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
+  simp only [Prod.mk.injEq, exists_eq_left]
+  change (0 = (mul (mul g x) (inverse g)).y)
+  rw[mul,mul]
+  simp only
+  rw[inverse,add_neg_cancel_comm]
+  obtain ⟨x1, hx1⟩ := hx
+  rw[Hom_H_to_V_x_Dual] at hx1
+  simp only [AddMonoidHom.mk'_apply, Prod.mk.injEq] at hx1
+  exact hx1.2
+
+
+
 
 --Sous-groupe définie par ψ⁻¹(V*).
 def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
   refine Subgroup.mk ?_ ?_
   · refine Submonoid.mk ?_ ?_
     · refine Subsemigroup.mk (Set.preimage (Hom_H_to_V_x_Dual V k) ({⟨0,y⟩ | (y : Module.Dual k V)})) ?_
-      simp
+      simp only [Set.preimage_setOf_eq, Set.mem_setOf_eq, forall_exists_index]
       intro a b x1 hx1 x2 hx2
       use (a.y + b.y)
       change ((0, a.y + b.y) = (Hom_H_to_V_x_Dual V k) (mul a b))
@@ -290,14 +311,35 @@ instance Hom_H_to_V_x_Dual_sub_Dual_commutative : CommGroup (Hom_H_to_V_x_Dual_s
     rw [@AddCommMonoidWithOne.add_comm]
   · rw [@AddCommMonoid.add_comm]
 
+--C'est un sous-groupe distingué
+instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub_Dual V k) :=by
+  refine Subgroup.Normal.mk ?_
+  intro x hx g
+  rw[Hom_H_to_V_x_Dual_sub_Dual] at hx
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq] at hx
+  rw[Hom_H_to_V_x_Dual_sub_Dual]
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+  rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
+  simp only [Prod.mk.injEq, exists_eq_right]
+  change (0 = (mul (mul g x) (inverse g)).x)
+  rw[mul,mul]
+  simp only
+  rw[inverse,add_neg_cancel_comm]
+  obtain ⟨x1, hx1⟩ := hx
+  rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply] at hx1
+  simp only [Prod.mk.injEq] at hx1
+  exact hx1.1
+
+
 variable{V k}
 --Définition du commutateur de deux éléments
  omit [FiniteDimensional k V] in theorem commutator_of_elements (H1 H2 : Heisenberg V k) :
   ⁅H1, H2⁆ = ⟨ H1.y (H2.x) - H2.y (H1.x), 0, 0 ⟩ := by
   rw [@commutatorElement_def]
   change ((mul (mul (mul H1 H2) (inverse H1)) (inverse H2)) = { z := H1.y H2.x - H2.y H1.x, x := 0, y := 0 })
-  rw[mul,mul, mul, inverse, inverse]
-  simp
+  rw[mul,mul, mul, inverse, inverse,map_neg]
+  simp only [map_neg, sub_neg_eq_add, LinearMap.add_apply, add_neg_cancel_comm, add_neg_cancel,
+    mk.injEq, and_self, and_true]
   ring
 
 
@@ -312,7 +354,7 @@ theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
   obtain ⟨h11,h12⟩ := (nontrivial_iff_exists_ne 0).mp inst5
   specialize hf ⟨0,h11,0⟩
   rw[Heisenberg.center_eq,Heisenberg.center_is_subgroup,Subgroup.mem_mk,Heisenberg.center,Set.mem_setOf_eq] at hf
-  simp at hf
+  simp only [and_true] at hf
   contradiction
 
 -- Si p est dans le commutateur, alors il est de la forme (z,0,0)
@@ -330,7 +372,7 @@ omit inst5 in theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (c
   rw[Heisenberg.commutator_of_elements]
   intro h
   rw[<-h]
-  simp
+  simp only [and_self]
 
 --Heisenberg est un groupe nilpotent d'ordre 2
 theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ lowerCentralSeries (Heisenberg V k) 2 = ⊥ :=by
@@ -342,8 +384,8 @@ theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ l
     simp at hx
     rw[_root_.commutator] at hx
     change( x ∈ Subgroup.closure {x | ∃ p ∈ ⁅⊤, ⊤⁆, ∃ q, ⁅p, q⁆ = x}) at hx
-    rw[Subgroup.closure] at hx
-    simp at hx
+    rw[Subgroup.closure,Subgroup.mem_sInf] at hx
+    simp only [Set.mem_setOf_eq] at hx
     specialize hx ⊥
     rw [← @Subgroup.mem_bot]
     apply hx
@@ -352,8 +394,8 @@ theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ l
     rw[Heisenberg.commutator_of_elements] at hq
     simp
     change (u = ⟨0,0,0⟩)
-    rw[<-hq]
-    simp
+    rw[<-hq,mk.injEq]
+    simp only [and_self, and_true]
     rw[((Heisenberg.commutator_caracterisation p) hp).1, ((Heisenberg.commutator_caracterisation p) hp).2]
     simp
 
