@@ -111,19 +111,19 @@ instance center_eq :
     simp at h1
     ring_nf at h1
     simp at h1
-    have h11 : ∀ (g : Heisenberg V k), ((form_commutator_H1 k V) (h.x, h.y)) (g.x, g.y) = 0 ∧ g.x + h.x = h.x + g.x ∧ g.y + h.y = h.y + g.y :=by
-      unfold form_commutator_H1 form_commutator_H
+    have h11 : ∀ (g : Heisenberg V k), ((form_commutator V k) (h.x, h.y)) (g.x, g.y) = 0 ∧ g.x + h.x = h.x + g.x ∧ g.y + h.y = h.y + g.y :=by
+      unfold form_commutator
       simp
       intro g
       specialize h1 g
-      rw[sub_eq_zero]
-      exact
-        (and_symm_left (g.y h.x) (h.y g.x) (g.x + h.x = h.x + g.x ∧ g.y + h.y = h.y + g.y)).mp h1
-    have h12 := non_degenerate_form_H k V
+      constructor
+      · exact add_eq_zero_iff_neg_eq.mpr (congrArg Neg.neg (id (Eq.symm h1.left)))
+      · exact h1.right
+    have h12 := form_commutator_non_degenerate V k
     rw[LinearMap.BilinForm.Nondegenerate] at h12
     specialize h12 ⟨h.x,h.y⟩
     change ((h.x=0 ∧ h.y =0))
-    have h13 : ∀ (g : Heisenberg V k), ((form_commutator_H1 k V) (h.x, h.y)) (g.x, g.y) = 0:= by
+    have h13 : ∀ (g : Heisenberg V k), ((form_commutator V k) (h.x, h.y)) (g.x, g.y) = 0:= by
       intro g
       specialize h11 g
       exact h11.1
@@ -345,7 +345,7 @@ variable{V k}
 
 variable (V k) [inst5 : Nontrivial V]
 --Le sous-groupe engendré par les commutateurs est non trivial.
-omit inst4 in theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
+ theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
   simp
   rw[_root_.commutator]
   by_contra hf
@@ -359,7 +359,7 @@ omit inst4 in theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 
 
 -- Si p est dans le commutateur, alors il est de la forme (z,0,0)
 variable {V k}
-omit inst5 inst4 in theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Heisenberg V k)) → (p.x=0 ∧ p.y=0) :=by
+omit inst5 in theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Heisenberg V k)) → (p.x=0 ∧ p.y=0) :=by
   intro h
   rw [commutator_def,← @SetLike.mem_coe,@Subgroup.commutator_def,Subgroup.closure] at h
   simp only [Subgroup.mem_top, true_and, Subgroup.coe_sInf, Set.mem_setOf_eq, Set.mem_iInter,
@@ -375,7 +375,7 @@ omit inst5 inst4 in theorem commutator_caracterisation (p : Heisenberg V k) : p 
   simp only [and_self]
 
 --Heisenberg est un groupe nilpotent d'ordre 2
-omit inst4 in theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ lowerCentralSeries (Heisenberg V k) 2 = ⊥ :=by
+theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ lowerCentralSeries (Heisenberg V k) 2 = ⊥ :=by
   constructor
   · exact commutator_ne_bot V k
   · rw [@Subgroup.eq_bot_iff_forall]
