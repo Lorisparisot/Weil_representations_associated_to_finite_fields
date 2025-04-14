@@ -258,7 +258,9 @@ instance Hom_H_to_V_x_Dual_sub_V_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub
   simp only [AddMonoidHom.mk'_apply, Prod.mk.injEq] at hx1
   exact hx1.2
 
-
+--C'est un sous-groupe maximal.
+--instance Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)): ((Hom_H_to_V_x_Dual_sub_V V k) ≤ Q ∧ Q ≠ ⊤ )→ Q = (Hom_H_to_V_x_Dual_sub_V V k) := by
+  --sorry
 
 
 --Sous-groupe définie par ψ⁻¹(V*).
@@ -330,7 +332,6 @@ instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_
   simp only [Prod.mk.injEq] at hx1
   exact hx1.1
 
-
 variable{V k}
 --Définition du commutateur de deux éléments
  omit [FiniteDimensional k V] in theorem commutator_of_elements (H1 H2 : Heisenberg V k) :
@@ -342,10 +343,9 @@ variable{V k}
     mk.injEq, and_self, and_true]
   ring
 
-
 variable (V k) [inst5 : Nontrivial V]
 --Le sous-groupe engendré par les commutateurs est non trivial.
-theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
+omit inst4 in theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
   simp
   rw[_root_.commutator]
   by_contra hf
@@ -359,7 +359,7 @@ theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
 
 -- Si p est dans le commutateur, alors il est de la forme (z,0,0)
 variable {V k}
-omit inst5 in theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Heisenberg V k)) → (p.x=0 ∧ p.y=0) :=by
+omit inst5 inst4 in theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Heisenberg V k)) → (p.x=0 ∧ p.y=0) :=by
   intro h
   rw [commutator_def,← @SetLike.mem_coe,@Subgroup.commutator_def,Subgroup.closure] at h
   simp only [Subgroup.mem_top, true_and, Subgroup.coe_sInf, Set.mem_setOf_eq, Set.mem_iInter,
@@ -375,7 +375,7 @@ omit inst5 in theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (c
   simp only [and_self]
 
 --Heisenberg est un groupe nilpotent d'ordre 2
-theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ lowerCentralSeries (Heisenberg V k) 2 = ⊥ :=by
+omit inst4 in theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ lowerCentralSeries (Heisenberg V k) 2 = ⊥ :=by
   constructor
   · exact commutator_ne_bot V k
   · rw [@Subgroup.eq_bot_iff_forall]
@@ -399,5 +399,30 @@ theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ l
     rw[((Heisenberg.commutator_caracterisation p) hp).1, ((Heisenberg.commutator_caracterisation p) hp).2]
     simp
 
+variable (V k)
+--H(V) est en bijection avec H(V*)
+noncomputable def equiv_Dual:
+  Heisenberg V k ≃ Heisenberg (Module.Dual k V) k := by
+  refine Equiv.mk (fun a ↦ ⟨a.z, a.y , ((convention_eval_iso V k).toFun (-a.x)) ⟩ ) (fun a ↦ ⟨a.z, ((convention_eval_iso V k).invFun (-a.y)) , a.x⟩) ?_ ?_
+  · intro H
+    simp
+  · intro H
+    simp
+
+--Cette bijection est un antiisomorphisme pour les conventions de l'article
+noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k V) k)ᵐᵒᵖ := by
+  refine MulEquiv.mk (Equiv.trans (equiv_Dual V k) (MulOpposite.opEquiv)) ?_
+  intro H1 H2
+  simp only [Equiv.toFun_as_coe, Equiv.trans_apply, MulOpposite.opEquiv_apply]
+  rw [← @MulOpposite.op_mul,MulOpposite.op_inj]
+  change ((equiv_Dual V k) (mul H1 H2) = mul ((equiv_Dual V k) H2) ((equiv_Dual V k) H1))
+  rw[equiv_Dual,mul,mul]
+  simp
+  constructor
+  · rw[eq_add_neg_iff_add_eq]
+    rw[convention_eval_iso_apply]
+    simp
+    rw [@AddCommMonoidWithOne.add_comm]
+  · rw [@AddCommMonoid.add_comm]
 
 #min_imports

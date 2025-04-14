@@ -44,6 +44,35 @@
     \end{proof}
 \end{proposition}
 
+\begin{definition}[Bijectivité avec $\mathcal{H}(V*)$]
+    \label{def:bij_H}
+    \uses{def:heisenberg,def:identification_dual}
+    \lean{Heisenberg.equiv_Dual}
+    \leanok 
+
+    Sous les hypothèses d'identification du bidual, l'application 
+    $\Phi : (z,x,y) \mapsto (z,y,x)$ définit une bijection 
+    entre $\mathcal{H}(V)$ et $\mathcal{H}(V^*)$.
+    \begin{proof}
+        \leanok
+        Preuve calculatoire
+    \end{proof}
+\end{definition}
+
+\begin{definition}[Antiisomorphisme avec $\mathcal{H}(V*)$]
+    \label{prop:antiisoH}
+    \uses{def:bij_H}
+    \lean{Heisenberg.anti_iso_Dual}
+    \leanok 
+
+    Sous les hypothèses d'identification du bidual, la bijection définie en \ref{def:bij_H} est un anti-isomorphisme de groupes.
+    est un antiisomorphisme de groupes entre $\mathcal{H}(V)$ et $\mathcal{H}(V^*)$.
+    \begin{proof}
+        \leanok
+        Preuve calculatoire sans difficultés notoires.
+    \end{proof}
+\end{definition}
+
 \section{Centre}
 
 \begin{definition}[Centre d'Heisenberg]

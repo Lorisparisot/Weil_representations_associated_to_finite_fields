@@ -1,0 +1,83 @@
+L'article fait le choix d'une identification non-canonique du bidual :
+$<x,y>=-<y,x>$. Certaines propriétés dépendent exclusivement de cette
+convention \textit{(voir par exemple)}.
+
+\section{Mise en place des conventions}
+
+\begin{definition}[Forme sur $V**\times V$]
+    \label{def:form_dual}
+    \uses{}
+    \lean{convention_dual}
+    \leanok 
+
+    On définit une application bilinéaire de $V^{**}\times V$ dans $k$ par 
+    $(x,y)\mapsto - y(x)$.
+    \begin{proof}
+        \leanok
+        On vérifie la bilinéarité.
+    \end{proof}
+\end{definition}
+On accompage également ce lemme d'un lemme simp.
+
+\begin{definition}[Application $V$ dans $V^{**}$]
+    \label{def:v_to_dual_dual}
+    \uses{}
+    \lean{convention_eval}
+    \leanok 
+
+    On définit une application linéaire de $V$ dans $V^{**}$ par 
+    $v\mapsto (\varphi\mapsto -\varphi(v))$.
+    \begin{proof}
+        \leanok
+        On vérifie que c'est une application linéaire
+    \end{proof}
+\end{definition}
+On accompagne également ce lemme d'un lemme simp.
+
+\begin{proposition}[Application $V$ dans $V^{**}$]
+    \label{def:identification_dual}
+    \uses{def:v_to_dual_dual}
+    \lean{convention_eval_iso}
+    \leanok 
+
+    Si $V$ est réflexif, alors l'application définie en \ref{def:dual_to_v} est une 
+    bijection linéaire de $V$ dans $V^{**}$.
+    \begin{proof}
+        \leanok
+        On vérifie que c'est une bijection en donnant un inverse.
+    \end{proof}
+\end{proposition}
+On accompagne également ce lemme d'un lemme simp.
+
+\section{Quelques résultats sur la forme $((x_1,y_1),(x_2,y_1))\mapsto y_1(x_2)-y_2(x_1)$}
+
+\begin{definition}[Forme commutateur]
+    \label{def:form_com}
+    \uses{}
+    \lean{def:form_dual}
+    \leanok 
+
+    Si $V$ est réflexif, l'application $((x_1,y_1),(x_2,y_2))\mapsto y_1(x_2)-y_2(x_1)$ est une forme bilinéaire sur 
+    $V\times V^*$.
+    \begin{proof}
+        \leanok
+        On vérifie la bilinéarité.
+    \end{proof}
+\end{definition}
+
+\begin{proposition}[Non dégénéréscence]
+    \label{def:non_dege_form_com}
+    \uses{def:form_com}
+    \lean{form_commutator_non_degenerate}
+    \leanok 
+
+    La forme définie en \ref{def:form_com} est non dégénérée.
+    \begin{proof}
+        \leanok
+        Supposons que la forme soit dégénérée. Alors il existe $h:=(x,y)\in V\times V^*$ tel
+        que $h\ne 0$ et $y(x')-y'(x)=0$ pour tout $(x',y')\in V\times V^*$.
+        En particulier, pour $y'=0$, $y(x')=0$ pour tout $x'$ et donc $y=0$.
+        Pour $x'=0$, $y'(x)=0$ pour tout $y'$ et donc $x=0$.
+        Le seul vecteur correspondant est $0$, ce qui contredit l'hypothèse.
+    \end{proof}
+\end{proposition}
