@@ -31,7 +31,6 @@ def mul
 def inverse (H : Heisenberg V k) : Heisenberg V k :=
   ⟨ -H.z - (H.y (-H.x)), - H.x ,- H.y⟩
 
---Instance de groupe
 /-- Together with `Heisenberg.mul` and `Heisenberg.inverse`, `Heisenberg`forms a group. -/
 instance group : Group (Heisenberg V k) := {
   mul := mul,
@@ -65,12 +64,13 @@ instance group : Group (Heisenberg V k) := {
     simp
 }
 
---Centre du groupe d'Heisenberg
+
 variable (V k)
+/--Center of `Heisenberg` -/
 def center := {H : Heisenberg V k | H.x = 0 ∧ H.y = 0}
 
 
---Le centre du groupe d'Heisenberg définit ci-dessus est un sous-groupe de Heisenberg
+/--`Heisenberg.center` is a subgroup of `Heisenberg` -/
 instance center_is_subgroup : Subgroup (Heisenberg V k) :=
 { carrier := center V k,
   one_mem' := by
@@ -100,7 +100,7 @@ instance center_is_subgroup : Subgroup (Heisenberg V k) :=
       rw [ha.2]
 }
 
---Le centre définit ci-dessus est bien le centre du groupe d'Heisenberg
+/--`Heisenberg.center` is the center of `Heisenberg` -/
 instance center_eq :
   Subgroup.center (Heisenberg V k) = Heisenberg.center_is_subgroup V k := by
   ext h
@@ -179,7 +179,7 @@ instance surjective_Hom_H_to_V_x_Dual : Function.Surjective (Hom_H_to_V_x_Dual V
   use ⟨0, H.1, H.2⟩
 
 --Définition de la suite exact 0 → k → Heisenberg → V × V* → 0
-/--We have an exact sequence 0 → $k$ → $H(V)$ → $V$ × $V^*$ → 0 given by `Heisenberg.Hom_k_to_H` and `Heisenberg.Hom_H_to_V_x_Dual`.-/
+/--We have an exact sequence $0 → k → H(V) → V × V^* → 0$ given by `Heisenberg.Hom_k_to_H` and `Heisenberg.Hom_H_to_V_x_Dual`.-/
 def exact_sequence :
   Function.Exact (Hom_k_to_H V k) (Hom_H_to_V_x_Dual V k) := by
   refine Function.Exact.of_comp_of_mem_range rfl ?_
@@ -352,7 +352,10 @@ instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_
 variable{V k}
 
 --Définition du commutateur de deux éléments
- omit [FiniteDimensional k V] in theorem commutator_of_elements (H1 H2 : Heisenberg V k) :
+ omit [FiniteDimensional k V] in
+ /--Commutator of two elements of `Heisenberg` -/
+ @[simp]
+ theorem commutator_of_elements (H1 H2 : Heisenberg V k) :
   ⁅H1, H2⁆ = ⟨ H1.y (H2.x) - H2.y (H1.x), 0, 0 ⟩ := by
   rw [@commutatorElement_def]
   change ((mul (mul (mul H1 H2) (inverse H1)) (inverse H2)) = { z := H1.y H2.x - H2.y H1.x, x := 0, y := 0 })
@@ -375,9 +378,11 @@ variable (V k) [inst5 : Nontrivial V]
   simp only [and_true] at hf
   contradiction
 
--- Si p est dans le commutateur, alors il est de la forme (z,0,0)
+
 variable {V k}
-omit inst5 in theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Heisenberg V k)) → (p.x=0 ∧ p.y=0) :=by
+omit inst5 in
+/--Caracterisation of elements in the commutator of `Heisenberg` -/
+theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Heisenberg V k)) → (p.x=0 ∧ p.y=0) :=by
   intro h
   rw [commutator_def,← @SetLike.mem_coe,@Subgroup.commutator_def,Subgroup.closure] at h
   simp only [Subgroup.mem_top, true_and, Subgroup.coe_sInf, Set.mem_setOf_eq, Set.mem_iInter,
