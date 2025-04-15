@@ -28,7 +28,7 @@ def convention_dual : Module.Dual k (Module.Dual k V) →ₗ[k] (Module.Dual k V
     simp
 
 --ajout d'un lemme simp pour faciliter les calculs.
-[simp]
+@[simp]
 theorem convention (v : Module.Dual k V) (φ : Module.Dual k (Module.Dual k V)) :
   convention_dual V k φ v = - φ v := by
   unfold convention_dual
@@ -45,12 +45,13 @@ def convention_eval : V →ₗ[k] Module.Dual k (Module.Dual k V):=by
     simp
 
 --Lemme simp pour faciliter les calculs
-[simp]
+@[simp]
 theorem convention_eval_apply (v : V) (φ :(Module.Dual k V)) : ((convention_eval V k) v) φ = - φ v := by
   rw[convention_eval]
   simp
 
 --V est isomorphe à V** par l'application convention_eval
+/-- The bijection between a reflexive module and its double dual such that (x,y)=-(y,x), bundled as a `LinearEquiv`. -/
 noncomputable def convention_eval_iso [Module.IsReflexive k V] : V ≃ₗ[k] Module.Dual k (Module.Dual k V) := by
   refine LinearEquiv.mk ?_ ?_ ?_ ?_
   · exact convention_eval V k
@@ -116,8 +117,7 @@ instance form_commutator_non_degenerate [Module.IsReflexive k V]:
       rw[<-Module.forall_dual_apply_eq_zero_iff k]
       intro φ
       specialize left1 φ
-      unfold convention_dual at left1
-      simp at left1
+      rw [neg_eq_zero] at left1
       exact left1
     apply right
     exact Prod.ext hhhh hh
