@@ -73,7 +73,7 @@ noncomputable def convention_eval_iso [Module.IsReflexive k V] : V ≃ₗ[k] Mod
     simp
 
 --Lemme simp pour faciliter les calculs
-[simp]
+@[simp]
 theorem convention_eval_iso_apply [FiniteDimensional k V] (v : V) (φ :(Module.Dual k V)) : ((convention_eval_iso V k) v) φ = - φ v := by
   rw [← convention_eval_apply]
   exact rfl
