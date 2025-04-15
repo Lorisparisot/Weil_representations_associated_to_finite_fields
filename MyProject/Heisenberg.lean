@@ -259,8 +259,23 @@ instance Hom_H_to_V_x_Dual_sub_V_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub
   exact hx1.2
 
 --C'est un sous-groupe maximal.
---instance Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)): ((Hom_H_to_V_x_Dual_sub_V V k) ≤ Q ∧ Q ≠ ⊤ )→ Q = (Hom_H_to_V_x_Dual_sub_V V k) := by
-  --sorry
+/-
+instance Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)): ((Hom_H_to_V_x_Dual_sub_V V k) ≤ Q ∧ Q ≠ ⊤ )→ Q = (Hom_H_to_V_x_Dual_sub_V V k) := by
+  intro h
+  cases h with
+  | intro left right =>
+    ext x
+    constructor
+    · intro hx
+      by_contra hf
+      have h1 : ∀ x ∈ Q, ∀ h ∈ Hom_H_to_V_x_Dual_sub_V V k, x*h*x⁻¹ ∈ Hom_H_to_V_x_Dual_sub_V V k := by
+        intro a ha b hb
+        refine Subgroup.Normal.conj_mem (Hom_H_to_V_x_Dual_sub_V_normal V k) b hb a
+
+      sorry
+    · intro hx
+      exact left hx
+-/
 
 
 --Sous-groupe définie par ψ⁻¹(V*).
@@ -419,10 +434,7 @@ noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k
   rw[equiv_Dual,mul,mul]
   simp
   constructor
-  · rw[eq_add_neg_iff_add_eq]
-    rw[convention_eval_iso_apply]
-    simp
-    rw [@AddCommMonoidWithOne.add_comm]
+  · rw [@AddCommMonoid.add_comm]
   · rw [@AddCommMonoid.add_comm]
 
 #min_imports
