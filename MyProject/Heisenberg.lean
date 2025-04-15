@@ -17,7 +17,7 @@ structure Heisenberg where
   x : V
   y : Module.Dual k V
 
-#check Heisenberg
+
 namespace Heisenberg
 
 --Loi de groupe sur Heisenberg
@@ -66,7 +66,6 @@ instance group : Group (Heisenberg V k) := {
 --Centre du groupe d'Heisenberg
 variable (V k)
 def center := {H : Heisenberg V k | H.x = 0 ∧ H.y = 0}
-#check center
 
 
 --Le centre du groupe d'Heisenberg définit ci-dessus est un sous-groupe de Heisenberg
@@ -178,6 +177,7 @@ instance surjective_Hom_H_to_V_x_Dual : Function.Surjective (Hom_H_to_V_x_Dual V
   use ⟨0, H.1, H.2⟩
 
 --Définition de la suite exact 0 → k → Heisenberg → V × V* → 0
+/--We have an exact sequence 0 → $k$ → H(V) → $V$ x $V^*$ → 0 -/
 def exact_sequence :
   Function.Exact (Hom_k_to_H V k) (Hom_H_to_V_x_Dual V k) := by
   refine Function.Exact.of_comp_of_mem_range rfl ?_
@@ -348,6 +348,7 @@ instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_
   exact hx1.1
 
 variable{V k}
+
 --Définition du commutateur de deux éléments
  omit [FiniteDimensional k V] in theorem commutator_of_elements (H1 H2 : Heisenberg V k) :
   ⁅H1, H2⁆ = ⟨ H1.y (H2.x) - H2.y (H1.x), 0, 0 ⟩ := by
@@ -359,7 +360,7 @@ variable{V k}
   ring
 
 variable (V k) [inst5 : Nontrivial V]
---Le sous-groupe engendré par les commutateurs est non trivial.
+/--The commutator subgroup oh Heisenberg is non trivial -/
  theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
   simp
   rw[_root_.commutator]
@@ -389,7 +390,7 @@ omit inst5 in theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (c
   rw[<-h]
   simp only [and_self]
 
---Heisenberg est un groupe nilpotent d'ordre 2
+/-- The Heisenberg group is a twostep nilpotent group -/
 theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ lowerCentralSeries (Heisenberg V k) 2 = ⊥ :=by
   constructor
   · exact commutator_ne_bot V k
@@ -415,7 +416,8 @@ theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ l
     simp
 
 variable (V k)
---H(V) est en bijection avec H(V*)
+
+/-- H(V) is in bijection with H(V*) -/
 noncomputable def equiv_Dual:
   Heisenberg V k ≃ Heisenberg (Module.Dual k V) k := by
   refine Equiv.mk (fun a ↦ ⟨a.z, a.y , ((convention_eval_iso V k).toFun (-a.x)) ⟩ ) (fun a ↦ ⟨a.z, ((convention_eval_iso V k).invFun (-a.y)) , a.x⟩) ?_ ?_
@@ -424,7 +426,7 @@ noncomputable def equiv_Dual:
   · intro H
     simp
 
---Cette bijection est un antiisomorphisme pour les conventions de l'article
+/--With the convention (x,y)=-(y,x), H(V) is antiisomorphic to H(V*) -/
 noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k V) k)ᵐᵒᵖ := by
   refine MulEquiv.mk (Equiv.trans (equiv_Dual V k) (MulOpposite.opEquiv)) ?_
   intro H1 H2
