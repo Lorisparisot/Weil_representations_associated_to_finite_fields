@@ -22,6 +22,7 @@ namespace Heisenberg
 
 --Loi de groupe sur Heisenberg
 variable {V k}
+/--Intern law over `Heisenberg` -/
 def mul
   (H1 H2 : Heisenberg V k) : Heisenberg V k:=
   ⟨H1.z + H2.z + (H1.y H2.x), H1.x + H2.x, H1.y + H2.y⟩
@@ -31,6 +32,7 @@ def inverse (H : Heisenberg V k) : Heisenberg V k :=
   ⟨ -H.z - (H.y (-H.x)), - H.x ,- H.y⟩
 
 --Instance de groupe
+/-- Together with `Heisenberg.mul` and `Heisenber.inverse`, `Heisenberg`forms a group. -/
 instance group : Group (Heisenberg V k) := {
   mul := mul,
   mul_assoc := by
@@ -143,7 +145,7 @@ instance center_eq :
     rw [@AddCommMonoidWithOne.add_comm]
 
 
---Morphisme de k dans Heisenberg
+/--The map $(z,x,y) ↦ (z,0,0)$ defines a homorphism from `Heisenberg`to its center `Heisenberg.center`. -/
 def Hom_k_to_H : AddMonoidHom k (Additive (Heisenberg V k)) :=by
   refine AddMonoidHom.mk' (fun z => ⟨z,0,0⟩) ?_
   intro a b
@@ -151,7 +153,7 @@ def Hom_k_to_H : AddMonoidHom k (Additive (Heisenberg V k)) :=by
   change ((⟨a + b, 0, 0⟩ : Heisenberg V k) = mul ⟨a, 0, 0⟩ ⟨b, 0, 0⟩)
   simp only [mul,LinearMap.zero_apply, add_zero]
 
--- Injectivité de Hom_k_to_H
+/-- The homomorphism `Heisenberg.Hom_k_to_H` is injective. -/
 instance injective_Hom_k_to_H : Function.Injective (Hom_k_to_H V k) := by
   intro k1 k2
   rw[Hom_k_to_H,AddMonoidHom.mk'_apply]
@@ -161,7 +163,7 @@ instance injective_Hom_k_to_H : Function.Injective (Hom_k_to_H V k) := by
   exact h
 
 
---Morphisme de Heisenberg dans V × V*
+/-- The map $(z,x,y)↦(x,y)$ defines a homomorphism from `Heisenberg`to $V × V^*$. -/
 def Hom_H_to_V_x_Dual : AddMonoidHom (Additive (Heisenberg V k)) (V × Module.Dual k V ):=by
   refine AddMonoidHom.mk' (fun H => (H.x, H.y)) ?_
   intro H1 H2
@@ -170,14 +172,14 @@ def Hom_H_to_V_x_Dual : AddMonoidHom (Additive (Heisenberg V k)) (V × Module.Du
   rw[mul]
   simp only [and_self]
 
---Surjectivité de Hom_H_to_V_x_Dual
+/--The homomorphism `Heisenberg.Hom_H_to_V_x_Dual` is surjective. -/
 instance surjective_Hom_H_to_V_x_Dual : Function.Surjective (Hom_H_to_V_x_Dual V k) := by
   intro H
   rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
   use ⟨0, H.1, H.2⟩
 
 --Définition de la suite exact 0 → k → Heisenberg → V × V* → 0
-/--We have an exact sequence 0 → $k$ → H(V) → $V$ x $V^*$ → 0 -/
+/--We have an exact sequence 0 → $k$ → $H(V)$ → $V$ × $V^*$ → 0 given by `Heisenberg.Hom_k_to_H` and `Heisenberg.Hom_H_to_V_x_Dual`.-/
 def exact_sequence :
   Function.Exact (Hom_k_to_H V k) (Hom_H_to_V_x_Dual V k) := by
   refine Function.Exact.of_comp_of_mem_range rfl ?_

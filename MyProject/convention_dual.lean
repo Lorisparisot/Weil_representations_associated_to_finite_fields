@@ -80,6 +80,7 @@ theorem convention_eval_iso_apply [FiniteDimensional k V] (v : V) (φ :(Module.D
 
 --alias de Module.evalEquiv pour notre convention
 
+/--The bilinear form over $V × V^*$ that sends $((x_1,y_1),(x_2,y_2)$ to $y_1(x_2)-y_2(x_1)$. -/
 noncomputable def form_commutator [Module.IsReflexive k V] : (V × Module.Dual k V) →ₗ[k] (V × Module.Dual k V) →ₗ[k] k := by
   refine LinearMap.mk₂ k (fun H1 H2 => H1.2.toFun H2.1 + (convention_dual V k ((Module.evalEquiv k V).toFun (H1.1)) H2.2)) ?_ ?_ ?_ ?_
   · intro m1 m2 n
@@ -95,6 +96,7 @@ noncomputable def form_commutator [Module.IsReflexive k V] : (V × Module.Dual k
     simp
     ring
 
+/--The bilinear form `form_commutator` is non degenerate -/
 instance form_commutator_non_degenerate [Module.IsReflexive k V]:
   LinearMap.BilinForm.Nondegenerate (form_commutator V k) := by
   rw[LinearMap.BilinForm.Nondegenerate ]
