@@ -32,7 +32,7 @@ def inverse (H : Heisenberg V k) : Heisenberg V k :=
   ⟨ -H.z - (H.y (-H.x)), - H.x ,- H.y⟩
 
 --Instance de groupe
-/-- Together with `Heisenberg.mul` and `Heisenber.inverse`, `Heisenberg`forms a group. -/
+/-- Together with `Heisenberg.mul` and `Heisenberg.inverse`, `Heisenberg`forms a group. -/
 instance group : Group (Heisenberg V k) := {
   mul := mul,
   mul_assoc := by
@@ -145,7 +145,7 @@ instance center_eq :
     rw [@AddCommMonoidWithOne.add_comm]
 
 
-/--The map $(z,x,y) ↦ (z,0,0)$ defines a homorphism from `Heisenberg`to its center `Heisenberg.center`. -/
+/--The map $(z,x,y) ↦ (z,0,0)$ defines a homorphism from `Heisenberg` to its center `Heisenberg.center`. -/
 def Hom_k_to_H : AddMonoidHom k (Additive (Heisenberg V k)) :=by
   refine AddMonoidHom.mk' (fun z => ⟨z,0,0⟩) ?_
   intro a b
@@ -163,7 +163,7 @@ instance injective_Hom_k_to_H : Function.Injective (Hom_k_to_H V k) := by
   exact h
 
 
-/-- The map $(z,x,y)↦(x,y)$ defines a homomorphism from `Heisenberg`to $V × V^*$. -/
+/-- The map $(z,x,y)↦(x,y)$ defines a homomorphism from `Heisenberg` to $V × V^*$. -/
 def Hom_H_to_V_x_Dual : AddMonoidHom (Additive (Heisenberg V k)) (V × Module.Dual k V ):=by
   refine AddMonoidHom.mk' (fun H => (H.x, H.y)) ?_
   intro H1 H2
@@ -195,7 +195,7 @@ def exact_sequence :
   exact rfl
 
 
---Sous-groupe définie par ψ⁻¹(V).
+/--The pull-back of $V$ by `Heisenberg.Hom_H_to_V_x_Dual`is a subgroup. -/
 def Hom_H_to_V_x_Dual_sub_V : Subgroup (Heisenberg V k) := by
   refine Subgroup.mk ?_ ?_
   · refine Submonoid.mk ?_ ?_
@@ -221,7 +221,7 @@ def Hom_H_to_V_x_Dual_sub_V : Subgroup (Heisenberg V k) := by
     rw[Hom_H_to_V_x_Dual, AddMonoidHom.mk'_apply, Prod.mk.injEq] at h
     exact h.2.symm
 
---C'est un sous-groupe commutatif
+/--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_V` is commutative. -/
 instance Hom_H_to_V_x_Dual_sub_V_commutative : CommGroup (Hom_H_to_V_x_Dual_sub_V V k) :=by
   refine CommGroup.mk ?_
   intro a b
@@ -241,7 +241,7 @@ instance Hom_H_to_V_x_Dual_sub_V_commutative : CommGroup (Hom_H_to_V_x_Dual_sub_
   · rw [@AddCommMonoid.add_comm]
   · rw [@AddCommMonoid.add_comm]
 
---C'est un sous-groupe distingué
+/--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_V` is a normal subgroup. -/
 instance Hom_H_to_V_x_Dual_sub_V_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub_V V k) :=by
   refine Subgroup.Normal.mk ?_
   intro x hx g
@@ -280,7 +280,7 @@ instance Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)): ((Hom_
 -/
 
 
---Sous-groupe définie par ψ⁻¹(V*).
+/--The pull-back of $V^*$ by `Heisenberg.Hom_H_to_V_x_Dual`is a subgroup. -/
 def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
   refine Subgroup.mk ?_ ?_
   · refine Submonoid.mk ?_ ?_
@@ -309,7 +309,7 @@ def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
     rw[h.1]
     simp only [and_self]
 
---C'est un sous-groupe commutatif
+/--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_Dual` is commutative. -/
 instance Hom_H_to_V_x_Dual_sub_Dual_commutative : CommGroup (Hom_H_to_V_x_Dual_sub_Dual V k) :=by
   refine CommGroup.mk ?_
   intro a b
@@ -330,7 +330,7 @@ instance Hom_H_to_V_x_Dual_sub_Dual_commutative : CommGroup (Hom_H_to_V_x_Dual_s
     rw [@AddCommMonoidWithOne.add_comm]
   · rw [@AddCommMonoid.add_comm]
 
---C'est un sous-groupe distingué
+/--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_Dual` is a normal subgroup. -/
 instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub_Dual V k) :=by
   refine Subgroup.Normal.mk ?_
   intro x hx g
@@ -362,7 +362,7 @@ variable{V k}
   ring
 
 variable (V k) [inst5 : Nontrivial V]
-/--The commutator subgroup oh Heisenberg is non trivial -/
+/--The commutator subgroup of `Heisenberg` is non trivial -/
  theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
   simp
   rw[_root_.commutator]
@@ -392,7 +392,7 @@ omit inst5 in theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (c
   rw[<-h]
   simp only [and_self]
 
-/-- The Heisenberg group is a twostep nilpotent group -/
+/-- `Heisenberg` is a twostep nilpotent group -/
 theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ lowerCentralSeries (Heisenberg V k) 2 = ⊥ :=by
   constructor
   · exact commutator_ne_bot V k
@@ -419,7 +419,7 @@ theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ l
 
 variable (V k)
 
-/-- H(V) is in bijection with H(V*) -/
+/-- $H(V)$ is in bijection with $H(V*)$ -/
 noncomputable def equiv_Dual:
   Heisenberg V k ≃ Heisenberg (Module.Dual k V) k := by
   refine Equiv.mk (fun a ↦ ⟨a.z, a.y , ((convention_eval_iso V k).toFun (-a.x)) ⟩ ) (fun a ↦ ⟨a.z, ((convention_eval_iso V k).invFun (-a.y)) , a.x⟩) ?_ ?_
@@ -428,7 +428,7 @@ noncomputable def equiv_Dual:
   · intro H
     simp
 
-/--With the convention (x,y)=-(y,x), H(V) is antiisomorphic to H(V*) -/
+/--With the convention $(x,y)=-(y,x)$, $H(V)$ is antiisomorphic to $H(V*)$ -/
 noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k V) k)ᵐᵒᵖ := by
   refine MulEquiv.mk (Equiv.trans (equiv_Dual V k) (MulOpposite.opEquiv)) ?_
   intro H1 H2
