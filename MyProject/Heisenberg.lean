@@ -5,6 +5,23 @@ import Mathlib.GroupTheory.Nilpotent
 import Mathlib.Algebra.Group.Subgroup.Defs
 
 
+/-!
+# Heisenberg's groups over a vector space
+
+This file defines Heisenberg's groups over a vector space and their basic properties.
+
+## Mains results
+
+Let `k`be a field, `V` a finite dimensional vector space over `k`, and `Module.Dual k V` its dual space.
+We also take the convention that `V`is in bijection with `Module.Dual k (Module.Dual k V)` by
+$(x,y)=-(y,x)$.
+We define the group of Heisenberg, some subgroups, and basic properties of these groups.
+The main results are :
++ `Heisenberg.two_step_nilpotent` : the Heisenberg group is a two-step nilpotent group.
++ `Heisenberg.anti_iso_Dual`: the Heisenberg group is anti-isomorphic to the Heisenberg group of its dual.
+-/
+
+
 variable (V k : Type*) [inst1 : Field k] [inst2 : AddCommGroup V] [inst3 : Module k V] [inst4 : FiniteDimensional k V]
 
 --local notation "q" => Fintype.card k
@@ -351,7 +368,7 @@ instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_
 
 variable{V k}
 
---Définition du commutateur de deux éléments
+
  omit [FiniteDimensional k V] in
  /--Commutator of two elements of `Heisenberg` -/
  @[simp]
