@@ -96,11 +96,11 @@
 
     The center of Heisenberg $\mathcal{Z}_{\mathcal{H}(V)}$ is a subgroup
     of $\mathcal{H}(V)$.
-    \begin{proof}
-        \leanok
-        We check the axioms and compute.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    We check the axioms and compute.
+\end{proof}
 
 \begin{proposition}[Caracterisation of the center]
     \label{prop:center_H_is_center}
@@ -109,12 +109,12 @@
     \leanok
 
     The set define in \ref{def:center_H} is indeed the center of $\mathcal{H}(V)$.
-    \begin{proof}
-        \leanok
-        By double inclusion. Reciprocity use the fact that the quadratic form \ref{def:form_com}
-        is a non degeneracy one \textit{(see \ref{def:non_dege_form_com} for a proof)}.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    By double inclusion. Reciprocity use the fact that the quadratic form \ref{def:form_com}
+    is a non degeneracy one \textit{(see \ref{def:non_dege_form_com} for a proof)}.
+\end{proof}
 
 \section{Commutator and nilpotency}
 
@@ -126,11 +126,11 @@
 
     Let $H_1:=(z_1,x_1,y_1)$ and $H_2:=(z_2,x_2,y_2)$ be two elements of 
     $\mathcal{H}(V)$. The commutator of $[H_1,H_2]$ is $(y_1(x_2)-y_2(x_1),0,0)$.
-    \begin{proof}
-        \leanok
-        We compute $H_1*H_2*H_1^{-1}*H_2^{-1}$.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    We compute $H_1*H_2*H_1^{-1}*H_2^{-1}$.
+\end{proof}
 
 \begin{proposition}[Commutator isn't trivial]
     \label{prop:commutator_H_nontrivial}
@@ -140,15 +140,15 @@
 
     If $V$ isn't trivial, the subgroup of $\mathcal{H}(V)$ 
     generates by commutators isn't trivial too.
-    \begin{proof}
-        \leanok 
-        By contradiction. If it was trivial, every element of $\mathcal{H}(V)$
-        would belong to its center.
-        Because $V$ isn't trivial, there exists $x\in V$ such that $x\ne0$. Thus,
-        $(0,x,0)$ would belong to the center. But because of the definition of the center, $x = 0$. 
-        We get a contradiction.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok 
+    By contradiction. If it was trivial, every element of $\mathcal{H}(V)$
+    would belong to its center.
+    Because $V$ isn't trivial, there exists $x\in V$ such that $x\ne0$. Thus,
+    $(0,x,0)$ would belong to the center. But because of the definition of the center, $x = 0$. 
+    We get a contradiction.
+\end{proof}
 
 \begin{proposition}[Caracterisation of the commutator]
         \label{prop:commutator_H_caracterisation}
@@ -157,11 +157,11 @@
         \leanok
     
         If $h:=(z,x,y)$ belongs to the commutator subgroup, then $x=0$ and $y=0$.
-    \begin{proof}
-        \leanok
-        We compute.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    We compute.
+\end{proof}
 
 \begin{theorem}[Nilpotency of Heisenberg's group]
     \label{thm:two_step_nil}
@@ -170,13 +170,13 @@
     \leanok
 
     If $V$ isn't trivial, $\mathcal{H}(V)$ is a two step nilpotent group.
-    \begin{proof}
-        \leanok
-        We have to show that the commutator isn't trivial and that $[[\mathcal{H}(V),\mathcal{H}(V)],\mathcal{H}(V)]$
-        is trivial. The first point is done in \ref{prop:commutator_H_nontrivial}.
-        The second is some computation, using \ref{prop:commutator_H_caracterisation}.
-    \end{proof}
 \end{theorem}
+\begin{proof}
+    \leanok
+    We have to show that the commutator isn't trivial and that $[[\mathcal{H}(V),\mathcal{H}(V)],\mathcal{H}(V)]$
+    is trivial. The first point is done in \ref{prop:commutator_H_nontrivial}.
+    The second is some computation, using \ref{prop:commutator_H_caracterisation}.
+\end{proof}
 
 \section{Short exact sequence}
 
@@ -201,11 +201,11 @@
     \leanok 
 
     The homomorphism defined in \ref{def:map_k_H} is injective.
-    \begin{proof}
-        \leanok
-        We suppose $\varphi(x)=\varphi(y)$ and we show $x=y$. No difficulties.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    We suppose $\varphi(x)=\varphi(y)$ and we show $x=y$. No difficulties.
+\end{proof}
 
 \begin{definition}[Homomorphism from $\mathcal{H}(V)$ to $V\times V^*$]
     \label{def:map_H_VxDual}
@@ -228,11 +228,11 @@
     \leanok 
 
     The homomorphism defined in \ref{def:map_H_VxDual} is surjective.
-    \begin{proof}
-        \leanok
-        Trivial.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
 
 \begin{proposition}[Short exact sequence]
     \label{exact_seq_h}
@@ -242,11 +242,11 @@
 
     We have a short exact sequence $0\rightarrow k \stackrel{\varphi}{\rightarrow} \mathcal{H}(V) \stackrel{\psi}{\rightarrow}
     V\times V^* \rightarrow 0$.
-    \begin{proof}
-        \leanok
-        We check that the kernel of $\psi$ is exactly the image of $\varphi$.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    We check that the kernel of $\psi$ is exactly the image of $\varphi$.
+\end{proof}
 
 \begin{definition}[$\psi^{-1}(V)$]
     \label{def:psi_inv_V}
@@ -268,11 +268,11 @@
     \leanok
 
     The subgroup defined in \ref{def:psi_inv_V} is commutative.
-    \begin{proof}
-        \leanok
-        Check that $h_1*h2=h2*h1$.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    Check that $h_1*h2=h2*h1$.
+\end{proof}
 
 \begin{proposition}[Pullback is normal]
     \label{prop:psi_inv_V_normal}
@@ -281,11 +281,11 @@
     \leanok
 
     The subgroup defined in \ref{def:psi_inv_V} is a normal subgroup of Heisenberg.
-    \begin{proof}
-        \leanok 
-        Check that $g*h*g^{-1}\in \psi^{-1}(V)$ for every $g\in \mathcal{H}(V)$ and $h\in \psi^{-1}(V)$.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok 
+    Check that $g*h*g^{-1}\in \psi^{-1}(V)$ for every $g\in \mathcal{H}(V)$ and $h\in \psi^{-1}(V)$.
+\end{proof}
 
 \begin{proposition}[Maximality of the pullback]
     \label{prop:psi_inv_V_max}
@@ -295,15 +295,15 @@
 
     The subgroup defined in \ref{def:psi_inv_V} is maximal among the
     commutative subgroups of $\mathcal{H}(V)$.
-    \begin{proof}
-        \leanok 
-        By contradiction. If it's not, then there exists $Q$ a commutative subgroup
-        such that $\psi^{-1}(V)\subset Q$ and $Q\ne \psi^{-1}(V)$. Let $q:=(z,x,y)\in Q\backslash \psi^{-1}(V)$.
-        In particular, we have for every $h=(a,b,0)\in \psi^{-1}(V)$ that $x*h=h*x$.
-        We compute this equality and find out that for every $b\in V$, $y(b)=0$. Thus $y=0$ and $q\in \psi^{-1}(V)$.
-        Contradiction.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok 
+    By contradiction. If it's not, then there exists $Q$ a commutative subgroup
+    such that $\psi^{-1}(V)\subset Q$ and $Q\ne \psi^{-1}(V)$. Let $q:=(z,x,y)\in Q\backslash \psi^{-1}(V)$.
+    In particular, we have for every $h=(a,b,0)\in \psi^{-1}(V)$ that $x*h=h*x$.
+    We compute this equality and find out that for every $b\in V$, $y(b)=0$. Thus $y=0$ and $q\in \psi^{-1}(V)$.
+    Contradiction.
+\end{proof}
 
 \begin{definition}[$\psi^{-1}(V)$]
     \label{def:psi_inv_Dual}
@@ -325,11 +325,11 @@
     \leanok
 
     The subgroup defined in \ref{def:psi_inv_Dual} is commutative.
-    \begin{proof}
-        \leanok
-        Check that $h_1*h2=h2*h1$.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    Check that $h_1*h2=h2*h1$.
+\end{proof}
 
 \begin{proposition}[Pullback is normal]
     \label{prop:psi_inv_Dual_normal}
@@ -338,11 +338,11 @@
     \leanok
 
     The subgroup defined in \ref{def:psi_inv_Dual} is ai normal subgroup of Heisenberg. .
-    \begin{proof}
-        \leanok 
-        Check that $g*h*g^{-1}\in \psi^{-1}(V^*)$ for every $g\in \mathcal{H}(V)$ and $h\in \psi^{-1}(V^*)$.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok 
+    Check that $g*h*g^{-1}\in \psi^{-1}(V^*)$ for every $g\in \mathcal{H}(V)$ and $h\in \psi^{-1}(V^*)$.
+\end{proof}
 
 \begin{proposition}[Maximality of the pullback]
     \label{prop:psi_inv_Dual_max}
@@ -352,12 +352,12 @@
 
     The subgroup defined in \ref{def:psi_inv_Dual} is maximal among the
     commutative subgroups of $\mathcal{H}(V)$.
-    \begin{proof}
-        \leanok 
-        By contradiction. If it's not, then there exists $Q$ a commutative subgroup
-        such that $\psi^{-1}(V^*)\subset Q$ and $Q\ne \psi^{-1}(V^*)$. Let $q:=(z,x,y)\in Q\backslash \psi^{-1}(V^*)$.
-        In particular, we have for every $h=(a,0,b)\in \psi^{-1}(V^*)$ that $x*h=h*x$.
-        We compute this equality and find out that for every $b\in V^*$, $b(x)=0$. Thus $x=0$ and $q\in \psi^{-1}(V^*)$.
-        Contradiction.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok 
+    By contradiction. If it's not, then there exists $Q$ a commutative subgroup
+    such that $\psi^{-1}(V^*)\subset Q$ and $Q\ne \psi^{-1}(V^*)$. Let $q:=(z,x,y)\in Q\backslash \psi^{-1}(V^*)$.
+    In particular, we have for every $h=(a,0,b)\in \psi^{-1}(V^*)$ that $x*h=h*x$.
+    We compute this equality and find out that for every $b\in V^*$, $b(x)=0$. Thus $x=0$ and $q\in \psi^{-1}(V^*)$.
+    Contradiction.
+\end{proof}

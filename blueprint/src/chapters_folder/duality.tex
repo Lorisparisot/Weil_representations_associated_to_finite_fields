@@ -42,11 +42,11 @@ We set up also a simp lemma for the evaluation of the map.
 
     If $V$ is reflexive, then the linear map defined in \ref{def:v_to_dual_dual} is
     a bijective linear map from $V$ to $V^{**}$.
-    \begin{proof}
-        \leanok
-        We check it's a bijective map by giving the explicit inverse map.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    We check it's a bijective map by giving the explicit inverse map.
+\end{proof}
 We set up also a simp lemma for the evaluation of the bijective map.
 
 \section{Some results about the commutator bilinear form}
@@ -72,12 +72,12 @@ We set up also a simp lemma for the evaluation of the bijective map.
     \leanok 
 
     The bilinear form defined in \ref{def:form_com} is a nondegeneracy bilinear form.
-    \begin{proof}
-        \leanok
-        Suppose it is degeneracy. Then there exists $h:=(x,y)\in V\times V^*$ such that
-        $h\ne 0$ and $y(x')-y'(x)=0$ for all $(x',y')\in V\times V^*$.
-        In particular, for $y'=0$, $y(x')=0$ for all $x'$, so $y=0$.
-        Then, for $x'=0$, $y'(x)=0$ for all $y'$, so $x=0$.
-        Thus $h=0$. Contradiction.
-    \end{proof}
 \end{proposition}
+\begin{proof}
+    \leanok
+    Suppose it is degeneracy. Then there exists $h:=(x,y)\in V\times V^*$ such that
+    $h\ne 0$ and $y(x')-y'(x)=0$ for all $(x',y')\in V\times V^*$.
+    In particular, for $y'=0$, $y(x')=0$ for all $x'$, so $y=0$.
+    Then, for $x'=0$, $y'(x)=0$ for all $y'$, so $x=0$.
+    Thus $h=0$. Contradiction.
+\end{proof}
