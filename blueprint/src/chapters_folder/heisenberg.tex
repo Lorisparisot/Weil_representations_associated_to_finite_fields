@@ -1,246 +1,250 @@
 \section{Construction}
 
-\begin{definition}[Ensemble d'Heisenberg]
+\begin{definition}[Structure of Heisenberg]
     \label{def:heisenberg}
     \lean{Heisenberg}
     \leanok
 
-    Etant donné $k$ un corps, $V$ un espace vectoriel de dimension finie sur
-    $k$ et $V^*$ le dual de $V$, on définit l'ensemble d'Heisenberg par 
+    Giver $k$ a field, $V$ a $k$ vector space and $V^*$ its dual vector space,
+    we define the Heisenberg set associated to $V$ by
     $\mathcal{H}(V):=\{(z,x,y) \in k\times V\times V^*\}$.
 \end{definition}
 
-\begin{definition}[Multiplication sur l'ensemble d'Heisenberg]
+\begin{definition}[Multiplication on Heisenberg]
     \label{def:mul_H}
     \uses{def:heisenberg}
     \lean{Heisenberg.mul}
     \leanok 
 
-    On définit une loi interne sur l'ensemble d'Heisenberg par :
-    $(z_1,x_1,y_1)*(z_2,x_2,y_2) = (z_1+z_2+y_1(x_2),x_1+x_2,y_1+y_2)$ pour
-    tout $(z_1,x_1,y_1),(z_2,x_2,y_2)\in\mathcal{H}(V)$.
+    We define an internal law on Heisenberg by the following formula :
+    $(z_1,x_1,y_1)*(z_2,x_2,y_2) = (z_1+z_2+y_1(x_2),x_1+x_2,y_1+y_2)$ for every
+     $(z_1,x_1,y_1),(z_2,x_2,y_2)\in\mathcal{H}(V)$.
 \end{definition}
 
-\begin{definition}[Inverse d'un élément d'Heisenberg]
+\begin{definition}[Inverse of an element of Heisenberg]
     \label{def:inv_H}
     \uses{def:heisenberg}
     \lean{Heisenberg.inverse}
     \leanok 
 
-    L'inverse d'un élément $(z,x,y)\in\mathcal{H}(V)$ est donné par 
+    The inverse of $(z,x,y)\in\mathcal{H}(V)$ is given by the formula
     $(-z- y(-x), - x ,- y)$.
+    \begin{proof}
+        \leanok 
+        Compute $h*h^{-1}$.
+    \end{proof}
 \end{definition}
 
-\begin{proposition}[Groupe d'Heisenberg]
+\begin{proposition}[Heisenberg's group]
     \label{prop:group_H}
     \uses{def:heisenberg,def:mul_H,def:inv_H}
     \lean{Heisenberg.group}
     \leanok
-    Muni de la loi de composition interne, Heisenberg est un groupe.
+    Heisenberg is a group for the the internal law defined in \ref{def:mul_H}.
     \begin{proof}
         \leanok
-        On vérifie les axiomes et on fait les calculs. Pas de difficultés
-        notoires.
+        We check the axioms of a group.
     \end{proof}
 \end{proposition}
 
-\begin{definition}[Bijectivité avec $\mathcal{H}(V*)$]
+\begin{definition}[Bijectivity with $\mathcal{H}(V*)$]
     \label{def:bij_H}
     \uses{def:heisenberg,def:identification_dual}
     \lean{Heisenberg.equiv_Dual}
     \leanok 
 
-    Sous les hypothèses d'identification du bidual, l'application 
-    $\Phi : (z,x,y) \mapsto (z,y,x)$ définit une bijection 
-    entre $\mathcal{H}(V)$ et $\mathcal{H}(V^*)$.
+    Under our identification of the bidual, the map
+    $\Phi : (z,x,y) \mapsto (z,y,x)$ defines a bijection 
+    between $\mathcal{H}(V)$ and $\mathcal{H}(V^*)$.
     \begin{proof}
         \leanok
-        Preuve calculatoire
+        Compute $\Phi\circ\Phi^{-1}$ and $\Phi^{-1}\circ\Phi$.
     \end{proof}
 \end{definition}
 
-\begin{definition}[Antiisomorphisme avec $\mathcal{H}(V*)$]
+\begin{definition}[Antiisomorphic with $\mathcal{H}(V*)$]
     \label{prop:antiisoH}
     \uses{def:bij_H}
     \lean{Heisenberg.anti_iso_Dual}
     \leanok 
 
-    Sous les hypothèses d'identification du bidual, la bijection définie en \ref{def:bij_H} est un anti-isomorphisme de groupes.
-    est un antiisomorphisme de groupes entre $\mathcal{H}(V)$ et $\mathcal{H}(V^*)$.
+    Under our identification of the bidual, the map define in \ref{def:bij_H} is
+    a group antiisomorphism from $\mathcal{H}(V)$ to $\mathcal{H}(V^*)$.
     \begin{proof}
         \leanok
-        Preuve calculatoire sans difficultés notoires.
+        Compute that $\Phi(h_1*h_2)=\Phi(h_2)*\Phi(h_1)$.
     \end{proof}
 \end{definition}
 
-\section{Centre}
+\section{Center}
 
-\begin{definition}[Centre d'Heisenberg]
+\begin{definition}[Center of Heisenberg]
     \label{def:center_H}
     \uses{def:heisenberg}
     \lean{Heisenberg.center}
     \leanok 
 
-    On définit le centre d'Heisenberg comme étant l'ensemble des éléments
+    We define the center of $\mathcal{H}(V)$ by the set
     $\mathcal{Z}_{\mathcal{H}(V)}:=\{(z,0,0)\in\mathcal{H}(V),\ z\in k\}$
 \end{definition}
 
-\begin{proposition}[Centre est un sous-groupe]
+\begin{proposition}[The center is a subgroup]
     \label{prop:center_H_subgroup}
     \uses{def:center_H,prop:group_H}
     \lean{Heisenberg.center_is_subgroup}
     \leanok
 
-    Le centre d'Heisenberg $\mathcal{Z}_{\mathcal{H}(V)}$ est un sous-groupe
-    de $\mathcal{H}(V)$.
+    The center of Heisenberg $\mathcal{Z}_{\mathcal{H}(V)}$ is a subgroup
+    of $\mathcal{H}(V)$.
     \begin{proof}
         \leanok
-        On vérifie les axiomes et on fait les calculs. Pas de difficultés notoires.
+        We check the axioms and compute.
     \end{proof}
 \end{proposition}
 
-\begin{proposition}[Caractérisation du centre]
+\begin{proposition}[Caracterisation of the center]
     \label{prop:center_H_is_center}
     \uses{prop:center_H_subgroup,def:non_dege_form_com}
     \lean{Heisenberg.center_eq}
     \leanok
 
-    Le centre définit plus haut est bien le centre de $\mathcal{H}(V)$.
+    The set define in \ref{def:center_H} is indeed the center of $\mathcal{H}(V)$.
     \begin{proof}
         \leanok
-        Par double inclusion. Le sens réciproque utilise la non dégénérence de la forme
-        quadratique \ref{def:form_com} \textit{(voir \ref{def:non_dege_form_com} pour une preuve)}.
+        By double inclusion. Reciprocity use the fact that the quadratic form \ref{def:form_com}
+        is a non degeneracy one \textit{(see \ref{def:non_dege_form_com} for a proof)}.
     \end{proof}
 \end{proposition}
 
-\section{Commutateurs et nilpotence}
+\section{Commutator and nilpotency}
 
-\begin{proposition}[Commutateur]
+\begin{proposition}[Commutator]
     \label{prop:commutator_H_of_elements}
     \uses{prop:group_H}
     \lean{Heisenberg.commutator_of_elements}
     \leanok 
 
-    Soient $H_1:=(z_1,x_1,y_1)$ et $H_2:=(z_2,x_2,y_2)$ deux éléments de 
-    $\mathcal{H}(V)$. Le commutateur $[H_1,H_2]$ est $(y_1(x_2)-y_2(x_1),0,0)$.
+    Let $H_1:=(z_1,x_1,y_1)$ and $H_2:=(z_2,x_2,y_2)$ be two elements of 
+    $\mathcal{H}(V)$. The commutator of $[H_1,H_2]$ is $(y_1(x_2)-y_2(x_1),0,0)$.
     \begin{proof}
         \leanok
-        On calcule $H_1*H_2*H_1^{-1}*H_2^{-1}$.
+        We compute $H_1*H_2*H_1^{-1}*H_2^{-1}$.
     \end{proof}
 \end{proposition}
 
-\begin{proposition}[Commutateur non trivial]
+\begin{proposition}[Commutator isn't trivial]
     \label{prop:commutator_H_nontrivial}
     \uses{prop:center_H_subgroup}
     \lean{Heisenberg.commutator_ne_bot}
     \leanok 
 
-    Si $V$ est non trivial, le sous-groupe de $\mathcal{H}(V)$ engendré par les commutateurs est non trivial.
+    If $V$ isn't trivial, the subgroup of $\mathcal{H}(V)$ 
+    generates by commutators isn't trivial too.
     \begin{proof}
         \leanok 
-        On procède par l'absurde. S'il était trivial, tout élément de $\mathcal{H}(V)$
-        appartiendrait à son centre.
-        Comme $V$ non trivial, $\exists x\in V,\ x\ne0$. En particulier,
-        $(0,x,0)$ y appartiendrait. Mais par définition du centre, $x$ est nul. Contradiction.
+        By contradiction. If it was trivial, every element of $\mathcal{H}(V)$
+        would belong to its center.
+        Because $V$ isn't trivial, there exists $x\in V$ such that $x\ne0$. Thus,
+        $(0,x,0)$ would belong to the center. But because of the definition of the center, $x = 0$. 
+        We get a contradiction.
     \end{proof}
 \end{proposition}
 
-\begin{proposition}[Caractérisation du commutateur]
+\begin{proposition}[Caracterisation of the commutator]
         \label{prop:commutator_H_caracterisation}
         \uses{prop:commutator_H_of_elements, prop:center_H_subgroup,prop:center_H_is_center}
         \lean{Heisenberg.commutator_caracterisation}
         \leanok
     
-        Si $h:=(z,x,y)$ est un élément du commutateur, alors $x=0$ et $y=0$.
+        If $h:=(z,x,y)$ belongs to the commutator subgroup, then $x=0$ and $y=0$.
     \begin{proof}
         \leanok
-        On calcule.
+        We compute.
     \end{proof}
 \end{proposition}
 
-\begin{theorem}[Nilpotence du groupe d'Heisenberg]
+\begin{theorem}[Nilpotency of Heisenberg's group]
     \label{thm:two_step_nil}
     \uses{prop:commutator_H_nontrivial,prop:commutator_H_caracterisation}
     \lean{Heisenberg.two_step_nilpotent}
     \leanok
 
-    Si $V$ est non trivial, le groupe $\mathcal{H}(V)$ est nilpotent de pas 2.
+    If $V$ isn't trivial, $\mathcal{H}(V)$ is a two step nilpotent group.
     \begin{proof}
         \leanok
-        Il faut montrer que le commutateur est non trivial et que $[[\mathcal{H}(V),\mathcal{H}(V)],\mathcal{H}(V)]$
-        est trivial. Le premier point est fait en \ref{prop:commutator_H_nontrivial}.
-        Le second est calculatoire, en utilisant \ref{prop:commutator_H_caracterisation}, pas de difficultés notoires.
+        We have to show that the commutator isn't trivial and that $[[\mathcal{H}(V),\mathcal{H}(V)],\mathcal{H}(V)]$
+        is trivial. The first point is done in \ref{prop:commutator_H_nontrivial}.
+        The second is some computation, using \ref{prop:commutator_H_caracterisation}.
     \end{proof}
 \end{theorem}
 
-\section{Suite exacte}
+\section{Short exact sequence}
 
-\begin{definition}[Morphisme de $k$ vers $\mathcal{H}(V)$]
+\begin{definition}[Homomorphism from $k$ to $\mathcal{H}(V)$]
     \label{def:map_k_H}
     \uses{prop:group_H}
     \lean{Heisenberg.Hom_k_to_H}
     \leanok 
 
-    L'application $\varphi:z\mapsto (z,0,0)$ définie un morphisme de 
-    $(k,+)$ dans $\mathcal{H}(V)$.
+    The map $\varphi:z\mapsto (z,0,0)$ defines a homomorphism from
+    $(k,+)$ to $\mathcal{H}(V)$.
     \begin{proof}
         \leanok
-        C'est clair.
+        Trivial.
     \end{proof}
 \end{definition}
 
-\begin{proposition}[Injectivité de $\varphi$]
+\begin{proposition}[Injectivity of $\varphi$]
     \label{prop:inj_map_k_H}
     \uses{def:map_k_H}
     \lean{Heisenberg.injective_Hom_k_to_H}
     \leanok 
 
-    Le morphisme définit en \ref{def:map_k_H} est injectif.
+    The homomorphism defined in \ref{def:map_k_H} is injective.
     \begin{proof}
         \leanok
-        On suppose $\varphi(x)=\varphi(y)$ et on montre $x=y$. Pas de 
-        difficultés notoires.
+        We suppose $\varphi(x)=\varphi(y)$ and we show $x=y$. No difficulties.
     \end{proof}
 \end{proposition}
 
-\begin{definition}[Morphisme de $\mathcal{H}(V)$ vers $V\times V^*$]
+\begin{definition}[Homomorphism from $\mathcal{H}(V)$ to $V\times V^*$]
     \label{def:map_H_VxDual}
     \uses{prop:group_H}
     \lean{Heisenberg.Hom_H_to_V_x_Dual}
     \leanok 
 
-    L'application $\psi:(z,x,y)\mapsto (x,y)$ définie un morphisme de 
-    $\mathcal{H}(V)$ dans $V\times V^*$.
+    The map $\psi:(z,x,y)\mapsto (x,y)$ defines a homomorphism from 
+    $\mathcal{H}(V)$ to $V\times V^*$.
     \begin{proof}
         \leanok
-        C'est clair.
+        Trivial.
     \end{proof}
 \end{definition}
 
-\begin{proposition}[Surjectivité de $\psi$]
+\begin{proposition}[Surjectivity of $\psi$]
     \label{prop:surj_map_H_VxV*}
     \uses{def:map_H_VxDual}
     \lean{Heisenberg.surjective_Hom_H_to_V_x_Dual}
     \leanok 
 
-    Le morphisme définit en \ref{def:map_H_VxDual} est surjectif.
+    The homomorphism defined in \ref{def:map_H_VxDual} is surjective.
     \begin{proof}
         \leanok
-        C'est clair.
+        Trivial.
     \end{proof}
 \end{proposition}
 
-\begin{proposition}[Suite exacte]
+\begin{proposition}[Short exact sequence]
     \label{exact_seq_h}
     \uses{def:map_k_H,def:map_H_VxDual}
     \lean{Heisenberg.exact_sequence}
     \leanok 
 
-    On a une suite exacte $0\rightarrow k \rightarrow \mathcal{H}(V) \rightarrow
+    We have a short exact sequence $0\rightarrow k \stackrel{\varphi}{\rightarrow} \mathcal{H}(V) \stackrel{\psi}{\rightarrow}
     V\times V^* \rightarrow 0$.
     \begin{proof}
         \leanok
-        On vérifie que le noyau de $\psi$ est exactement l'image de $\varphi$. Calculs sans difficultés notoires.
+        We check that the kernel of $\psi$ is exactly the image of $\varphi$.
     \end{proof}
 \end{proposition}
 
@@ -250,53 +254,53 @@
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_V}
     \leanok 
 
-    L'image réciproque de $V\times\{0\}$ par $\psi$ définit un sous-groupe de $\mathcal{H}(V)$.
+    The pullback $V\times\{0\}$ by $\psi$ defines a subgroup of $\mathcal{H}(V)$.
     \begin{proof}
         \leanok
-        On vérifie que c'est un sous-groupe. Pas de difficultés notoires.
+        We check that it is a subgroup.
     \end{proof}
 \end{definition}
 
-\begin{proposition}
+\begin{proposition}[Pullback is commutative]
     \label{prop:psi_inv_V_comm}
     \uses{def:psi_inv_V}
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_V_commutative}
     \leanok
 
-    Le sous-groupe défini en \ref{def:psi_inv_V} est commutatif.
+    The subgroup defined in \ref{def:psi_inv_V} is commutative.
     \begin{proof}
         \leanok
-        On calcule. Pas de difficultés notoires.
+        Check that $h_1*h2=h2*h1$.
     \end{proof}
 \end{proposition}
 
-\begin{proposition}
+\begin{proposition}[Pullback is normal]
     \label{prop:psi_inv_V_normal}
     \uses{def:psi_inv_V}
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_V_normal}
     \leanok
 
-    Le sous-groupe défini en \ref{def:psi_inv_V} est distingué.
+    The subgroup defined in \ref{def:psi_inv_V} is a normal subgroup of Heisenberg.
     \begin{proof}
         \leanok 
-        On calcule. Pas de difficultés notoires.
+        Check that $g*h*g^{-1}\in \psi^{-1}(V)$ for every $g\in \mathcal{H}(V)$ and $h\in \psi^{-1}(V)$.
     \end{proof}
 \end{proposition}
 
-\begin{proposition}
+\begin{proposition}[Maximality of the pullback]
     \label{prop:psi_inv_V_max}
     \uses{def:psi_inv_V,prop:psi_inv_V_comm}
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_V_maximal}
     \leanok
 
-    Le sous-groupe défini en \ref{def:psi_inv_V} est maximal parmi les sous-groupes
-    commutatifs de $\mathcal{H}(V)$.
+    The subgroup defined in \ref{def:psi_inv_V} is maximal among the
+    commutative subgroups of $\mathcal{H}(V)$.
     \begin{proof}
         \leanok 
-        Supposons qu'il ne le soit pas. Alors il existe $Q$ commutatif tel que
-        $\psi^{-1}(V)\subset Q$ et $Q\ne \psi^{-1}(V)$. Soit $q=(z,x,y)\in Q\backslash \psi^{-1}(V)$.
-        On a donc en particulier pour tout $h=(a,b,0)\in \psi^{-1}(V)$ que $x*h=h*x$. On 
-        calcule et cela entraine que pour tout $b\in V$, $y(b)=0$. Donc $y=0$ et $q\in \psi^{-1}(V)$.
+        By contradiction. If it's not, then there exists $Q$ a commutative subgroup
+        such that $\psi^{-1}(V)\subset Q$ and $Q\ne \psi^{-1}(V)$. Let $q:=(z,x,y)\in Q\backslash \psi^{-1}(V)$.
+        In particular, we have for every $h=(a,b,0)\in \psi^{-1}(V)$ that $x*h=h*x$.
+        We compute this equality and find out that for every $b\in V$, $y(b)=0$. Thus $y=0$ and $q\in \psi^{-1}(V)$.
         Contradiction.
     \end{proof}
 \end{proposition}
@@ -307,40 +311,40 @@
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_Dual}
     \leanok 
 
-    L'image réciproque de $\{0\}\times V^*$ par $\psi$ définit un sous-groupe de $\mathcal{H}(V)$.
+    The pullback of $\{0\}\times V^*$ by $\psi$ defines a subgroup of $\mathcal{H}(V)$.
     \begin{proof}
         \leanok
-        On vérifie que c'est un sous-groupe. Pas de difficultés notoires.
+        We check the axioms.
     \end{proof}
 \end{definition}
     
-\begin{proposition}
+\begin{proposition}[Commutativity of the pullback]
     \label{prop:psi_inv_Dual_comm}
     \uses{def:psi_inv_Dual}
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_Dual_commutative}
     \leanok
 
-    Le sous-groupe défini en \ref{def:psi_inv_Dual} est commutatif.
+    The subgroup defined in \ref{def:psi_inv_Dual} is commutative.
     \begin{proof}
         \leanok
-        On calcule. Pas de difficultés notoires.
+        Check that $h_1*h2=h2*h1$.
     \end{proof}
 \end{proposition}
 
-\begin{proposition}
+\begin{proposition}[Pullback is normal]
     \label{prop:psi_inv_Dual_normal}
     \uses{def:psi_inv_Dual}
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_Dual_normal}
     \leanok
 
-    Le sous-groupe défini en \ref{def:psi_inv_Dual} est distingué.
+    The subgroup defined in \ref{def:psi_inv_Dual} is ai normal subgroup of Heisenberg. .
     \begin{proof}
         \leanok 
-        On calcule. Pas de difficultés notoires.
+        Check that $g*h*g^{-1}\in \psi^{-1}(V^*)$ for every $g\in \mathcal{H}(V)$ and $h\in \psi^{-1}(V^*)$.
     \end{proof}
 \end{proposition}
 
-\begin{proposition}
+\begin{proposition}[Maximality of the pullback]
     \label{prop:psi_inv_Dual_max}
     \uses{def:psi_inv_Dual,prop:psi_inv_Dual_comm}
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_Dual_maximal}
