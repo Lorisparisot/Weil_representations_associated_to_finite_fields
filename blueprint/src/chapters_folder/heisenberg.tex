@@ -204,7 +204,7 @@
 \end{proposition}
 
 \begin{definition}[Morphisme de $\mathcal{H}(V)$ vers $V\times V^*$]
-    \label{def:map_H_VxV*}
+    \label{def:map_H_VxDual}
     \uses{prop:group_H}
     \lean{Heisenberg.Hom_H_to_V_x_Dual}
     \leanok 
@@ -219,11 +219,11 @@
 
 \begin{proposition}[Surjectivité de $\psi$]
     \label{prop:surj_map_H_VxV*}
-    \uses{def:map_H_VxV*}
+    \uses{def:map_H_VxDual}
     \lean{Heisenberg.surjective_Hom_H_to_V_x_Dual}
     \leanok 
 
-    Le morphisme définit en \ref{def:map_H_VxV*} est surjectif.
+    Le morphisme définit en \ref{def:map_H_VxDual} est surjectif.
     \begin{proof}
         \leanok
         C'est clair.
@@ -232,7 +232,7 @@
 
 \begin{proposition}[Suite exacte]
     \label{exact_seq_h}
-    \uses{def:map_k_H,def:map_H_VxV*}
+    \uses{def:map_k_H,def:map_H_VxDual}
     \lean{Heisenberg.exact_sequence}
     \leanok 
 
@@ -246,7 +246,7 @@
 
 \begin{definition}[$\psi^{-1}(V)$]
     \label{def:psi_inv_V}
-    \uses{def:map_H_VxV*}
+    \uses{def:map_H_VxDual}
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_V}
     \leanok 
 
@@ -303,7 +303,7 @@
 
 \begin{definition}[$\psi^{-1}(V)$]
     \label{def:psi_inv_Dual}
-    \uses{def:map_H_VxV*}
+    \uses{def:map_H_VxDual}
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_Dual}
     \leanok 
 
