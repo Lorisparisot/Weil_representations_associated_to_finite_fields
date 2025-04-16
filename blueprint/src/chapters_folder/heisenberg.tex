@@ -283,6 +283,24 @@
     \end{proof}
 \end{proposition}
 
+\begin{proposition}
+    \label{prop:psi_inv_V_max}
+    \uses{def:psi_inv_V,prop:psi_inv_V_comm}
+    \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_V_maximal}
+    \leanok
+
+    Le sous-groupe défini en \ref{def:psi_inv_V} est maximal parmi les sous-groupes
+    commutatifs de $\mathcal{H}(V)$.
+    \begin{proof}
+        \leanok 
+        Supposons qu'il ne le soit pas. Alors il existe $Q$ commutatif tel que
+        $\psi^{-1}(V)\subset Q$ et $Q\ne \psi^{-1}(V)$. Soit $q=(z,x,y)\in Q\backslash \psi^{-1}(V)$.
+        On a donc en particulier pour tout $h=(a,b,0)\in \psi^{-1}(V)$ que $x*h=h*x$. On 
+        calcule et cela entraine que pour tout $b\in V$, $y(b)=0$. Donc $y=0$ et $q\in \psi^{-1}(V)$.
+        Contradiction.
+    \end{proof}
+\end{proposition}
+
 \begin{definition}[$\psi^{-1}(V)$]
     \label{def:psi_inv_Dual}
     \uses{def:map_H_VxV*}
@@ -319,5 +337,23 @@
     \begin{proof}
         \leanok 
         On calcule. Pas de difficultés notoires.
+    \end{proof}
+\end{proposition}
+
+\begin{proposition}
+    \label{prop:psi_inv_Dual_max}
+    \uses{def:psi_inv_V,prop:psi_inv_Dual_comm}
+    \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_Dual_maximal}
+    \leanok
+
+    Le sous-groupe défini en \ref{def:psi_inv_Dual} est maximal parmi les sous-groupes
+    commutatifs de $\mathcal{H}(V)$.
+    \begin{proof}
+        \leanok 
+        Supposons qu'il ne le soit pas. Alors il existe $Q$ commutatif tel que
+        $\psi^{-1}(V^*)\subset Q$ et $Q\ne \psi^{-1}(V^*)$. Soit $q=(z,x,y)\in Q\backslash \psi^{-1}(V)$.
+        On a donc en particulier pour tout $h=(a,0,b)\in \psi^{-1}(V^*)$ que $x*h=h*x$. On 
+        calcule et cela entraine que pour tout $b\in V^*$, $b(x)=0$. Donc $x=0$ et $q\in \psi^{-1}(V^*)$.
+        Contradiction.
     \end{proof}
 \end{proposition}
