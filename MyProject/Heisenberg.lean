@@ -277,24 +277,42 @@ instance Hom_H_to_V_x_Dual_sub_V_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub
   simp only [AddMonoidHom.mk'_apply, Prod.mk.injEq] at hx1
   exact hx1.2
 
---C'est un sous-groupe maximal.
-/-
-instance Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)): ((Hom_H_to_V_x_Dual_sub_V V k) ≤ Q ∧ Q ≠ ⊤ )→ Q = (Hom_H_to_V_x_Dual_sub_V V k) := by
-  intro h
-  cases h with
-  | intro left right =>
-    ext x
-    constructor
-    · intro hx
-      by_contra hf
-      have h1 : ∀ x ∈ Q, ∀ h ∈ Hom_H_to_V_x_Dual_sub_V V k, x*h*x⁻¹ ∈ Hom_H_to_V_x_Dual_sub_V V k := by
-        intro a ha b hb
-        refine Subgroup.Normal.conj_mem (Hom_H_to_V_x_Dual_sub_V_normal V k) b hb a
 
-      sorry
-    · intro hx
-      exact left hx
--/
+/--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_V` is maximal among the commutative
+subgroups of `Heisenberg`-/
+instance Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : ((Hom_H_to_V_x_Dual_sub_V V k) < Q ) → ¬ (Subgroup.IsCommutative Q)  := by
+  intro h
+  by_contra hf
+  rw [@SetLike.lt_iff_le_and_exists] at h
+  obtain ⟨x,hx⟩ := h.2
+  cases hx with
+  | intro left right =>
+    apply right
+    rw [Hom_H_to_V_x_Dual_sub_V]
+    simp
+    have h1 : ∀ (b : V), mul x (⟨0, b, 0⟩ : Heisenberg V k) = mul ⟨0, b, 0⟩ x := by
+      intro b
+      have h2 : ⟨0, b, 0⟩ ∈ Hom_H_to_V_x_Dual_sub_V V k := by
+        rw[Hom_H_to_V_x_Dual_sub_V]
+        simp
+        use b
+        rw[Hom_H_to_V_x_Dual]
+        simp
+      exact Subgroup.mul_comm_of_mem_isCommutative Q left (h.1 h2)
+    unfold mul at h1
+    simp at h1
+    rw[Hom_H_to_V_x_Dual]
+    simp
+    have h3 :  ∀ (b : V), x.y b = 0 := by
+      intro b
+      specialize h1 b
+      exact h1.1
+    apply LinearMap.ext_iff.mpr
+    simp
+    intro x1
+    specialize h3 x1
+    exact h3.symm
+
 
 
 /--The pull-back of $V^*$ by `Heisenberg.Hom_H_to_V_x_Dual`is a subgroup. -/
@@ -366,8 +384,40 @@ instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_
   simp only [Prod.mk.injEq] at hx1
   exact hx1.1
 
-variable{V k}
+/--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_Dual` is maximal among the commutative
+subgroups of `Heisenberg`-/
+instance Hom_H_to_V_x_Dual_sub_Dual_maximal [FiniteDimensional k V] (Q : Subgroup (Heisenberg V k)) : ((Hom_H_to_V_x_Dual_sub_Dual V k) < Q ) → ¬ (Subgroup.IsCommutative Q)  := by
+  intro h
+  by_contra hf
+  rw [@SetLike.lt_iff_le_and_exists] at h
+  obtain ⟨x,hx⟩ := h.2
+  cases hx with
+  | intro left right =>
+    apply right
+    rw [Hom_H_to_V_x_Dual_sub_Dual]
+    simp
+    have h1 : ∀ (b : Module.Dual k V), mul x (⟨0, 0, b⟩ : Heisenberg V k) = mul ⟨0, 0, b⟩ x := by
+      intro b
+      have h2 : ⟨0, 0, b⟩ ∈ Hom_H_to_V_x_Dual_sub_Dual V k := by
+        rw[Hom_H_to_V_x_Dual_sub_Dual]
+        simp
+        use b
+        rw[Hom_H_to_V_x_Dual]
+        simp
+      exact Subgroup.mul_comm_of_mem_isCommutative Q left (h.1 h2)
+    unfold mul at h1
+    simp at h1
+    rw[Hom_H_to_V_x_Dual]
+    simp
+    have h3 :  ∀ (b : Module.Dual k V), b x.x = 0 := by
+      intro b
+      specialize h1 b
+      exact h1.1
+    symm
+    rw[<-Module.forall_dual_apply_eq_zero_iff k]
+    exact h3
 
+variable{V k}
 
  omit [FiniteDimensional k V] in
  /--Commutator of two elements of `Heisenberg` -/
