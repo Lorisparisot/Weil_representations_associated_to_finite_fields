@@ -3,17 +3,26 @@ import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.LinearAlgebra.BilinearForm.Properties
 import Mathlib.LinearAlgebra.FreeModule.PID
 
+/-!
+# Convention on the bidual
+
+This file defines the identification of the bidual as choosen by Paul Gérardin in his paper.
+## Mains results
+
+Let `k`be a field, `V` a finite dimensional vector space over `k`, and `Module.Dual k V` its dual space.
+The main results are :
++ `convention_eval_iso` : the convention that $V^{**}$ is identified with $V$ by
+$(x,y)=-(y,x)$.
++ `form_commutator_non_degenerate`: the bilinear form $((x_1,y_1),(x_2,y_2))↦ (y_1(x_2)-y_2(x_1)$ is non degenerate.
+-/
+
+
 variable (V k : Type*) [Field k] [AddCommGroup V] [Module k V]
 
 --local notation "q" => Fintype.card k
 
-/- Ce projet LEAN se veut être une tentative de formalisation du papier
-"Weil representations associated to finite fields" de Paul Gérardin.
-Ce premier fichier contient les conventions de l'auteur sur le dual ainsi que
-diverses propriétés à ce propos.
--/
 
---On définie la forme bilinéaire (V* x V**) → k, (y,x) ↦ - x y
+/-- The map $(x,y)↦ - y(x)$ is a bilinear form on $V^{**}× V$. -/
 def convention_dual : Module.Dual k (Module.Dual k V) →ₗ[k] (Module.Dual k V) →ₗ[k] k := by
   refine LinearMap.mk₂ k (fun x y => - x y) ?_ ?_ ?_ ?_
   · intro m n f
@@ -34,7 +43,7 @@ theorem convention (v : Module.Dual k V) (φ : Module.Dual k (Module.Dual k V)) 
   unfold convention_dual
   simp
 
---On définit l'application V → V**
+/--The map $V → V^{**}$ satisfying the convention $(x,y)=-y(x)$.  -/
 def convention_eval : V →ₗ[k] Module.Dual k (Module.Dual k V):=by
   refine LinearMap.mk ?_ ?_
   · refine AddHom.mk ?_ ?_
@@ -50,7 +59,7 @@ theorem convention_eval_apply (v : V) (φ :(Module.Dual k V)) : ((convention_eva
   rw[convention_eval]
   simp
 
---V est isomorphe à V** par l'application convention_eval
+
 /-- The bijection between a reflexive module and its double dual such that (x,y)=-(y,x), bundled as a `LinearEquiv`. -/
 noncomputable def convention_eval_iso [Module.IsReflexive k V] : V ≃ₗ[k] Module.Dual k (Module.Dual k V) := by
   refine LinearEquiv.mk ?_ ?_ ?_ ?_

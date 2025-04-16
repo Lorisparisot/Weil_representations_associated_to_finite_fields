@@ -44,7 +44,7 @@ def mul
   (H1 H2 : Heisenberg V k) : Heisenberg V k:=
   ⟨H1.z + H2.z + (H1.y H2.x), H1.x + H2.x, H1.y + H2.y⟩
 
---Inverse d'un élément d'Heisenberg
+/--Inverse of an element of `Heisenberg` by `mul` -/
 def inverse (H : Heisenberg V k) : Heisenberg V k :=
   ⟨ -H.z - (H.y (-H.x)), - H.x ,- H.y⟩
 
@@ -287,34 +287,30 @@ theorem Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : Subgro
   · intro h
     by_contra hf
     rw [@SetLike.lt_iff_le_and_exists] at h
-    obtain ⟨x,hx⟩ := h.2
-    cases hx with
-    | intro left right =>
-      apply right
-      rw [Hom_H_to_V_x_Dual_sub_V]
-      simp
-      have h1 : ∀ (b : V), mul x (⟨0, b, 0⟩ : Heisenberg V k) = mul ⟨0, b, 0⟩ x := by
-        intro b
-        have h2 : ⟨0, b, 0⟩ ∈ Hom_H_to_V_x_Dual_sub_V V k := by
-          rw[Hom_H_to_V_x_Dual_sub_V]
-          simp
-          use b
-          rw[Hom_H_to_V_x_Dual]
-          simp
-        exact Subgroup.mul_comm_of_mem_isCommutative Q left (h.1 h2)
-      unfold mul at h1
-      simp at h1
-      rw[Hom_H_to_V_x_Dual]
-      simp
-      have h3 :  ∀ (b : V), x.y b = 0 := by
-        intro b
-        specialize h1 b
-        exact h1.1
-      apply LinearMap.ext_iff.mpr
-      simp
-      intro x1
-      specialize h3 x1
-      exact h3.symm
+    obtain ⟨x,⟨left,right⟩⟩ := h.2
+    apply right
+    rw [Hom_H_to_V_x_Dual_sub_V]
+    simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+    have h1 : ∀ (b : V), mul x (⟨0, b, 0⟩ : Heisenberg V k) = mul ⟨0, b, 0⟩ x := by
+      intro b
+      have h2 : ⟨0, b, 0⟩ ∈ Hom_H_to_V_x_Dual_sub_V V k := by
+        rw[Hom_H_to_V_x_Dual_sub_V]
+        simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+        use b
+        rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
+      exact Subgroup.mul_comm_of_mem_isCommutative Q left (h.1 h2)
+    unfold mul at h1
+    simp only [add_zero, zero_add, LinearMap.zero_apply, mk.injEq, add_eq_left, and_true] at h1
+    rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
+    simp only [Prod.mk.injEq, exists_eq_left]
+    have h3 :  ∀ (b : V), x.y b = 0 := by
+      intro b
+      exact (h1 b).1
+    apply LinearMap.ext_iff.mpr
+    simp only [LinearMap.zero_apply]
+    intro x1
+    specialize h3 x1
+    exact h3.symm
 
 
 
@@ -396,32 +392,28 @@ instance Hom_H_to_V_x_Dual_sub_Dual_maximal [FiniteDimensional k V] (Q : Subgrou
   · intro h
     by_contra hf
     rw [@SetLike.lt_iff_le_and_exists] at h
-    obtain ⟨x,hx⟩ := h.2
-    cases hx with
-    | intro left right =>
-      apply right
-      rw [Hom_H_to_V_x_Dual_sub_Dual]
-      simp
-      have h1 : ∀ (b : Module.Dual k V), mul x (⟨0, 0, b⟩ : Heisenberg V k) = mul ⟨0, 0, b⟩ x := by
-        intro b
-        have h2 : ⟨0, 0, b⟩ ∈ Hom_H_to_V_x_Dual_sub_Dual V k := by
-          rw[Hom_H_to_V_x_Dual_sub_Dual]
-          simp
-          use b
-          rw[Hom_H_to_V_x_Dual]
-          simp
-        exact Subgroup.mul_comm_of_mem_isCommutative Q left (h.1 h2)
-      unfold mul at h1
-      simp at h1
-      rw[Hom_H_to_V_x_Dual]
-      simp
-      have h3 :  ∀ (b : Module.Dual k V), b x.x = 0 := by
-        intro b
-        specialize h1 b
-        exact h1.1
-      symm
-      rw[<-Module.forall_dual_apply_eq_zero_iff k]
-      exact h3
+    obtain ⟨x,⟨ left, right⟩ ⟩ := h.2
+    apply right
+    rw [Hom_H_to_V_x_Dual_sub_Dual]
+    simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+    have h1 : ∀ (b : Module.Dual k V), mul x (⟨0, 0, b⟩ : Heisenberg V k) = mul ⟨0, 0, b⟩ x := by
+      intro b
+      have h2 : ⟨0, 0, b⟩ ∈ Hom_H_to_V_x_Dual_sub_Dual V k := by
+        rw[Hom_H_to_V_x_Dual_sub_Dual]
+        simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+        use b
+        rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
+      exact Subgroup.mul_comm_of_mem_isCommutative Q left (h.1 h2)
+    unfold mul at h1
+    simp only [add_zero, map_zero, zero_add, mk.injEq, left_eq_add, true_and] at h1
+    rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
+    simp only [Prod.mk.injEq, exists_eq_right]
+    have h3 :  ∀ (b : Module.Dual k V), b x.x = 0 := by
+      intro b
+      exact (h1 b).1
+    symm
+    rw[<-Module.forall_dual_apply_eq_zero_iff k]
+    exact h3
 
 variable{V k}
 
