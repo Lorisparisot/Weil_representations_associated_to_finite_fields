@@ -350,14 +350,14 @@
     \lean{Heisenberg.Hom_H_to_V_x_Dual_sub_Dual_maximal}
     \leanok
 
-    Le sous-groupe défini en \ref{def:psi_inv_Dual} est maximal parmi les sous-groupes
-    commutatifs de $\mathcal{H}(V)$.
+    The subgroup defined in \ref{def:psi_inv_Dual} is maximal among the
+    commutative subgroups of $\mathcal{H}(V)$.
     \begin{proof}
         \leanok 
-        Supposons qu'il ne le soit pas. Alors il existe $Q$ commutatif tel que
-        $\psi^{-1}(V^*)\subset Q$ et $Q\ne \psi^{-1}(V^*)$. Soit $q=(z,x,y)\in Q\backslash \psi^{-1}(V)$.
-        On a donc en particulier pour tout $h=(a,0,b)\in \psi^{-1}(V^*)$ que $x*h=h*x$. On 
-        calcule et cela entraine que pour tout $b\in V^*$, $b(x)=0$. Donc $x=0$ et $q\in \psi^{-1}(V^*)$.
+        By contradiction. If it's not, then there exists $Q$ a commutative subgroup
+        such that $\psi^{-1}(V^*)\subset Q$ and $Q\ne \psi^{-1}(V^*)$. Let $q:=(z,x,y)\in Q\backslash \psi^{-1}(V^*)$.
+        In particular, we have for every $h=(a,0,b)\in \psi^{-1}(V^*)$ that $x*h=h*x$.
+        We compute this equality and find out that for every $b\in V^*$, $b(x)=0$. Thus $x=0$ and $q\in \psi^{-1}(V^*)$.
         Contradiction.
     \end{proof}
 \end{proposition}
