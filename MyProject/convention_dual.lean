@@ -105,7 +105,7 @@ noncomputable def form_commutator [Module.IsReflexive k V] : (V × Module.Dual k
     simp
     ring
 
-/--The bilinear form `form_commutator` is non degenerate -/
+/--The bilinear form `form_commutator` is nondegeneracy -/
 theorem form_commutator_non_degenerate [Module.IsReflexive k V]:
   LinearMap.BilinForm.Nondegenerate (form_commutator V k) := by
   rw[LinearMap.BilinForm.Nondegenerate ]
