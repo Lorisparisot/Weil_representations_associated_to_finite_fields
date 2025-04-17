@@ -3,6 +3,9 @@ import Mathlib.Algebra.Group.Commutator
 import MyProject.convention_dual
 import Mathlib.GroupTheory.Nilpotent
 import Mathlib.Algebra.Group.Subgroup.Defs
+import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+import Mathlib.SetTheory.Cardinal.Finite
+import Mathlib.GroupTheory.Index
 
 
 /-!
@@ -510,5 +513,54 @@ noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k
   constructor
   · rw [@AddCommMonoid.add_comm]
   · rw [@AddCommMonoid.add_comm]
+
+/-- The trivial bijection between `Heisenberg`and $k× V× V^*$. -/
+instance bij_k_V_Dual : (Heisenberg V k) ≃ (k × V × (Module.Dual k V)) :=by
+  refine Equiv.mk (fun a ↦ (a.z, a.x, a.y)) (fun h ↦ ⟨h.1, h.2.1, h.2.2⟩) ?_ ?_
+  · intro h
+    simp only
+  · intro h
+    simp only [Prod.mk.eta]
+
+
+omit inst5 in
+/-- Cardinal of `Heisenberg` when $k$ is a finite field -/
+theorem card_H [inst6 : Fintype k] : Nat.card (Heisenberg V k) = (Nat.card k)*(Nat.card V)^2 := by
+  rw[Nat.card_congr (bij_k_V_Dual V k),Nat.pow_two]
+  simp
+  left
+  rw [← @Basis.linearEquiv_dual_iff_finiteDimensional] at inst4
+  obtain ⟨h⟩ := inst4
+  apply LinearEquiv.toEquiv at h
+  rw [Nat.card_congr h]
+
+omit inst4 inst5 in
+/-- Cardinal of  `Heisenberg.center` -/
+theorem card_center : Nat.card (Heisenberg.center V k) = Nat.card k := by
+  have h : Heisenberg.center V k ≃ k := by
+    refine Equiv.mk (fun a ↦ a.val.z) (fun b ↦ ⟨⟨b, 0, 0⟩, by
+      simp [Heisenberg.center, Subgroup.center]
+    ⟩) ?_ ?_
+    · intro H
+      simp
+      rw [@Subtype.ext_iff_val]
+      simp
+      obtain⟨h1, h2⟩ := H
+      simp
+      rw [@Set.mem_def] at h2
+      ext u
+      · simp
+      · simp
+        rw[center,@Set.setOf_app_iff] at h2
+        exact h2.1.symm
+      · simp
+        rw[center,@Set.setOf_app_iff] at h2
+        rw[h2.2]
+        simp only [LinearMap.zero_apply]
+    · intro H
+      simp
+  rw [Nat.card_congr h]
+
+
 
 #min_imports

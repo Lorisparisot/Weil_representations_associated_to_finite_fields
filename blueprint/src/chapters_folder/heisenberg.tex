@@ -10,6 +10,18 @@
     $\mathcal{H}(V):=\{(z,x,y) \in k\times V\times V^*\}$.
 \end{definition}
 
+\begin{proposition}[Trivial bijection]
+    \label{prop:bij_H_triv}
+    \uses{def:heisenberg}
+    \lean{Heisenberg.bij_k_V_Dual}
+    \leanok
+    $\mathcal{H}(V)$ is in bijection with $k\times V\times V^*$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
+
 \begin{definition}[Multiplication on Heisenberg]
     \label{def:mul_H}
     \uses{def:heisenberg}
@@ -360,4 +372,31 @@
     In particular, we have for every $h=(a,0,b)\in \psi^{-1}(V^*)$ that $x*h=h*x$.
     We compute this equality and find out that for every $b\in V^*$, $b(x)=0$. Thus $x=0$ and $q\in \psi^{-1}(V^*)$.
     Contradiction.
+\end{proof}
+
+\section{Specifities of the case $k=\mathbb{F}_q$}
+
+\begin{proposition}[Cardinality]
+    \label{prop:H_card}
+    \uses{prop:bij_H_triv}
+    \lean{Heisenberg.card_H}
+    \leanok
+    If $k$ is a finite field, then $|\mathcal{H}(V)|=|k|\times|V|^2$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    With \ref{prop:bij_H_triv} we know $\mathcal{H}(V)\cong k \times V \times V^*$.
+    Because $V$ is finite dimensional, $|V|=|V^*|$, thus we get the result.
+\end{proof}
+
+\begin{proposition}[Cardinality of the center]
+    \label{prop:H_card_center}
+    \uses{def:center_H}
+    \lean{Heisenberg.card_center}
+    \leanok
+    If $k$ is a finite field, then $|\mathcal{Z}_{\mathcal{H}(V)}|=|k|$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Trivial, the center being isomorphic to $k$.
 \end{proof}
