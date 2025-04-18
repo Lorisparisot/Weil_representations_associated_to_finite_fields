@@ -6,6 +6,7 @@ import Mathlib.Algebra.Group.Subgroup.Defs
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.SetTheory.Cardinal.Finite
 import Mathlib.GroupTheory.Index
+import Mathlib.Data.Nat.Init
 
 
 /-!
@@ -492,7 +493,7 @@ theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ l
 
 variable (V k)
 
-/-- $H(V)$ is in bijection with $H(V*)$ -/
+/-- $H(V)$ is in bijection with $H(V*)$. -/
 noncomputable def equiv_Dual:
   Heisenberg V k ≃ Heisenberg (Module.Dual k V) k := by
   refine Equiv.mk (fun a ↦ ⟨a.z, a.y , ((convention_eval_iso V k).toFun (-a.x)) ⟩ ) (fun a ↦ ⟨a.z, ((convention_eval_iso V k).invFun (-a.y)) , a.x⟩) ?_ ?_
@@ -501,7 +502,7 @@ noncomputable def equiv_Dual:
   · intro H
     simp
 
-/--With the convention $(x,y)=-(y,x)$, $H(V)$ is antiisomorphic to $H(V*)$ -/
+/--With the convention $(x,y)=-(y,x)$, $H(V)$ is antiisomorphic to $H(V*)$. -/
 noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k V) k)ᵐᵒᵖ := by
   refine MulEquiv.mk (Equiv.trans (equiv_Dual V k) (MulOpposite.opEquiv)) ?_
   intro H1 H2
@@ -522,6 +523,25 @@ instance bij_k_V_Dual : (Heisenberg V k) ≃ (k × V × (Module.Dual k V)) :=by
   · intro h
     simp only [Prod.mk.eta]
 
+/-- The trivial bijection beetween `Heisenberg.center`and $k$.-/
+instance bij_k_center : Heisenberg.center V k ≃ k := by
+  refine Equiv.mk (fun h => h.val.z) (fun z => ⟨⟨z, 0, 0⟩, by simp [Heisenberg.center, Subgroup.center]⟩) ?_ ?_
+  · intro h
+    simp
+    rw [@Subtype.ext_iff_val]
+    simp
+    obtain ⟨h1, h2⟩ := h
+    simp
+    rw [@Set.mem_def] at h2
+    ext u
+    rw [center,@Set.setOf_app_iff] at h2
+    · simp only
+      exact h2.1.symm
+    · simp only [LinearMap.zero_apply]
+      rw[h2.2,@LinearMap.zero_apply]
+  · intro h
+    simp
+
 
 omit inst5 in
 /-- Cardinal of `Heisenberg` when $k$ is a finite field -/
@@ -537,30 +557,21 @@ theorem card_H [inst6 : Fintype k] : Nat.card (Heisenberg V k) = (Nat.card k)*(N
 omit inst4 inst5 in
 /-- Cardinal of  `Heisenberg.center` -/
 theorem card_center : Nat.card (Heisenberg.center V k) = Nat.card k := by
-  have h : Heisenberg.center V k ≃ k := by
-    refine Equiv.mk (fun a ↦ a.val.z) (fun b ↦ ⟨⟨b, 0, 0⟩, by
-      simp [Heisenberg.center, Subgroup.center]
-    ⟩) ?_ ?_
-    · intro H
-      simp
-      rw [@Subtype.ext_iff_val]
-      simp
-      obtain⟨h1, h2⟩ := H
-      simp
-      rw [@Set.mem_def] at h2
-      ext u
-      · simp
-      · simp
-        rw[center,@Set.setOf_app_iff] at h2
-        exact h2.1.symm
-      · simp
-        rw[center,@Set.setOf_app_iff] at h2
-        rw[h2.2]
-        simp only [LinearMap.zero_apply]
-    · intro H
-      simp
-  rw [Nat.card_congr h]
+   rw [Nat.card_congr (bij_k_center V k)]
 
+omit inst5 in
+/--The index of the center of `Heisenberg` is equal to the cardinal of $V$ to the square.-/
+theorem ord_V [inst6 : Fintype k]: (Subgroup.index (Subgroup.center (Heisenberg V k))) = (Nat.card V)^2 :=by
+  have h3 : (Nat.card k)*(Nat.card V)^2 / (Nat.card k) = (Nat.card V)^2 := by
+    simp
+  rw[<-h3,<-card_H,<-Subgroup.index_mul_card (Subgroup.center (Heisenberg V k))]
+  have h4 : Nat.card (Subgroup.center (Heisenberg V k)) = Nat.card k := by
+    rw[center_eq, center_is_subgroup]
+    simp only [Subgroup.mem_mk]
+    rw [card_center]
+  rw[h4]
+  simp only [Nat.card_eq_fintype_card, ne_eq, Fintype.card_ne_zero, not_false_eq_true,
+    mul_div_cancel_right₀]
 
 
 #min_imports
