@@ -1,58 +1,73 @@
 import Mathlib.RepresentationTheory.Basic
 
-namespace Representation_induced
+/-!
+# Addendum to the representation theory in mathlib
 
-variable (k G W : Type*) [inst1 : Field k] [inst2 : Group G] [inst3 : AddCommGroup W] [inst4 : Finite G]
-[inst5 : Module k W] [inst6 : FiniteDimensional k W]
+This file adds some properties about representation theory in mathlib.
+
+## Main results
+The goal of this file is to formalize the induced representation for finite group and
+particular subgroup (commutative one) and the Frobenius reciprocity.
+
+## Contents
++ Adds to `MonoidAlgebra`theory over a group, to create some particular tensor products.
++ Induced representation in the case...
++ Frobenius reciprocity in the case...
+
+-/
+
+
+
+
+namespace kG_kH_Module
+
+variable (k G : Type*) [inst1 : Field k] [inst2 : Group G]
 variable (H : @Subgroup G inst2) [instH : H.IsCommutative]
-variable (θ : Representation k H W)
 
-noncomputable def kHModule1 : MonoidAlgebra k H →ₐ[k] Module.End k W := by
-  exact Representation.asAlgebraHom θ
-
-#check (MonoidAlgebra k H)
-#check (MonoidAlgebra k G)
-
-
+omit k instH in
+/--The "trivial" map from a subgroup `H` of `G`. -/
 noncomputable def mapHG : H → G :=
   fun h => (Subgroup.subtype H) h
 
+omit k instH in
+/--The trivial map is a homomorphism.-/
 instance mulHom_mapHG : H →* G := by
   exact H.subtype
 
+omit instH in
 @[simp]
 theorem mapHG_eval (h : H) : mapHG G H h = ↑h:= by
   rfl
 
-#check mapHG
-
+/--The trivial map from `MonoidAlgebra k H` to `MonoidAlgebra k G`, ie elements from
+`MonoidAlgebra k H` are seen as `MonoidAlgebra k G`.-/
 noncomputable def Map_KHKG : (MonoidAlgebra k H) → (MonoidAlgebra k G) :=
   fun h => MonoidAlgebra.mapDomain (Subgroup.subtype H) h
 
+/--If `H` is commutative, `MonoidAlgebra k H` is a commutative monoid.-/
 noncomputable instance KHCommMonoid : CommMonoid (MonoidAlgebra k H) := by
   exact CommMonoidWithZero.toCommMonoid
 
-#check KHCommMonoid
-
-noncomputable instance SMul_KHKG : SMul (MonoidAlgebra k H) (MonoidAlgebra k G) := by
-  refine SMul.mk ?_
-  intro h
-  intro g
-  exact (Map_KHKG k G H h)*g
-
+/--`MonoidAlgebra k H` is a commutative semiring.-/
 noncomputable instance KHCommRing : CommSemiring (MonoidAlgebra k H) := by
   have h1 := KHCommMonoid k G H
   exact MonoidAlgebra.commSemiring
 
+/--Scalar multiplication between `MonoidAlgebra k H` and `MonoidAlgebra k G`, ie
+classical mulitplication between an element of `MonoidAlgebra k H` seen as an element
+of `MonoidAlgebra k G` and an element of `MonoidAlgebra k G`.-/
 noncomputable instance SMulKHKG : SMul (MonoidAlgebra k H) (MonoidAlgebra k G) := by
   refine SMul.mk ?_
   intro h
   intro g
   exact (Map_KHKG k G H h)*g
 
+/--Ring morphism from `MonoidAlgebra k H` to `MonoidAlgebra k G`, given by the coercion
+of element of `H`into element of `G`.-/
 noncomputable def RingMorphism_KH_KG : (MonoidAlgebra k H) →+* (MonoidAlgebra k G) := by
   exact MonoidAlgebra.mapDomainRingHom k (mulHom_mapHG G H)
 
+/--`MonoidAlgebra k G` is a `MonoidAlgebra k (Subgroup.center G)` algebra.-/
 noncomputable instance KG_is_KH_Algebra : Algebra (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) := by
   refine Algebra.mk (RingMorphism_KH_KG k G (Subgroup.center G)) ?_ ?_
   · intro pH pG
@@ -100,12 +115,10 @@ noncomputable instance KG_is_KH_Algebra : Algebra (MonoidAlgebra k (Subgroup.cen
       AddMonoidHom.toZeroHom_coe, Finsupp.mapDomain.addMonoidHom_apply]
     exact rfl
 
-
-def KGModule := TensorProduct (MonoidAlgebra k H) (MonoidAlgebra k G) (Representation.asModule θ)
-  sorry
+end kG_kH_Module
 #min_imports
 
-end Representation_induced
+
 
 
 --TensorProduct.leftModule TensorProduct.lift Algebra.ofModule

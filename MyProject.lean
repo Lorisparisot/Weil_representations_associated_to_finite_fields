@@ -2,3 +2,4 @@
 -- Import modules here that should be built as part of the library.
 import «MyProject».convention_dual
 import «MyProject».Heisenberg
+import «MyProject».Addendum_Representation_theory

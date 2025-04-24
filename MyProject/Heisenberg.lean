@@ -527,11 +527,11 @@ instance bij_k_V_Dual : (Heisenberg V k) ≃ (k × V × (Module.Dual k V)) :=by
 instance bij_k_center : Heisenberg.center V k ≃ k := by
   refine Equiv.mk (fun h => h.val.z) (fun z => ⟨⟨z, 0, 0⟩, by simp [Heisenberg.center, Subgroup.center]⟩) ?_ ?_
   · intro h
-    simp
+    simp only
     rw [@Subtype.ext_iff_val]
-    simp
+    simp only
     obtain ⟨h1, h2⟩ := h
-    simp
+    simp only
     rw [@Set.mem_def] at h2
     ext u
     rw [center,@Set.setOf_app_iff] at h2
