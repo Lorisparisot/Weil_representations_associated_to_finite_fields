@@ -1,11 +1,4 @@
-import Mathlib.LinearAlgebra.PiTensorProduct
-import Mathlib.Algebra.MonoidAlgebra.Defs
 import Mathlib.RepresentationTheory.Basic
-import Mathlib.Algebra.Module.Defs
-import Mathlib.Algebra.Module.LinearMap.End
-import Mathlib
-
-
 
 namespace Representation_induced
 
@@ -95,7 +88,6 @@ noncomputable instance KG_is_KH_Algebra : Algebra (MonoidAlgebra k (Subgroup.cen
       constructor
       · refine Set.not_mem_singleton_iff.mpr ?_
         rw [Finset.mem_singleton] at hf
-        push_neg at hf
         exact hf
       · rw[Set.indicator,@eq_ite_iff]
         right
@@ -111,7 +103,9 @@ noncomputable instance KG_is_KH_Algebra : Algebra (MonoidAlgebra k (Subgroup.cen
 
 def KGModule := TensorProduct (MonoidAlgebra k H) (MonoidAlgebra k G) (Representation.asModule θ)
   sorry
+#min_imports
 
 end Representation_induced
+
 
 --TensorProduct.leftModule TensorProduct.lift Algebra.ofModule
