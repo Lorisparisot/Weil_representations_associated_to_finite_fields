@@ -16,28 +16,16 @@ particular subgroup (commutative one) and the Frobenius reciprocity.
 
 -/
 
-
-
-
 namespace kG_kH_Module
 
 variable (k G : Type*) [inst1 : Field k] [inst2 : Group G]
 variable (H : @Subgroup G inst2) [instH : H.IsCommutative]
 
-omit k instH in
-/--The "trivial" map from a subgroup `H` of `G`. -/
-noncomputable def mapHG : H → G :=
-  fun h => (Subgroup.subtype H) h
 
 omit k instH in
 /--The trivial map is a homomorphism.-/
 instance mulHom_mapHG : H →* G := by
   exact H.subtype
-
-omit instH in
-@[simp]
-theorem mapHG_eval (h : H) : mapHG G H h = ↑h:= by
-  rfl
 
 /--The trivial map from `MonoidAlgebra k H` to `MonoidAlgebra k G`, ie elements from
 `MonoidAlgebra k H` are seen as `MonoidAlgebra k G`.-/

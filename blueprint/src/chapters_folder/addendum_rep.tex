@@ -1,0 +1,32 @@
+This first chapter introduces some notions that weren't formalize in
+mathlib about representation theory. The main goal of this part is to build
+the induced representation in a particular case and the Frobenius reciprocity
+in a particular case.
+
+\section{Group algebra}
+
+\begin{definition}
+    \label{def:trivialHG}
+    \uses{}
+    \lean{kG_kH_Module.mulHom_mapHG}
+    \leanok
+    Given $G$ a group and $H$ a subgroup of $G$, we have a trivial homomorphism from $H$
+    to $G$ given by $h\mapsto h$.
+    \begin{proof}
+        \leanok
+        Trivial.
+    \end{proof}
+\end{definition}
+
+\begin{definition}
+    \label{def:trivialkHkG}
+    \uses{}
+    \lean{kG_kH_Module.Map_KHKG}
+    \leanok
+    Given $\mathbb{K}$ a field, $G$ a group and $H$ a subgroup of $G$, 
+    we have a trivial homomorphism from $\mathbb{K}[H]$ to $\mathbb{K}[G]$.
+    \begin{proof}
+        \leanok
+        Trivial.
+    \end{proof}
+\end{definition}
