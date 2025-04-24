@@ -38,7 +38,6 @@ noncomputable instance KHCommMonoid : CommMonoid (MonoidAlgebra k H) := by
 
 /--`MonoidAlgebra k H` is a commutative semiring.-/
 noncomputable instance KHCommRing : CommSemiring (MonoidAlgebra k H) := by
-  have h1 := KHCommMonoid k G H
   exact MonoidAlgebra.commSemiring
 
 /--Scalar multiplication between `MonoidAlgebra k H` and `MonoidAlgebra k G`, ie
@@ -56,7 +55,7 @@ noncomputable def RingMorphism_KH_KG : (MonoidAlgebra k H) →+* (MonoidAlgebra 
   exact MonoidAlgebra.mapDomainRingHom k (mulHom_mapHG G H)
 
 /--`MonoidAlgebra k G` is a `MonoidAlgebra k (Subgroup.center G)` algebra.-/
-noncomputable instance KG_is_KH_Algebra : Algebra (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) := by
+noncomputable instance KG_is_Kcenter_Algebra : Algebra (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) := by
   refine Algebra.mk (RingMorphism_KH_KG k G (Subgroup.center G)) ?_ ?_
   · intro pH pG
     ext x

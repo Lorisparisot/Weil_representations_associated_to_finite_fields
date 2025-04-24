@@ -30,3 +30,65 @@ in a particular case.
         Trivial.
     \end{proof}
 \end{definition}
+
+\begin{proposition}
+    \label{prop:KHcomm}
+    \uses{}
+    \lean{kG_kH_Module.KHCommMonoid}
+    \leanok 
+    If $H$ is a commutative subgroup of $G$, then $\mathbb{K}[H]$ is a 
+    commutative monoid.
+\end{proposition}
+\begin{proof}
+    \leanok
+    \texit{Mettre une preuve}
+\end{proof}
+
+\begin{proposition}
+    \label{prop:KHcommsemiring}
+    \uses{}
+    \lean{kG_kH_Module.KHCommRing}
+    \leanok
+    If $H$ is a commutative subgroup of $G$, then $\mathbb{K}[H]$ is a 
+    commutative semiring.
+\end{proposition}
+\begin{proof}
+    \leanok
+    \texit{Mettre une preuve}
+\end{proof}
+
+\begin{definition}
+    \label{prop:KHcommsemiring}
+    \uses{def:trivialkHkG}
+    \lean{kG_kH_Module.SMulKHKG}
+    \leanok
+    If $H$ is a commutative subgroup of $G$, we have a scalar multiplication
+    of $\mathbb{K}[H]$ on $\mathbb{K}[G]$ given by the classic multiplication
+    on $\mathbb{K}[G]$.
+\end{definition}
+
+\begin{definition}
+    \label{def:RingHomkHkG}
+    \uses{def:trivialHG}
+    \lean{kG_kH_Module.RingMorphism_KH_KG}
+    \leanok
+    If $H$ is a commutative subgroup of $G$, we have a ring homomorphism
+    from $\mathbb{K}[H]$ to $\mathbb{K}[G]$ given by the map defined in \ref{def:trivialHG}.
+\end{definition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:kG_is_kH_Algebra}
+    \uses{def:RingHomkHkG}
+    \lean{kG_kH_Module.KG_is_Kcenter_Algebra}
+    \leanok
+    We have that $\mathbb{K}[G]$ is a $\mathbb{K}[\mathcal{Z}_G]$
+    algebra, where $\mathcal{Z}_G$ is the center of $G$
+\end{proposition}
+\begin{proof}
+    \leanok
+    We check the axioms of an algebra. Nothing really difficult.
+\end{proof}
