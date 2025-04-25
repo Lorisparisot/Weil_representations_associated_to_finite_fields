@@ -1,4 +1,4 @@
-import Mathlib.RepresentationTheory.Basic
+import Mathlib
 
 /-!
 # Addendum to the representation theory in mathlib
@@ -22,11 +22,6 @@ variable (k G : Type*) [inst1 : Field k] [inst2 : Group G]
 variable (H : @Subgroup G inst2) [instH : H.IsCommutative]
 
 
-omit k instH in
-/--The trivial map is a homomorphism.-/
-instance mulHom_mapHG : H →* G := by
-  exact H.subtype
-
 /--The trivial map from `MonoidAlgebra k H` to `MonoidAlgebra k G`, ie elements from
 `MonoidAlgebra k H` are seen as `MonoidAlgebra k G`.-/
 noncomputable def Map_KHKG : (MonoidAlgebra k H) → (MonoidAlgebra k G) :=
@@ -47,7 +42,7 @@ omit instH in
 /--Ring morphism from `MonoidAlgebra k H` to `MonoidAlgebra k G`, given by the coercion
 of element of `H`into element of `G`.-/
 noncomputable def RingMorphism_KH_KG : (MonoidAlgebra k H) →+* (MonoidAlgebra k G) := by
-  exact MonoidAlgebra.mapDomainRingHom k (mulHom_mapHG G H)
+  exact MonoidAlgebra.mapDomainRingHom k (Subgroup.subtype H)
 
 /--`MonoidAlgebra k G` is a `MonoidAlgebra k (Subgroup.center G)` algebra.-/
 noncomputable instance KG_is_KcenterG_Algebra : Algebra (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) := by
@@ -55,7 +50,7 @@ noncomputable instance KG_is_KcenterG_Algebra : Algebra (MonoidAlgebra k (Subgro
   · intro pH pG
     ext x
     rw[RingMorphism_KH_KG,MonoidAlgebra.mapDomainRingHom_apply, ZeroHom.toFun_eq_coe,
-      AddMonoidHom.toZeroHom_coe, Finsupp.mapDomain.addMonoidHom_apply,mulHom_mapHG,Subgroup.coe_subtype,
+      AddMonoidHom.toZeroHom_coe, Finsupp.mapDomain.addMonoidHom_apply,Subgroup.coe_subtype,
       @MonoidAlgebra.mul_apply_right,@MonoidAlgebra.mul_apply_left]
     congr
     rw [funext_iff]
@@ -71,12 +66,10 @@ noncomputable instance KG_is_KcenterG_Algebra : Algebra (MonoidAlgebra k (Subgro
     rw[mul_comm,mul_eq_mul_left_iff]
     left
     rw [@Finsupp.single_eq_set_indicator]
-    have htriv :  ↑x1 ∈ Subgroup.center G := by
-          simp only [SetLike.coe_mem]
-    have sub := (@Subgroup.mem_center_iff G _ x1).mp htriv
     by_cases hf : (x * g1⁻¹) = x1
     · have hf1 : (g1⁻¹ * x) = x1 :=by
-        rw [@inv_mul_eq_iff_eq_mul,sub,mul_eq_of_eq_mul_inv (id (Eq.symm hf))]
+        rw [@inv_mul_eq_iff_eq_mul,((@Subgroup.mem_center_iff G _ x1).mp (SetLike.coe_mem x1)),
+        mul_eq_of_eq_mul_inv (id (Eq.symm hf))]
       rw[hf,hf1]
     · push_neg at hf
       rw [← @Finset.not_mem_singleton] at hf
@@ -91,11 +84,15 @@ noncomputable instance KG_is_KcenterG_Algebra : Algebra (MonoidAlgebra k (Subgro
         simp only [Set.mem_singleton_iff, and_true]
         by_contra hff
         apply hf
-        rw [Finset.mem_singleton,@mul_inv_eq_iff_eq_mul,<-sub,mul_eq_of_eq_inv_mul (id (Eq.symm hff))]
+        rw [Finset.mem_singleton,@mul_inv_eq_iff_eq_mul,<-((@Subgroup.mem_center_iff G _ x1).mp (SetLike.coe_mem x1)),mul_eq_of_eq_inv_mul (id (Eq.symm hff))]
   · intro pH pG
     rw[HSMul.hSMul,instHSMul,RingMorphism_KH_KG,MonoidAlgebra.mapDomainRingHom_apply, ZeroHom.toFun_eq_coe,
       AddMonoidHom.toZeroHom_coe, Finsupp.mapDomain.addMonoidHom_apply]
     exact rfl
+
+/--If we have a homomorphism `H →* Subgroup.center G`, then we have `Algebra (MonoidAlgebra k H) (MonoidAlgebra k G)`. -/
+noncomputable instance KG_is_KH_Algebra (ϕ : H →* Subgroup.center G) : Algebra (MonoidAlgebra k H) (MonoidAlgebra k G):= by
+  exact Algebra.compHom (MonoidAlgebra k G) (MonoidAlgebra.mapDomainRingHom k ϕ)
 
 end kG_kH_Module
 #min_imports

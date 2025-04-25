@@ -5,18 +5,6 @@ in a particular case.
 
 \section{Group algebra}
 
-\begin{definition}
-    \label{def:trivialHG}
-    \uses{}
-    \lean{kG_kH_Module.mulHom_mapHG}
-    \leanok
-    Given $G$ a group and $H$ a subgroup of $G$, we have a trivial homomorphism from $H$
-    to $G$ given by $h\mapsto h$.
-    \begin{proof}
-        \leanok
-        Trivial.
-    \end{proof}
-\end{definition}
 
 \begin{definition}
     \label{def:trivialkHkG}
@@ -68,7 +56,7 @@ in a particular case.
 \end{proof}
 
 \begin{proposition}
-    \label{prop:kG_is_kH_Algebra}
+    \label{prop:kG_is_kGcenter_Algebra}
     \uses{def:RingHomkHkG}
     \lean{kG_kH_Module.KG_is_KcenterG_Algebra}
     \leanok
@@ -78,4 +66,17 @@ in a particular case.
 \begin{proof}
     \leanok
     We check the axioms of an algebra. Nothing really difficult.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:kG_is_kH_Algebra}
+    \uses{prop:kG_is_kGcenter_Algebra}
+    \lean{kG_kH_Module.KG_is_KH_Algebra}
+    \leanok
+    If there exists a ring homomorphism $H\rightarrow \mathcal{Z}_G$, then $\mathbb{K}[G]$
+    is a $\mathbb{K}[H]$ algebra.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Using \ref{prop:kG_is_kGcenter_Algebra}, we have \textit{mettre preuve propre}.
 \end{proof}
