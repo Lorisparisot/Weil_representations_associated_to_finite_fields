@@ -1,4 +1,8 @@
-import Mathlib
+import Mathlib.Algebra.Algebra.Defs
+import Mathlib.Algebra.EuclideanDomain.Field
+import Mathlib.Algebra.MonoidAlgebra.MapDomain
+import Mathlib.Algebra.Ring.Regular
+import Mathlib.GroupTheory.Subgroup.Center
 
 /-!
 # Addendum to the representation theory in mathlib
