@@ -1,8 +1,5 @@
-import Mathlib.Algebra.Algebra.Defs
-import Mathlib.Algebra.EuclideanDomain.Field
-import Mathlib.Algebra.MonoidAlgebra.MapDomain
-import Mathlib.Algebra.Ring.Regular
-import Mathlib.GroupTheory.Subgroup.Center
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.RepresentationTheory.Basic
 
 /-!
 # Addendum to the representation theory in mathlib
@@ -15,7 +12,7 @@ particular subgroup (commutative one) and the Frobenius reciprocity.
 
 ## Contents
 + Adds to `MonoidAlgebra`theory over a group, to create some particular tensor products.
-+ Induced representation in the case...
++ `Induced_rep_center.definition` : the representation iduced by the center of a group `G`.
 + Frobenius reciprocity in the case...
 
 -/
@@ -98,7 +95,38 @@ noncomputable instance KG_is_KcenterG_Algebra : Algebra (MonoidAlgebra k (Subgro
 noncomputable instance KG_is_KH_Algebra (ϕ : H →* Subgroup.center G) : Algebra (MonoidAlgebra k H) (MonoidAlgebra k G):= by
   exact Algebra.compHom (MonoidAlgebra k G) (MonoidAlgebra.mapDomainRingHom k ϕ)
 
+
 end kG_kH_Module
+
+namespace Induced_rep_center
+
+variable (k G W : Type*) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
+[inst4 : AddCommGroup W] [inst5 : Module k W]
+
+variable (H : @Subgroup G inst2) [instH : H.IsCommutative]
+
+variable (θ : Representation k (Subgroup.center G) W)
+
+/--Induced representation on `G` by a representation `Representation k (Subgroup.center G) W`
+seen as a tensor product. -/
+def tensor :=
+  TensorProduct (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) (θ.asModule)
+
+/--`tensor k G W θ` is an `AddCommMonoid`.-/
+noncomputable instance tensor_add_comm_mon : AddCommMonoid (tensor k G W θ) := by
+  rw[tensor]
+  exact TensorProduct.addCommMonoid
+
+/--`tensor k G W θ` is a `MonoidAlgebra k G` module.-/
+noncomputable instance tensor_module_mono : Module (MonoidAlgebra k G) (tensor k G W θ) := by
+  unfold tensor
+  exact TensorProduct.leftModule
+
+/--Induced representation on `G` by a representation `Representation k (Subgroup.center G) W`
+seen as a representation. -/
+noncomputable def definition := @Representation.ofModule k G _ _ (tensor k G W θ) _ _
+
+end Induced_rep_center
 #min_imports
 
 

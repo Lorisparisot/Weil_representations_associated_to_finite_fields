@@ -79,3 +79,48 @@ in a particular case.
     \leanok
     Using \ref{prop:kG_is_kGcenter_Algebra}, we have \textit{mettre preuve propre}.
 \end{proof}
+
+\section{Induced representation}
+
+\begin{definition}
+    \label{def:induced_tensor}
+    \uses{prop:kG_is_kH_Algebra}
+    \lean{Induced_rep_center.tensor}
+    \leanok
+    Given $G$ a group, $\mathbb{K}$ a field, $W$ a $k$ vector space and $\theta$ a representation of
+    $\mathcal{Z}_G$ on $W$, $V:=\mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$,
+    where $V_\theta$ is the $\mathbb{K}[\mathcal{Z}_G]$ module associated to $\theta$.
+\end{definition}
+
+\begin{proposition}
+    \label{prop:induced_add_comm_mono}
+    \uses{def:induced_tensor}
+    \lean{Induced_rep_center}
+    \leanok 
+    The $V$ defined in \ref{def:induced_tensor} is an additive commutative monoid.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We do \textit{mettre la preuve}.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:tensor_module_mono}
+    \uses{prop:kG_is_kH_Algebra}
+    \lean{Induced_rep_center.tensor_module_mono}
+    \leanok 
+    The $V$ defined in \ref{def:induced_tensor} is a $\mathbb{K}[G]$ module.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We do \textit{mettre la preuve}.
+\end{proof}
+
+\begin{definition}[Induced representation by the center]
+    \label{def:induced_rep}
+    \uses{prop:tensor_module_mono,prop:induced_add_comm_mono}
+    \lean{Induced_rep_center.definition}
+    \leanok
+    The $V$ defined in \ref{def:induced_tensor} defined a representation of $G$ called the
+    induced representation by $\mathcal{Z}_G$.
+\end{definition}
