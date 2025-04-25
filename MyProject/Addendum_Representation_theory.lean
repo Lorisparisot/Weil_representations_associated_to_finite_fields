@@ -95,7 +95,6 @@ noncomputable instance KG_is_KcenterG_Algebra : Algebra (MonoidAlgebra k (Subgro
 noncomputable instance KG_is_KH_Algebra (ϕ : H →* Subgroup.center G) : Algebra (MonoidAlgebra k H) (MonoidAlgebra k G):= by
   exact Algebra.compHom (MonoidAlgebra k G) (MonoidAlgebra.mapDomainRingHom k ϕ)
 
-
 end kG_kH_Module
 
 namespace Induced_rep_center
