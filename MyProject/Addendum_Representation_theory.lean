@@ -32,30 +32,25 @@ instance mulHom_mapHG : H →* G := by
 noncomputable def Map_KHKG : (MonoidAlgebra k H) → (MonoidAlgebra k G) :=
   fun h => MonoidAlgebra.mapDomain (Subgroup.subtype H) h
 
-/--If `H` is commutative, `MonoidAlgebra k H` is a commutative monoid.-/
-noncomputable instance KHCommMonoid : CommMonoid (MonoidAlgebra k H) := by
-  exact CommMonoidWithZero.toCommMonoid
-
-/--`MonoidAlgebra k H` is a commutative semiring.-/
-noncomputable instance KHCommRing : CommSemiring (MonoidAlgebra k H) := by
+/--If `G`is commutative, then `MonoidAlgebra k G` is a commutative semiring.-/
+noncomputable instance KGCommRing [instG : CommGroup G] : CommSemiring (MonoidAlgebra k G) := by
   exact MonoidAlgebra.commSemiring
 
+omit instH in
 /--Scalar multiplication between `MonoidAlgebra k H` and `MonoidAlgebra k G`, ie
 classical mulitplication between an element of `MonoidAlgebra k H` seen as an element
 of `MonoidAlgebra k G` and an element of `MonoidAlgebra k G`.-/
 noncomputable instance SMulKHKG : SMul (MonoidAlgebra k H) (MonoidAlgebra k G) := by
-  refine SMul.mk ?_
-  intro h
-  intro g
-  exact (Map_KHKG k G H h)*g
+  refine SMul.mk (fun h g => (Map_KHKG k G H h)*g)
 
+omit instH in
 /--Ring morphism from `MonoidAlgebra k H` to `MonoidAlgebra k G`, given by the coercion
 of element of `H`into element of `G`.-/
 noncomputable def RingMorphism_KH_KG : (MonoidAlgebra k H) →+* (MonoidAlgebra k G) := by
   exact MonoidAlgebra.mapDomainRingHom k (mulHom_mapHG G H)
 
 /--`MonoidAlgebra k G` is a `MonoidAlgebra k (Subgroup.center G)` algebra.-/
-noncomputable instance KG_is_Kcenter_Algebra : Algebra (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) := by
+noncomputable instance KG_is_KcenterG_Algebra : Algebra (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) := by
   refine Algebra.mk (RingMorphism_KH_KG k G (Subgroup.center G)) ?_ ?_
   · intro pH pG
     ext x
