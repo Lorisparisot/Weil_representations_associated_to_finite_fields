@@ -124,3 +124,53 @@ in a particular case.
     The $V$ defined in \ref{def:induced_tensor} defined a representation of $G$ called the
     induced representation by $\mathcal{Z}_G$.
 \end{definition}
+
+\begin{proposition}
+    \label{prop:induced_rep_is_module}
+    \uses{def:induced_rep}
+    \lean{Induced_rep_center.module_sub_rep_iso}
+    \leanok 
+   The induced representation defined in \ref{def:induced_rep} is a $\mathbb{K}[\mathcal{Z}_G]$ module.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from general properties of tensor products.
+\end{proof}
+
+\begin{definition}[Subrepresentation of the induced]
+    \label{def:induced_rep_subrep}
+    \uses{def:induced_rep}
+    \lean{Induced_rep_center.module_sub_rep}
+    \leanok
+    We define the subrepresentation of \ref{def:induced_rep} by 
+    $\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$,
+    where $V_\theta$ is the $\mathbb{K}[\mathcal{Z}_G]$ module associated to $\theta$.
+\end{definition}
+
+\begin{proposition}[Coercion]
+    \label{prop:induced_rep_coe}
+    \uses{def:induced_tensor,def:induced_rep,def:RingHomkHkG}
+    \lean{Induced_rep_center.coe}
+    \leanok 
+   We have a coercion from element of type $\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$
+   to element of type $\mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from \ref{def:RingHomkHkG}.
+\end{proof}
+
+\begin{proposition}[Isomorphism of subrepresentation]
+    \label{prop:induced_rep_sub_iso}
+    \uses{def:induced_rep}
+    \lean{Induced_rep_center.module_sub_rep_iso}
+    \leanok 
+   We have a bijection beetween $\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$
+   and $V_\theta$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from a more general theorem which I need to implement.
+\end{proof}
+
+
