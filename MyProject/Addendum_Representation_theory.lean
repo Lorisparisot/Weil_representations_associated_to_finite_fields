@@ -1,4 +1,5 @@
-import Mathlib
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.RepresentationTheory.Basic
 
 /-!
 # Addendum to the representation theory in mathlib
@@ -181,6 +182,7 @@ noncomputable def module_sub_rep_iso : module_sub_rep k G W θ ≃ θ.asModule :
   · intro x
     simp
 
+
 /-- `tensor k G W θ` is a `MonoidAlgebra k ↥(Subgroup.center G)` module.-/
 noncomputable instance tensor_module_sub : Module (MonoidAlgebra k ↥(Subgroup.center G)) (tensor k G W θ) := by
   unfold tensor
@@ -191,8 +193,6 @@ noncomputable instance tensor_module_sub : Module (MonoidAlgebra k ↥(Subgroup.
     exact TensorProduct.zero_smul x
 
 #check tensor_module_sub
-
-
 
 
 end Induced_rep_center
