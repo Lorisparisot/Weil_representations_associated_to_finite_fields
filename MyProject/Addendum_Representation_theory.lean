@@ -1,5 +1,4 @@
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RepresentationTheory.Basic
+import Mathlib
 
 /-!
 # Addendum to the representation theory in mathlib
@@ -22,11 +21,17 @@ namespace kG_kH_Module
 variable (k G : Type*) [inst1 : Field k] [inst2 : Group G]
 variable (H : @Subgroup G inst2) [instH : H.IsCommutative]
 
+
+--noncomputable def Map_KHKG : (MonoidAlgebra k H) → (MonoidAlgebra k G) :=
+  --fun h => MonoidAlgebra.mapDomain (Subgroup.subtype H) h
 omit instH in
 /--The trivial map from `MonoidAlgebra k H` to `MonoidAlgebra k G`, ie elements from
 `MonoidAlgebra k H` are seen as `MonoidAlgebra k G`.-/
-noncomputable def Map_KHKG : (MonoidAlgebra k H) → (MonoidAlgebra k G) :=
-  fun h => MonoidAlgebra.mapDomain (Subgroup.subtype H) h
+noncomputable def Map_KHKG : (MonoidAlgebra k H) →+* (MonoidAlgebra k G) := by
+  have f : H →*G := by exact H.subtype
+  have h1 := MonoidAlgebra.mapDomainRingHom k H.subtype
+  exact h1
+
 
 omit instH in
 /--Coercion from `MonoidAlgebra k H` to `MonoidAlgebra k G` when `H` is a subgroup of `G`-/
@@ -130,8 +135,6 @@ noncomputable instance tensor_module_mono : Module (MonoidAlgebra k G) (tensor k
 seen as a representation. -/
 noncomputable def definition := @Representation.ofModule k G _ _ (tensor k G W θ) _ _
 
-/--Induced representation on `G` by a representation `Representation k (Subgroup.center G) W`
-seen as a tensor product. -/
 def module_sub_rep := TensorProduct (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k (Subgroup.center G)) (θ.asModule)
 
 /--Coercion from `module_sub_rep` to `tensor`. -/
@@ -154,33 +157,38 @@ noncomputable instance Coe : CoeOut (module_sub_rep k G W θ) (tensor k G W θ) 
   let x1 := h1 x
   exact x1
 
-
+/--`module_sub_rep` seen as a subset of `tensor`-/
 def module_sub_rep_as_set :=
   {x : tensor k G W θ | ∃ (a :(MonoidAlgebra k (Subgroup.center G))), ∃ (b : θ.asModule), x = TensorProduct.tmul (MonoidAlgebra k (Subgroup.center G)) ↑a b}
 
 #check module_sub_rep_as_set
 
-/--The tensor product `module_sub_rep` is equivalent to `θ.asModule` (which is a specialization
-of a more specific theorem that I should implement : a ⨂ₐ M ≃ M)-/
-noncomputable def module_sub_rep_iso : module_sub_rep k G W θ ≃ θ.asModule := by
+/--`module_sub_rep` is an additive commutative monoid.-/
+noncomputable instance module_sub_rep_addcommmon : AddCommMonoid (module_sub_rep k G W θ) := by
   unfold module_sub_rep
-  refine Equiv.mk ?_ ?_ ?_ ?_
-  · intro g
-    have h1 := TensorProduct.comm (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k (Subgroup.center G)) θ.asModule
-    let g1 := h1 g
-    have h2 := TensorProduct.rid (MonoidAlgebra k (Subgroup.center G)) θ.asModule
-    let g2 := h2 g1
-    exact g2
-  · intro g
-    have h1 := (TensorProduct.rid (MonoidAlgebra k (Subgroup.center G)) θ.asModule).invFun
-    let g1 := h1 g
-    have h2 := (TensorProduct.comm (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k (Subgroup.center G)) θ.asModule).invFun
-    let g2 := h2 g1
-    exact g2
+  exact TensorProduct.addCommMonoid
+
+/--`module_sub_rep` is a `MonoidAlgebra k (Subgroup.center G)` module.-/
+noncomputable instance module_sub_rep_module :  Module (MonoidAlgebra k ↥(Subgroup.center G)) (module_sub_rep k G W θ) := by
+  unfold module_sub_rep
+  exact TensorProduct.instModule
+
+/--The tensor product `module_sub_rep` is lineary equivalent to `θ.asModule` (which is a specialization
+of a more specific theorem that I should implement : a ⨂ₐ M ≃ M)-/
+noncomputable def module_sub_rep_iso_bis : module_sub_rep k G W θ ≃ₗ[MonoidAlgebra k (Subgroup.center G)] θ.asModule := by
+  unfold module_sub_rep
+  refine LinearEquiv.mk ?_ ?_ ?_ ?_
+  · refine LinearMap.mk ?_ ?_
+    · refine AddHom.mk ?_ ?_
+      · exact (fun g => (TensorProduct.rid (MonoidAlgebra k (Subgroup.center G)) θ.asModule) ((TensorProduct.comm (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k (Subgroup.center G)) θ.asModule) g))
+      · simp only [map_add, implies_true]
+    · simp only [map_smul, RingHom.id_apply, implies_true]
+  · exact (fun g => ((TensorProduct.comm (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k (Subgroup.center G)) θ.asModule).invFun) (((TensorProduct.rid (MonoidAlgebra k (Subgroup.center G)) θ.asModule).invFun) g))
   · intro x
     simp only [LinearEquiv.invFun_eq_symm, LinearEquiv.symm_apply_apply]
   · intro x
-    simp
+    simp only [LinearEquiv.invFun_eq_symm, TensorProduct.rid_symm_apply,
+      TensorProduct.comm_symm_tmul, TensorProduct.comm_tmul, TensorProduct.rid_tmul, one_smul]
 
 
 /-- `tensor k G W θ` is a `MonoidAlgebra k ↥(Subgroup.center G)` module.-/
@@ -192,7 +200,122 @@ noncomputable instance tensor_module_sub : Module (MonoidAlgebra k ↥(Subgroup.
   · intro x
     exact TensorProduct.zero_smul x
 
-#check tensor_module_sub
+
+/--Coercion from `Set (MonoidAlgebra k H)` to `(Set (MonoidAlgebra k G))`.-/
+noncomputable instance Set_Coe : CoeOut (Set (MonoidAlgebra k H)) (Set (MonoidAlgebra k G)) := by
+  refine { coe := by exact fun a ↦ Set.univ }
+
+/--`(MonoidAlgebra k (Subgroup.center G))` seen as a subset of `MonoidAlgebra k G`
+is a `(MonoidAlgebra k (Subgroup.center G))` submodule of `(MonoidAlgebra k (Subgroup.center G))`.-/
+noncomputable def center_sub_module : Submodule (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) := by
+   refine Submodule.mk ?_ ?_
+   · refine AddSubmonoid.mk ?_ ?_
+     · refine AddSubsemigroup.mk ?_ ?_
+       · exact {x | ∃ y : MonoidAlgebra k (Subgroup.center G), x = y}
+       · intro a b ha hb
+         obtain ⟨ya,hya⟩ := ha
+         obtain ⟨yb, hyb⟩ := hb
+         use (ya+yb)
+         rw [hya, hyb]
+         exact Eq.symm (RingHom.map_add (kG_kH_Module.Map_KHKG k G (Subgroup.center G)) ya yb)
+     · simp
+       use 0
+       rw[kG_kH_Module.Map_KHKG]
+       simp
+   · intro c x
+     simp
+     intro x1 hx1
+     rw[hx1]
+     use c*x1
+     simp
+     exact rfl
+
+
+noncomputable def center_sub_module_iso : (MonoidAlgebra k (Subgroup.center G)) ≃ₗ[MonoidAlgebra k (Subgroup.center G)] center_sub_module k G:= by
+  refine Equiv.toLinearEquiv ?_ ?_
+  · refine Equiv.mk ?_ ?_ ?_ ?_
+    · exact (fun x => ⟨x, by use x⟩)
+    · exact (fun x => x.2.choose)
+    · intro x
+      simp
+
+      sorry
+    · intro x
+      simp
+      cases x with
+      | mk val property =>
+        refine Subtype.mk_eq_mk.mpr ?_
+        simp
+  sorry
+
+/--`θ.asModule` is a `(MonoidAlgebra k (Subgroup.center G))` submodule over itself.-/
+noncomputable def subrep_sub_module : Submodule (MonoidAlgebra k (Subgroup.center G)) (θ.asModule) := by
+  refine Submodule.mk ?_ ?_
+  · refine AddSubmonoid.mk ?_ ?_
+    · refine AddSubsemigroup.mk ?_ ?_
+      · exact Set.univ
+      · simp
+    · simp
+  · simp
+
+/--`θ.asModule` is isomorphic to itself seen as a submodule.-/
+noncomputable def subrep_sub_module_iso : θ.asModule ≃ₗ[MonoidAlgebra k (Subgroup.center G)] subrep_sub_module k G W θ := by
+  refine Equiv.toLinearEquiv ?_ ?_
+  · refine Equiv.mk ?_ ?_ ?_ ?_
+    · intro x
+      unfold subrep_sub_module
+      simp
+      refine ⟨x,?_⟩
+      simp only
+    · intro x
+      exact x.1
+    · simp
+      exact congrFun rfl
+    · simp
+      exact congrFun rfl
+  · exact { map_add := fun x ↦ congrFun rfl, map_smul := fun c ↦ congrFun rfl }
+
+
+noncomputable def tartanpion := (TensorProduct.mapIncl (center_sub_module k G) (subrep_sub_module k G W θ))
+
+#check tartanpion k G W θ
+#check module_sub_rep_iso_bis k G W θ
+
+/--`TensorProduct (MonoidAlgebra k (Subgroup.center G)) θ.asModule` is a `(MonoidAlgebra k (Subgroup.center G))` submodule
+of `tensor k G W θ`.-/
+noncomputable def is_sub_rep_submodule_iso : Submodule (MonoidAlgebra k (Subgroup.center G)) (tensor k G W θ) := by
+  refine Submodule.mk ?_ ?_
+  · refine AddSubmonoid.mk ?_ ?_
+    · refine AddSubsemigroup.mk ?_ ?_
+      · exact (Set.image (TensorProduct.mapIncl (center_sub_module k G) (subrep_sub_module k G W θ)) (Set.univ))
+      · simp
+        intro a b x1 hx1 x2 hx2
+        use (x1+x2)
+        simp only [map_add]
+        exact Mathlib.Tactic.LinearCombination.add_eq_eq hx1 hx2
+    · use 0
+      simp only [Set.mem_univ, TensorProduct.mapIncl, map_zero, and_self]
+  · simp only [TensorProduct.mapIncl, Set.image_univ, Set.mem_range, forall_exists_index,
+    forall_apply_eq_imp_iff]
+    intro c a
+    use (c • a)
+    simp only [map_smul]
+
+
+
+/-- `θ.asModule` is a subrepresentation of `tensor k G W θ`, ie `θ.asModule` is isomorphic to a `(MonoidAlgebra k (Subgroup.center G))` submodule
+of `tensor k G W θ`.-/
+noncomputable def is_sub_rep_submodule : θ.asModule ≃ₗ[MonoidAlgebra k (Subgroup.center G)] is_sub_rep_submodule_iso k G W θ := by
+  refine Equiv.toLinearEquiv ?_ ?_
+  · refine Equiv.mk ?_ ?_ ?_ ?_
+    · exact (fun x => (iso k G W θ) ((module_sub_rep_iso_bis k G W θ).invFun x))
+    · exact (fun x => (module_sub_rep_iso_bis k G W θ) ((iso k G W θ).invFun x))
+    · intro x
+      simp
+    · intro x
+      simp
+  · refine { map_add := by simp, map_smul := by simp }
+
 
 
 end Induced_rep_center
