@@ -1,4 +1,5 @@
-import Mathlib
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.RepresentationTheory.Basic
 
 /-!
 # Addendum to the representation theory in mathlib
@@ -400,10 +401,6 @@ noncomputable def iso_induced_as_tensor (E : Type*) [AddCommMonoid E] [Module (M
   unfold tensor module_sub_rep
   exact ((iso_hom_tens (MonoidAlgebra k ↥(Subgroup.center G)) (θ.asModule) E (MonoidAlgebra k G)).trans (iso_hom_tens (MonoidAlgebra k ↥(Subgroup.center G)) θ.asModule E
             (MonoidAlgebra k ↥(Subgroup.center G))).symm)
-
-
-
-
 
 end Induced_rep_center
 
