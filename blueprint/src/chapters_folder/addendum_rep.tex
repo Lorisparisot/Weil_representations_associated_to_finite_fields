@@ -260,7 +260,7 @@ in a particular case.
 \end{proof}
 
 \begin{proposition}[$V_\theta$ as submodule isomorphic to $V_\theta$]
-    \label{prop:theta_submodule}
+    \label{prop:theta_submodule_triv}
     \uses{prop:theta_submodule}
     \lean{Induced_rep_center.subrep_sub_module_iso}
     \leanok 
@@ -273,10 +273,10 @@ in a particular case.
 
 \begin{proposition}[$\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]} V_\theta$ as submodule]
     \label{prop:center_times_theta_submodule}
-    \uses{prop:center_submodule,prop:theta_submodule}
+    \uses{prop:center_submodule,prop:theta_submodule_triv}
     \lean{Induced_rep_center.is_sub_rep_submodule_iso}
     \leanok 
-    The image of the map sending \ref{prop:center_submodule} and \ref{prop:theta_submodule}
+    The image of the map sending \ref{prop:center_submodule} and \ref{prop:theta_submodule_triv}
     to their tensor product defines a $\mathbb{K}[\mathcal{Z}_G]$-submodule of 
     $\mathbb{K}[G]\otimes_{\mathbb{k}[\mathcal{Z}_G]}V_\theta$.
 \end{proposition}
