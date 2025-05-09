@@ -149,10 +149,10 @@ in a particular case.
 
 \begin{proposition}
     \label{prop:subrep_addmon}
-    \uses{def:subrep_asmodule}
+    \uses{def:induced_rep_subrep}
     \lean{Induced_rep_center.module_sub_rep_addcommmon}
     \leanok 
-   The tensor product defined in \ref{def:subrep_asmodule} is an additive commutative monoid.
+   The tensor product defined in \ref{def:induced_rep_subrep} is an additive commutative monoid.
 \end{proposition}
 \begin{proof}
     \leanok
@@ -164,23 +164,11 @@ in a particular case.
     \uses{prop:subrep_addmon}
     \lean{Induced_rep_center.module_sub_rep_addcommmon}
     \leanok 
-   The tensor product defined in \ref{def:subrep_asmodule} is a $\mathbb{K}[\mathcal{Z}_G]$ module.
+   The tensor product defined in \ref{def:induced_rep_subrep} is a $\mathbb{K}[\mathcal{Z}_G]$ module.
 \end{proposition}
 \begin{proof}
     \leanok
     It comes from general properties of tensor products.
-\end{proof}
-
-\begin{proposition}
-    \label{prop:subrep_iso_theta}
-    \uses{prop:subrep_module}
-    \lean{Induced_rep_center.module_sub_rep_iso}
-    \leanok 
-   The tensor product defined in \ref{def:subrep_asmodule} is isomorphic to $V_\theta$.
-\end{proposition}
-\begin{proof}
-    \leanok
-    We consider the map \textit{mettre la map}.
 \end{proof}
 
 
@@ -199,7 +187,7 @@ in a particular case.
 
 \begin{proposition}
     \label{prop:module_sub_rep_iso}
-    \uses{def:induced_rep}
+    \uses{def:induced_rep,prop:subrep_module}
     \lean{Induced_rep_center.module_sub_rep_iso}
     \leanok
     We have an isomorphism between $\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$ and $V_\theta$.
@@ -287,7 +275,7 @@ in a particular case.
 
 \begin{proposition}[Image of $V_\theta$ as submodule]
     \label{prop:subsubsub}
-    \uses{prop:subrep_iso_theta}
+    \uses{prop:subrep_iso_theta,prop:module_sub_rep_iso}
     \lean{Induced_rep_center.subsubsub}
     \leanok 
     The image of $V_\theta$ by \ref{prop:module_sub_rep_iso} defines a $\mathbb{K}[\mathcal{Z}_G]$-submodule of 
