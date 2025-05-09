@@ -221,7 +221,7 @@ in a particular case.
     It comes from \ref{def:RingHomkHkG}.
 \end{proof}
 
-\begin{proposition}[Coercion bis]
+\begin{proposition}[Coercion set]
     \label{prop:induced_rep_coe_set}
     \uses{def:induced_tensor,def:induced_rep,def:RingHomkHkG}
     \lean{Induced_rep_center.Coe}
@@ -234,10 +234,58 @@ in a particular case.
     It comes from \ref{def:RingHomkHkG}.
 \end{proof}
 
+\begin{proposition}[Center as submodule]
+    \label{prop:center_submodule}
+    \uses{prop:induced_rep_coe_set,def:RingHomkHkG}
+    \lean{Induced_rep_center.center_sub_module}
+    \leanok 
+    The set of elements of $\mathbb{K}[\mathcal{Z}_G]$ seen as elements of $\mathbb{K}[G]$
+    defines a $\mathbb{K}[\mathcal{Z}_G]$-submodule of $\mathbb{K}[G]$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We use the coercion to define the set, and then check the axioms.
+\end{proof}
+
+\begin{proposition}[$V_\theta$ as submodule]
+    \label{prop:theta_submodule}
+    \uses{}
+    \lean{Induced_rep_center.subrep_sub_module}
+    \leanok 
+    The set of elements of $V_\theta$ defines a $\mathbb{K}[\mathcal{Z}_G]$-submodule of itself.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
+
+\begin{proposition}[$V_\theta$ as submodule isomorphic to $V_\theta$]
+    \label{prop:theta_submodule}
+    \uses{prop:theta_submodule}
+    \lean{Induced_rep_center.subrep_sub_module_iso}
+    \leanok 
+    The submodule defined in \ref{prop:theta_submodule} is isomorphic to $V_\theta$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
+
+\begin{proposition}[$\mathbb{K}[\mathcal{Z}_G]\otime_{\mathbb{K}[\mathcal{Z}_G]} V_\theta$ as submodule]
+    \label{prop:center_times_theta_submodule}
+    \uses{prop:center_submodule,prop:theta_submodule}
+    \lean{Induced_rep_center.is_sub_rep_submodule_iso}
+    \leanok 
+    The image of the map sending \ref{prop:center_submodule} and \ref{prop:theta_submodule}
+    to their tensor product defines a $\mathbb{K}[\mathcal{Z}_G]$-submodule of 
+    $\mathbb{K}[G]\otimes_{\mathbb{k}[\mathcal{Z}_G]}V_\theta$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
 
 
 
-
-
-\ection{Frobenius reciprocity law}
+\section{Frobenius reciprocity law}
 

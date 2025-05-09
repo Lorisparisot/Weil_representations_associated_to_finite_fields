@@ -222,14 +222,14 @@ noncomputable def center_sub_module : Submodule (MonoidAlgebra k (Subgroup.cente
          use ya+yb
          rw[<-ha,<-hb]
          exact RingHom.map_add (kG_kH_Module.Map_KHKG k G (Subgroup.center G)) ya yb
-     · simp
+     · simp only [Set.mem_univ, true_and, Set.mem_setOf_eq]
        use 0
-       simp
+       simp only [map_zero]
    · intro c x
-     simp
+     simp only [Set.mem_univ, true_and, Set.mem_setOf_eq, forall_exists_index]
      intro x1 hx1
      use c*x1
-     simp
+     simp only [map_mul]
      exact congrArg (HMul.hMul ((kG_kH_Module.Map_KHKG k G (Subgroup.center G)) c)) hx1
 
 
@@ -239,9 +239,9 @@ noncomputable def subrep_sub_module : Submodule (MonoidAlgebra k (Subgroup.cente
   · refine AddSubmonoid.mk ?_ ?_
     · refine AddSubsemigroup.mk ?_ ?_
       · exact (@Set.univ θ.asModule)
-      · simp
-    · simp
-  · simp
+      · simp only [Set.mem_univ, imp_self, implies_true]
+    · simp only [Set.mem_univ]
+  · simp only [Set.mem_univ, imp_self, implies_true]
 
 /--`θ.asModule` is isomorphic to itself seen as a submodule.-/
 noncomputable def subrep_sub_module_iso : θ.asModule ≃ₗ[MonoidAlgebra k (Subgroup.center G)] subrep_sub_module k G W θ := by
@@ -249,17 +249,16 @@ noncomputable def subrep_sub_module_iso : θ.asModule ≃ₗ[MonoidAlgebra k (Su
   · refine Equiv.mk ?_ ?_ ?_ ?_
     · intro x
       unfold subrep_sub_module
-      simp
+      simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_univ]
       refine ⟨x,?_⟩
       simp only
     · intro x
       exact x.1
-    · simp
+    · simp only [eq_mpr_eq_cast, cast_eq, id_eq]
       exact congrFun rfl
-    · simp
+    · simp only [eq_mpr_eq_cast, cast_eq, id_eq]
       exact congrFun rfl
   · exact { map_add := fun x ↦ congrFun rfl, map_smul := fun c ↦ congrFun rfl }
-
 
 /--`TensorProduct (MonoidAlgebra k (Subgroup.center G)) θ.asModule` is a `(MonoidAlgebra k (Subgroup.center G))` submodule
 of `tensor k G W θ`.-/
@@ -285,7 +284,7 @@ noncomputable def is_sub_rep_submodule_iso : Submodule (MonoidAlgebra k (Subgrou
 #check module_sub_rep k G W θ
 #check is_sub_rep_submodule_iso k G W θ
 
-/--The image of `θ.asModule` by `module_sub_rep_iso_bis` is a submodule of `tensor k G W θ`, ie
+/--The image of `θ.asModule` by `module_sub_rep_iso` is a submodule of `tensor k G W θ`, ie
 `θ.asModule` is a subrepresentation of the induced representation-/
 noncomputable def subsubsub : Submodule (MonoidAlgebra k (Subgroup.center G)) (tensor k G W θ) := by
   refine Submodule.mk ?_ ?_
