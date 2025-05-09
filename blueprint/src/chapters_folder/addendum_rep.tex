@@ -82,7 +82,7 @@ in a particular case.
 
 \section{Induced representation}
 
-\begin{definition}
+\begin{definition}[Induced representation as module]
     \label{def:induced_tensor}
     \uses{prop:kG_is_kH_Algebra}
     \lean{Induced_rep_center.tensor}
@@ -107,9 +107,21 @@ in a particular case.
 \begin{proposition}
     \label{prop:tensor_module_mono}
     \uses{prop:kG_is_kH_Algebra,def:induced_tensor}
-    \lean{Induced_rep_center.tensor_module_mono}
+    \lean{Induced_rep_center.tensor_module}
     \leanok 
     The $V$ defined in \ref{def:induced_tensor} is a $\mathbb{K}[G]$ module.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We do \textit{mettre la preuve}.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:tensor_module_sub}
+    \uses{prop:kG_is_kH_Algebra,def:induced_tensor}
+    \lean{Induced_rep_center.tensor_module_sub}
+    \leanok 
+    The $V$ defined in \ref{def:induced_tensor} is a $\mathbb{K}[\mathcal{Z}_G]$ module.
 \end{proposition}
 \begin{proof}
     \leanok
@@ -119,23 +131,11 @@ in a particular case.
 \begin{definition}[Induced representation by the center]
     \label{def:induced_rep}
     \uses{prop:tensor_module_mono,prop:induced_add_comm_mono}
-    \lean{Induced_rep_center.definition}
+    \lean{Induced_rep_center.as_rep}
     \leanok
     The $V$ defined in \ref{def:induced_tensor} defined a representation of $G$ called the
     induced representation by $\mathcal{Z}_G$.
 \end{definition}
-
-\begin{proposition}
-    \label{prop:induced_rep_is_module}
-    \uses{def:induced_rep}
-    \lean{Induced_rep_center.module_sub_rep_iso}
-    \leanok 
-   The induced representation defined in \ref{def:induced_rep} is a $\mathbb{K}[\mathcal{Z}_G]$ module.
-\end{proposition}
-\begin{proof}
-    \leanok
-    It comes from general properties of tensor products.
-\end{proof}
 
 \begin{definition}[Subrepresentation of the induced]
     \label{def:induced_rep_subrep}
@@ -146,6 +146,67 @@ in a particular case.
     $\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$,
     where $V_\theta$ is the $\mathbb{K}[\mathcal{Z}_G]$ module associated to $\theta$.
 \end{definition}
+
+\begin{proposition}
+    \label{prop:subrep_addmon}
+    \uses{def:subrep_asmodule}
+    \lean{Induced_rep_center.module_sub_rep_addcommmon}
+    \leanok 
+   The tensor product defined in \ref{def:subrep_asmodule} is an additive commutative monoid.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from general properties of tensor products.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:subrep_module}
+    \uses{prop:subrep_addmon}
+    \lean{Induced_rep_center.module_sub_rep_addcommmon}
+    \leanok 
+   The tensor product defined in \ref{def:subrep_asmodule} is a $\mathbb{K}[\mathcal{Z}_G]$ module.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from general properties of tensor products.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:subrep_iso_theta}
+    \uses{prop:subrep_module}
+    \lean{Induced_rep_center.module_sub_rep_iso}
+    \leanok 
+   The tensor product defined in \ref{def:subrep_asmodule} is isomorphic to $V_\theta$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We consider the map \textit{mettre la map}.
+\end{proof}
+
+
+\begin{proposition}
+    \label{prop:induced_rep_is_module}
+    \uses{def:induced_rep}
+    \lean{Induced_rep_center.module_sub_rep_module}
+    \leanok 
+   The induced representation defined in \ref{def:induced_rep} is a $\mathbb{K}[\mathcal{Z}_G]$ module.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from general properties of tensor products.
+\end{proof}
+
+
+\begin{proposition}
+    \label{prop:module_sub_rep_iso}
+    \uses{def:induced_rep}
+    \lean{Induced_rep_center.module_sub_rep_iso}
+    \leanok
+    We have an isomorphism between $\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$ and $V_\theta$.
+\end{proposition}
+\begin{proof}
+    It comes from a special case of a theorem \textit{à ajouter}.
+\end{proof}
 
 \begin{proposition}[Coercion]
     \label{prop:induced_rep_coe}
@@ -160,17 +221,23 @@ in a particular case.
     It comes from \ref{def:RingHomkHkG}.
 \end{proof}
 
-\begin{proposition}[Isomorphism of subrepresentation]
-    \label{prop:induced_rep_sub_iso}
-    \uses{def:induced_rep}
-    \lean{Induced_rep_center.module_sub_rep_iso}
+\begin{proposition}[Coercion bis]
+    \label{prop:induced_rep_coe_set}
+    \uses{def:induced_tensor,def:induced_rep,def:RingHomkHkG}
+    \lean{Induced_rep_center.Coe}
     \leanok 
-   We have a bijection beetween $\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$
-   and $V_\theta$.
+   We have a coercion from element of type $Set : \mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$
+   to element of type $Set : \mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$.
 \end{proposition}
 \begin{proof}
     \leanok
-    It comes from a more general theorem which I need to implement.
+    It comes from \ref{def:RingHomkHkG}.
 \end{proof}
 
+
+
+
+
+
+\ection{Frobenius reciprocity law}
 
