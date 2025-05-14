@@ -1,5 +1,5 @@
 import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RepresentationTheory.Basic
+import Mathlib.RepresentationTheory.Character
 
 /-!
 # Addendum to the representation theory in mathlib
@@ -30,7 +30,6 @@ noncomputable def Map_KHKG : (MonoidAlgebra k H) →+* (MonoidAlgebra k G) := by
   have f : H →*G := by exact H.subtype
   have h1 := MonoidAlgebra.mapDomainRingHom k H.subtype
   exact h1
-
 
 omit instH in
 /--Coercion from `MonoidAlgebra k H` to `MonoidAlgebra k G` when `H` is a subgroup of `G`-/
@@ -185,7 +184,6 @@ noncomputable def module_sub_rep_iso : module_sub_rep k G W θ ≃ₗ[MonoidAlge
     simp only [LinearEquiv.invFun_eq_symm, TensorProduct.rid_symm_apply,
       TensorProduct.comm_symm_tmul, TensorProduct.comm_tmul, TensorProduct.rid_tmul, one_smul]
 
-
 /-- `tensor k G W θ` is a `MonoidAlgebra k ↥(Subgroup.center G)` module.-/
 noncomputable instance tensor_module_sub : Module (MonoidAlgebra k ↥(Subgroup.center G)) (tensor k G W θ) := by
   unfold tensor
@@ -195,7 +193,6 @@ noncomputable instance tensor_module_sub : Module (MonoidAlgebra k ↥(Subgroup.
   · intro x
     exact TensorProduct.zero_smul x
 
-
 /--Coercion from `Set (MonoidAlgebra k H)` to `(Set (MonoidAlgebra k G))`.-/
 noncomputable instance Set_Coe : CoeOut (Set (MonoidAlgebra k H)) (Set (MonoidAlgebra k G)) := by
   refine { coe := ?_ }
@@ -203,7 +200,6 @@ noncomputable instance Set_Coe : CoeOut (Set (MonoidAlgebra k H)) (Set (MonoidAl
   have h := (kG_kH_Module.RingMorphism_KH_KG k G H)
   let xG := {h a | a ∈ x}
   exact xG
-
 
 /--`(MonoidAlgebra k (Subgroup.center G))` seen as a subset of `MonoidAlgebra k G`
 is a `(MonoidAlgebra k (Subgroup.center G))` submodule of `(MonoidAlgebra k (Subgroup.center G))`.-/
@@ -232,7 +228,6 @@ noncomputable def center_sub_module : Submodule (MonoidAlgebra k (Subgroup.cente
      use c*x1
      simp only [map_mul]
      exact congrArg (HMul.hMul ((kG_kH_Module.Map_KHKG k G (Subgroup.center G)) c)) hx1
-
 
 /--`θ.asModule` is a `(MonoidAlgebra k (Subgroup.center G))` submodule over itself.-/
 noncomputable def subrep_sub_module : Submodule (MonoidAlgebra k (Subgroup.center G)) (θ.asModule) := by
@@ -317,8 +312,44 @@ noncomputable def subsubsub : Submodule (MonoidAlgebra k (Subgroup.center G)) (t
     use (c • x1)
     simp only [map_smul]
 
-/--Isomorphism between $Hom_B(B⊗_AM,N)$ and $Hom_A(M,N)$ for $B$ an $A-$algebra, $M$ a $A-$ module
-and $N$ a $B-$module.-/
+
+
+noncomputable def subrep : θ.asModule ≃ₗ[MonoidAlgebra k (Subgroup.center G)] subsubsub k G W θ := by
+  refine Equiv.toLinearEquiv ?_ ?_
+  · refine Equiv.ofBijective ?_ ?_
+    · intro x
+      unfold subsubsub
+      simp
+      refine ⟨ ?_, ?_⟩
+      ·  exact ((TensorProduct.map (Algebra.linearMap (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G)) LinearMap.id)
+        ((module_sub_rep_iso k G W θ).symm x))
+      · use x
+        rfl
+    · constructor
+      · intro x1 x2
+        simp
+        intro h
+        unfold module_sub_rep_iso at h
+        simp only [LinearEquiv.invFun_eq_symm, TensorProduct.rid_symm_apply,
+          TensorProduct.comm_symm_tmul, id_eq, LinearEquiv.coe_symm_mk, TensorProduct.map_tmul,
+          Algebra.linearMap_apply, map_one, LinearMap.id_coe] at h
+
+        sorry
+      · intro y
+        unfold subsubsub at y
+        obtain ⟨hy, hy1⟩ := y
+        obtain ⟨ hy2,hy3⟩ := hy1
+        use hy2
+        simp
+        simp at hy3
+        congr
+
+
+        sorry
+
+
+/--Isomorphism between $Hom_B(B⊗_AM,N)$ and $Hom_A(M,N)$ for $B$ an `A`-algebra, `M` an `A`-module
+and `N` a `B`-module.-/
 noncomputable def iso_hom_tens (A M N B: Type*) [CommSemiring A] [Semiring B] [Algebra A B] [AddCommMonoid M] [Module A M] [AddCommMonoid N] [Module A N] [Module B N] [IsScalarTower A B N]:
 ((TensorProduct A B M) →ₗ[B] N) ≃ₗ[A] (M →ₗ[A] N) := by
   refine Equiv.toLinearEquiv ?_ ?_
@@ -404,7 +435,115 @@ noncomputable def iso_induced_as_tensor (E : Type*) [AddCommMonoid E] [Module (M
 
 end Induced_rep_center
 
+namespace Frobenius_reciprocity
 
+variable (k G W : Type) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
+[inst4 : AddCommGroup W] [inst5 : Module k W] [inst6 : Module.Finite k W]
+
+variable (H : @Subgroup G inst2) [instH : H.IsCommutative]
+
+variable (θ : Representation k (Subgroup.center G) W)
+
+instance Finite_H : Finite H := Subgroup.instFiniteSubtypeMem H
+
+noncomputable instance Fintype_G : Fintype G := by
+  exact Fintype.ofFinite G
+
+omit inst3 inst5 inst6 in
+/--Definition of a class function : given G a group, a class function is a function $f : G → G$
+which is contant over the conjugacy classes of $G$.-/
+class conj_class_fun where
+  Fun :  G → W
+  conj_property : ∀ (x : G), ∀ (g : G), Fun (g⁻¹ * x * g) = Fun x
+
+--set_option pp.proofs true in
+/--Definition of the induced of a class function-/
+noncomputable def Ind_conj_class_fun (f : conj_class_fun H W) : conj_class_fun G W := by
+  refine { Fun := ?_, conj_property := ?_ }
+  · intro x
+    let S := {g : G | g⁻¹ * x * g ∈ H}.toFinset
+    let f' : S → W := fun g ↦ f.1 ⟨g.1⁻¹ * x * g.1, by cases g with
+    | mk val property => simp only; rw [@Set.mem_toFinset] at property; exact property ⟩
+    let h1 := (1 / Fintype.card H) • (∑ g, f' g)
+    exact h1
+  · intro x g
+    simp only [Set.coe_setOf, Finset.univ_eq_attach]
+    ring_nf
+    let bij :  {g_1 | g_1⁻¹ * (g⁻¹ * x * g) * g_1 ∈ H} ≃ {g | g⁻¹ * x * g ∈ H} := by
+      refine Equiv.mk ?_ ?_ ?_ ?_
+      · exact (fun g1 => ⟨ g*g1, by simp only [Set.mem_setOf_eq, mul_inv_rev];simp only [Set.coe_setOf] at g1;let g2:= g1.2; group at g2; group;exact g2⟩)
+      · exact (fun u => ⟨ g⁻¹*u, by simp only [Set.mem_setOf_eq, mul_inv_rev, inv_inv];simp only [Set.coe_setOf] at u;group;let h2:= u.2; group at h2;exact h2 ⟩)
+      · intro u
+        simp only [Set.coe_setOf, Set.mem_setOf_eq, inv_mul_cancel_left, Subtype.coe_eta]
+      · intro u
+        simp only [Set.coe_setOf, Set.mem_setOf_eq, mul_inv_cancel_left, Subtype.coe_eta]
+    refine Mathlib.Tactic.LinearCombination.smul_const_eq ?_ ((1 / Fintype.card ↥H))
+    dsimp
+    refine Finset.sum_equiv ?_ ?_ ?_
+    · simp only [Set.mem_toFinset, Set.mem_setOf_eq]
+      exact bij
+    · simp only [Finset.mem_attach, eq_mpr_eq_cast, implies_true]
+    · intro a ha
+      simp
+      group
+      dsimp
+
+      sorry
+
+
+/--The character of a representation seen as a `conj_class_fun`.-/
+noncomputable instance character_as_conj_class_fun (U : FDRep k G) : conj_class_fun G k := by
+  refine { Fun := ?_, conj_property := ?_ }
+  · exact U.character
+  · intro x g
+    rw[FDRep.char_mul_comm,mul_inv_cancel_left]
+
+omit inst3 in
+@[simp]
+theorem character_as_conj_class_fun_is_character (U : FDRep k G) : (character_as_conj_class_fun k G U).Fun = U.character := by rfl
+
+
+#check @character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ)
+#check (Induced_rep_center.as_rep k G W θ)
+
+#check @FDRep.of k G _ _ (RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ)) (sorry) (sorry) (sorry) _
+
+noncomputable instance tensor_addcommgroup_restrictscalars : AddCommGroup (RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ)) := by
+  unfold Induced_rep_center.tensor
+  exact
+    instAddCommGroupRestrictScalars k (MonoidAlgebra k G)
+      (TensorProduct (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G) θ.asModule)
+
+noncomputable instance tensor_module_restrictscalars : Module k (RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ)) := by
+  unfold Induced_rep_center.tensor
+  exact
+    RestrictScalars.module k (MonoidAlgebra k G)
+      (TensorProduct (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G) θ.asModule)
+
+noncomputable instance tensor_module_restrictscalars_isfinite : Module.Finite k (RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ)) := by
+  sorry
+
+#check FDRep.of θ
+#check @character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ)
+#check @Ind_conj_class_fun G k _ _ _ (Subgroup.center G) (@character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ))
+set_option pp.proofs true in
+/--Given the character of a representation `θ` of `Subgroup.center G` on `k`, the character
+of the induced representation `tensor` on `G` is the `Ind_conj_class_fun` of the character of
+`θ`.
+-/
+theorem Induced_character_is_character_induced_center : character_as_conj_class_fun k G (FDRep.of (Induced_rep_center.as_rep k G W θ)) =
+@Ind_conj_class_fun G k _ _ _ (Subgroup.center G) (@character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ))  := by
+  unfold Ind_conj_class_fun
+  simp
+  unfold character_as_conj_class_fun
+  congr
+  unfold Induced_rep_center.as_rep
+  ext g
+  unfold Induced_rep_center.tensor
+
+  sorry
+
+end Frobenius_reciprocity
 
 #min_imports
 

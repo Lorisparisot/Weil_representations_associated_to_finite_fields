@@ -317,3 +317,53 @@ in a particular case.
 
 \section{Frobenius reciprocity law}
 
+\subsection{Central function}
+
+\begin{definition}[Central function]
+    \label{def:central_fun}
+    \uses{}
+    \lean{Frobenius_reciprocity.conj_class_fun}
+    \leanok 
+    Given $G$ a group, a function $f$ over $G$ is called central if it is constant on
+    the conjugacy classes of $G$ : $f(g^{-1}xg)=f(x)$ for all $g\in G$ and $x\in G$.
+\end{definition}
+
+\begin{definition}[Induced central function]
+    \label{def:induced_central_fun}
+    \uses{def:central_fun}
+    \lean{Frobenius_reciprocity.Ind_conj_class_fun}
+    \leanok 
+    If $H$ is a subgroup of $G$ a finite group, and if $f$ is central over $H$, we define a central function 
+    $f_G$ over $G$ (called the induced central function on $f$) by the formula :
+    \begin{equation*}
+        f_G(x)=\frac{1}{\tex{Card}(H)}\sum\limits_{g\in G\ \wedge \ g^{-1}xg\in H}f(g^{-1}xg)
+    \end{equation*}
+\begin{proof} 
+    We check the axiom by reordering the sum with the bijection $x\mapsto g^{-1}x$.
+    Still a problem in the lean proof.
+\end{proof}
+
+\begin{definition}[Character as central function]
+    \label{def:char_central_fun}
+    \uses{def:central_fun}
+    \lean{Frobenius_reciprocity.character_as_conj_class_fun}
+    \leanok 
+    A character is of course a central function over $G$. We empacked this definition
+    in Lean.
+\end{definition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
+
+\begin{proposition}[Induced character]
+    \label{prop:induced_char}
+    \uses{def:char_central_fun,def:induced_central_fun,def:induced_rep}
+    \lean{Induced_character_is_character_induced_center}
+    \leanok 
+    The character of the induced representation by $\mathcal{Z}_G$ over $G$ is the induced 
+    central function of the character of $\mathcal{Z}_G$.
+\end{propositon}
+\begin{proof}
+    sorry
+\end{proof}
