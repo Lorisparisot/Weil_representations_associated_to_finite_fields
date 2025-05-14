@@ -333,7 +333,6 @@ noncomputable def subrep : θ.asModule ≃ₗ[MonoidAlgebra k (Subgroup.center G
         simp only [LinearEquiv.invFun_eq_symm, TensorProduct.rid_symm_apply,
           TensorProduct.comm_symm_tmul, id_eq, LinearEquiv.coe_symm_mk, TensorProduct.map_tmul,
           Algebra.linearMap_apply, map_one, LinearMap.id_coe] at h
-
         sorry
       · intro y
         unfold subsubsub at y
@@ -342,10 +341,8 @@ noncomputable def subrep : θ.asModule ≃ₗ[MonoidAlgebra k (Subgroup.center G
         use hy2
         simp
         simp at hy3
-        congr
-
-
         sorry
+  sorry
 
 
 /--Isomorphism between $Hom_B(B⊗_AM,N)$ and $Hom_A(M,N)$ for $B$ an `A`-algebra, `M` an `A`-module
