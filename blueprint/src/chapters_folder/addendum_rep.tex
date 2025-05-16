@@ -359,10 +359,22 @@ in a particular case.
     \end{proof}
 \end{definition}
 
+\begin{proposition}[Induced representation is semisimple]
+    \label{prop:tensor_semi_simple}
+    \uses{def:induced_tensor}
+    \lean{Frobenius_reciprocity.tensor_semisimple}
+    \leanok 
+    If $|G|\nmid Char(k)$, then the module defined in \ref{def:induced_tensor} is semisimple.
+    \begin{proof}
+        \leanok
+        Trivial.
+    \end{proof}
+\end{proposition}
+
 
 \begin{proposition}[Induced character]
     \label{prop:induced_char}
-    \uses{def:char_central_fun,def:induced_central_fun,def:induced_rep}
+    \uses{def:char_central_fun,def:induced_central_fun,def:induced_rep,prop:tensor_semi_simple}
     \lean{Frobenius_reciprocity.Induced_character_is_character_induced_center}
     \leanok 
     The character of the induced representation by $\mathcal{Z}_G$ over $G$ is the induced 

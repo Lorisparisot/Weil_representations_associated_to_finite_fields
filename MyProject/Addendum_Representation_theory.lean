@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.RepresentationTheory.Character
+import Mathlib.RepresentationTheory.Maschke
 
 /-!
 # Addendum to the representation theory in mathlib
@@ -516,8 +517,17 @@ noncomputable instance tensor_module_restrictscalars : Module k (RestrictScalars
       (TensorProduct (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G) θ.asModule)
 
 noncomputable instance tensor_module_restrictscalars_isfinite : Module.Finite k (RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ)) := by
+  unfold Induced_rep_center.tensor
 
   sorry
+
+/--`tensor` is a semisimple module.-/
+noncomputable instance tensor_semisimple [h : NeZero ↑(Fintype.card G : k)] : IsSemisimpleModule (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ) := by
+  unfold Induced_rep_center.tensor
+  exact @MonoidAlgebra.Submodule.complementedLattice k _ G _ (h) _ (TensorProduct (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G) θ.asModule)
+    _ _
+
+
 
 #check FDRep.of θ
 #check @character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ)
@@ -527,7 +537,7 @@ set_option pp.proofs true in
 of the induced representation `tensor` on `G` is the `Ind_conj_class_fun` of the character of
 `θ`.
 -/
-theorem Induced_character_is_character_induced_center : character_as_conj_class_fun k G (FDRep.of (Induced_rep_center.as_rep k G W θ)) =
+theorem Induced_character_is_character_induced_center [h : NeZero ↑(Fintype.card G : k)] : character_as_conj_class_fun k G (FDRep.of (Induced_rep_center.as_rep k G W θ)) =
 @Ind_conj_class_fun G k _ _ _ (Subgroup.center G) (@character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ)).1  := by
   unfold Ind_conj_class_fun
   simp
@@ -536,8 +546,25 @@ theorem Induced_character_is_character_induced_center : character_as_conj_class_
   unfold Induced_rep_center.as_rep
   ext g
   unfold Induced_rep_center.tensor
+  have h1 := tensor_semisimple k G W θ
 
   sorry
+
+
+/-! Doc string.-/
+/--Scalar produt of characters is equal to the dimension of the Hom-/
+theorem char_orthonormal' [h : Invertible ↑(Fintype.card G : k)](V W : FDRep k G) :
+    ⅟ (Fintype.card G : k) • ∑ g : G, V.character g * W.character g⁻¹ =
+    Module.finrank k (W ⟶ V) := by
+  conv_lhs => congr; rfl; congr; rfl; intro g; rw [mul_comm, ← FDRep.char_linHom]
+  rw [FDRep.average_char_eq_finrank_invariants]
+  set e := Representation.linHom.invariantsEquivFDRepHom W V
+  have := LinearEquiv.finrank_eq e
+  rw [← this]
+  simp
+
+/--Frobenius reciprocicty law-/
+theorem Frobenius_center (ψ : FDRep k G) :
 
 end Frobenius_reciprocity
 
