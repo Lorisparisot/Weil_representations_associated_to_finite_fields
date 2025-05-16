@@ -26,7 +26,7 @@ The main results are :
 -/
 
 
-variable (V k : Type*) [inst1 : Field k] [inst2 : AddCommGroup V] [inst3 : Module k V] [inst4 : FiniteDimensional k V]
+variable (V k : Type*) [inst1 : Field k] [inst2 : AddCommGroup  V] [inst3 : Module k V] [inst4 : FiniteDimensional k V]
 
 --local notation "q" => Fintype.card k
 
@@ -243,8 +243,8 @@ def Hom_H_to_V_x_Dual_sub_V : Subgroup (Heisenberg V k) := by
     exact h.2.symm
 
 /--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_V` is commutative. -/
-instance Hom_H_to_V_x_Dual_sub_V_commutative : Subgroup.IsCommutative (Hom_H_to_V_x_Dual_sub_V V k) :=by
-  refine Subgroup.IsCommutative.mk ?_
+instance Hom_H_to_V_x_Dual_sub_V_commutative : IsMulCommutative (Hom_H_to_V_x_Dual_sub_V V k) :=by
+  refine IsMulCommutative.mk ?_
   refine { comm := ?_ }
   intro a b
   obtain ⟨a,ha⟩ := a
@@ -285,7 +285,7 @@ instance Hom_H_to_V_x_Dual_sub_V_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub
 omit inst4 in
 /--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_V` is maximal among the commutative
 subgroups of `Heisenberg`-/
-theorem Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : Subgroup.IsCommutative (Hom_H_to_V_x_Dual_sub_V V k) ∧ (((Hom_H_to_V_x_Dual_sub_V V k) < Q ) → ¬ (Subgroup.IsCommutative Q)) := by
+theorem Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : IsMulCommutative (Hom_H_to_V_x_Dual_sub_V V k) ∧ (((Hom_H_to_V_x_Dual_sub_V V k) < Q ) → ¬ (IsMulCommutative Q)) := by
   constructor
   · exact Hom_H_to_V_x_Dual_sub_V_commutative V k
   · intro h
@@ -302,7 +302,7 @@ theorem Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : Subgro
         simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
         use b
         rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
-      exact Subgroup.mul_comm_of_mem_isCommutative Q left (h.1 h2)
+      exact @Subgroup.mul_comm_of_mem_isMulCommutative _ _ Q hf x ⟨0, b, 0⟩ left (h.1 h2)
     unfold mul at h1
     simp only [add_zero, zero_add, LinearMap.zero_apply, mk.injEq, add_eq_left, and_true] at h1
     rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
@@ -348,8 +348,8 @@ def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
     simp only [and_self]
 
 /--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_Dual` is commutative. -/
-instance Hom_H_to_V_x_Dual_sub_Dual_commutative : Subgroup.IsCommutative (Hom_H_to_V_x_Dual_sub_Dual V k) :=by
-  refine Subgroup.IsCommutative.mk ?_
+instance Hom_H_to_V_x_Dual_sub_Dual_commutative : IsMulCommutative (Hom_H_to_V_x_Dual_sub_Dual V k) :=by
+  refine IsMulCommutative.mk ?_
   refine { comm := ?_ }
   intro a b
   obtain ⟨a,ha⟩ := a
@@ -390,7 +390,7 @@ instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_
 
 /--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_Dual` is maximal among the commutative
 subgroups of `Heisenberg`-/
-instance Hom_H_to_V_x_Dual_sub_Dual_maximal [FiniteDimensional k V] (Q : Subgroup (Heisenberg V k)) : Subgroup.IsCommutative (Hom_H_to_V_x_Dual_sub_Dual V k) ∧  (((Hom_H_to_V_x_Dual_sub_Dual V k) < Q ) → ¬ (Subgroup.IsCommutative Q)) := by
+instance Hom_H_to_V_x_Dual_sub_Dual_maximal [FiniteDimensional k V] (Q : Subgroup (Heisenberg V k)) : IsMulCommutative (Hom_H_to_V_x_Dual_sub_Dual V k) ∧  (((Hom_H_to_V_x_Dual_sub_Dual V k) < Q ) → ¬ (IsMulCommutative Q)) := by
   constructor
   · exact Hom_H_to_V_x_Dual_sub_Dual_commutative V k
   · intro h
@@ -407,7 +407,7 @@ instance Hom_H_to_V_x_Dual_sub_Dual_maximal [FiniteDimensional k V] (Q : Subgrou
         simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
         use b
         rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
-      exact Subgroup.mul_comm_of_mem_isCommutative Q left (h.1 h2)
+      exact Subgroup.mul_comm_of_mem_isMulCommutative Q left (h.1 h2)
     unfold mul at h1
     simp only [add_zero, map_zero, zero_add, mk.injEq, left_eq_add, true_and] at h1
     rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
