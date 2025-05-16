@@ -294,7 +294,7 @@ in a particular case.
     \lean{Induced_rep_center.iso_hom_tens}
     \leanok 
     Given $B$ an $A-algebra$ over a ring $A$, and $M$ a $A-$module and $N$
-    a $B-$module, we have an isomorphism $Hom_B(B\otimes_A M, N)\equiv Hom_A(M,N)$. 
+    a $B-$module, we have an isomorphism $Hom_B(B\otimes_A M, N)\simeq Hom_A(M,N)$. 
 \end{proposition}
 \begin{proof}
     \leanok
@@ -303,11 +303,11 @@ in a particular case.
 
 \begin{proposition}[Induced reprensentation property]
     \label{prop:induced_property}
-    \uses{prop:lemma_tensor}
+    \uses{prop:lemma_tensor, def:induced_tensor}
     \lean{Induced_rep_center.iso_induced_as_tensor}
     \leanok 
     Let $E$ be a $\mathbb{K}[G]$ module. We have an isomorphism $Hom_{\mathbb{K}[G]}
-    \left(\mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta,\ E\right)\equiv Hom_{\mathbb{K}[\mathcal{Z}_G]}
+    \left(\mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta,\ E\right)\simeq Hom_{\mathbb{K}[\mathcal{Z}_G]}
     \left(\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta,\ E\right)$.
 \end{proposition}
 \begin{proof}
