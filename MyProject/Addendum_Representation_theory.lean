@@ -12,7 +12,7 @@ particular subgroup (commutative one) and the Frobenius reciprocity.
 
 ## Contents
 + Adds to `MonoidAlgebra`theory over a group, to create some particular tensor products.
-+ `Induced_rep_center.definition` : the representation induced by the center of a group `G`.
++ `Induced_rep_center.tensor` : the representation induced by the center of a group `G`.
 + Frobenius reciprocity in the case...
 
 -/
@@ -20,7 +20,7 @@ particular subgroup (commutative one) and the Frobenius reciprocity.
 namespace kG_kH_Module
 
 variable (k G : Type*) [inst1 : Field k] [inst2 : Group G]
-variable (H : @Subgroup G inst2) [instH : H.IsCommutative]
+variable (H : @Subgroup G inst2) [instH : IsMulCommutative H]
 
 
 omit instH in
@@ -110,13 +110,15 @@ namespace Induced_rep_center
 variable (k G W : Type*) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
 [inst4 : AddCommGroup W] [inst5 : Module k W]
 
-variable (H : @Subgroup G inst2) [instH : H.IsCommutative]
+variable (H : @Subgroup G inst2) [instH : IsMulCommutative H]
 
 variable (θ : Representation k (Subgroup.center G) W)
 
+
+
 /--Induced representation on `G` by a representation `Representation k (Subgroup.center G) W`
 seen as a tensor product. -/
-def tensor :=
+abbrev tensor :=
   TensorProduct (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) (θ.asModule)
 
 /--`tensor k G W θ` is an `AddCommMonoid`.-/
@@ -437,7 +439,7 @@ namespace Frobenius_reciprocity
 variable (k G W : Type) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
 [inst4 : AddCommGroup W] [inst5 : Module k W] [inst6 : Module.Finite k W]
 
-variable (H : @Subgroup G inst2) [instH : H.IsCommutative]
+variable (H : @Subgroup G inst2) [instH : IsMulCommutative H]
 
 variable (θ : Representation k (Subgroup.center G) W)
 
@@ -453,16 +455,14 @@ class conj_class_fun where
   Fun :  G → W
   conj_property : ∀ (x : G), ∀ (g : G), Fun (g⁻¹ * x * g) = Fun x
 
---set_option pp.proofs true in
-/--Definition of the induced of a class function-/
-noncomputable def Ind_conj_class_fun (f : conj_class_fun H W) : conj_class_fun G W := by
+
+/--Definition of the induced class function of a function-/
+noncomputable def Ind_conj_class_fun (f : H → W) : conj_class_fun G W := by
   refine { Fun := ?_, conj_property := ?_ }
   · intro x
-    let S := {g : G | g⁻¹ * x * g ∈ H}.toFinset
-    let f' : S → W := fun g ↦ f.1 ⟨g.1⁻¹ * x * g.1, by cases g with
-    | mk val property => simp only; rw [@Set.mem_toFinset] at property; exact property ⟩
-    let h1 := (1 / Fintype.card H) • (∑ g, f' g)
-    exact h1
+    let S := {g : G | g⁻¹ * x * g ∈ H}
+    let f' : S → W := fun g ↦ f ⟨g.1⁻¹ * x * g.1, g.2⟩
+    exact (1 / Fintype.card H) • (∑ g, f' g)
   · intro x g
     simp only [Set.coe_setOf, Finset.univ_eq_attach]
     ring_nf
@@ -477,15 +477,13 @@ noncomputable def Ind_conj_class_fun (f : conj_class_fun H W) : conj_class_fun G
     refine Mathlib.Tactic.LinearCombination.smul_const_eq ?_ ((1 / Fintype.card ↥H))
     dsimp
     refine Finset.sum_equiv ?_ ?_ ?_
-    · simp only [Set.mem_toFinset, Set.mem_setOf_eq]
-      exact bij
-    · simp only [Finset.mem_attach, eq_mpr_eq_cast, implies_true]
-    · intro a ha
+    · exact bij
+    · intro i
       simp
-      group
+    · intro a ha
+      unfold bij
       dsimp
-
-      sorry
+      group
 
 
 /--The character of a representation seen as a `conj_class_fun`.-/
@@ -518,18 +516,19 @@ noncomputable instance tensor_module_restrictscalars : Module k (RestrictScalars
       (TensorProduct (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G) θ.asModule)
 
 noncomputable instance tensor_module_restrictscalars_isfinite : Module.Finite k (RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ)) := by
+
   sorry
 
 #check FDRep.of θ
 #check @character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ)
-#check @Ind_conj_class_fun G k _ _ _ (Subgroup.center G) (@character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ))
+#check @Ind_conj_class_fun G k _ _ _ (Subgroup.center G) (@character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ)).1
 set_option pp.proofs true in
 /--Given the character of a representation `θ` of `Subgroup.center G` on `k`, the character
 of the induced representation `tensor` on `G` is the `Ind_conj_class_fun` of the character of
 `θ`.
 -/
 theorem Induced_character_is_character_induced_center : character_as_conj_class_fun k G (FDRep.of (Induced_rep_center.as_rep k G W θ)) =
-@Ind_conj_class_fun G k _ _ _ (Subgroup.center G) (@character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ))  := by
+@Ind_conj_class_fun G k _ _ _ (Subgroup.center G) (@character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ)).1  := by
   unfold Ind_conj_class_fun
   simp
   unfold character_as_conj_class_fun
