@@ -547,7 +547,6 @@ theorem Induced_character_is_character_induced_center [h : NeZero ↑(Fintype.ca
   ext g
   unfold Induced_rep_center.tensor
   have h1 := tensor_semisimple k G W θ
-
   sorry
 
 
@@ -563,8 +562,7 @@ theorem char_orthonormal' [h : Invertible ↑(Fintype.card G : k)](V W : FDRep k
   rw [← this]
   simp
 
-/--Frobenius reciprocicty law-/
-theorem Frobenius_center (ψ : FDRep k G) :
+
 
 end Frobenius_reciprocity
 
