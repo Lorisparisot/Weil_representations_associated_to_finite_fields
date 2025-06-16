@@ -1,4 +1,4 @@
-import MyProject.Addenda_group_theory.lean
+import MyProject.Addenda_group_theory
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.RepresentationTheory.Character
 import Mathlib.RepresentationTheory.Maschke

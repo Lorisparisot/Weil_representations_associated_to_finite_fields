@@ -1,15 +1,11 @@
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RepresentationTheory.Character
-import Mathlib.RepresentationTheory.Maschke
-import Mathlib.RingTheory.SimpleModule.Basic
-import Mathlib.Data.Setoid.Partition
-import Mathlib.Algebra.DirectSum.Ring
-import Mathlib.Data.Set.Disjoint
+import Mathlib.Algebra.DirectSum.Module
+import Mathlib.LinearAlgebra.TensorProduct
+--import Mathlib.LinearAlgebra.TensorProduct.AlgebraTensorModule
 
 /-!
-# Addenda to the direct sums in mathlib
+# Addenda to the direct sums and tensor products in mathlib
 
-This file adds some lemmas about direct sums in mathlib.
+This file adds some lemmas about direct sums and tensor products in mathlib.
 
 
 ## Contents
@@ -17,6 +13,8 @@ This file adds some lemmas about direct sums in mathlib.
 + `DirectSum_eq_sum_direct` : Given a family `x : (i : ι) → β i` of indexed types on a fintype `ι`,
 we have the identity : `(∑ (i : ι), (DirectSum.of β i) (x i)) j = x j`.
 -/
+
+
 
 /--If two types `β` and `γ` are indexed by a same type `ι`, then we have an `AddEquiv` between
 `DirectSum i β` and `DirectSum i γ`.-/
@@ -90,6 +88,80 @@ theorem DirectSum_eq_sum_direct (ι : Type*) [hi : Fintype ι] (β : ι → Type
     exact DirectSum.of_eq_of_ne _ _ _ ha
   · simp only [Finset.mem_univ, not_true_eq_false, DirectSum.of_eq_same, IsEmpty.forall_iff]
 
+/--Isomorphism between $Hom_B(B⊗_AM,N)$ and $Hom_A(M,N)$ for $B$ an `A`-algebra, `M` an `A`-module
+and `N` a `B`-module.-/
+noncomputable def iso_hom_tens (A M N B: Type*) [CommSemiring A] [Semiring B] [Algebra A B] [AddCommMonoid M] [Module A M] [AddCommMonoid N] [Module A N] [Module B N] [IsScalarTower A B N]:
+((TensorProduct A B M) →ₗ[B] N) ≃ₗ[A] (M →ₗ[A] N) := by
+  refine Equiv.toLinearEquiv ?_ ?_
+  · refine Equiv.ofBijective ?_ ?_
+    · intro φ
+      refine LinearMap.mk ?_ ?_
+      · refine AddHom.mk (fun x => φ (TensorProduct.tmul A (1 : B) x)) ?_
+        · intro x y
+          rw [← @LinearMap.map_add,← @TensorProduct.tmul_add]
+      · intro m x
+        simp only [TensorProduct.tmul_smul, LinearMap.map_smul_of_tower, RingHom.id_apply]
+    · constructor
+      · intro x y
+        simp only [LinearMap.mk.injEq, AddHom.mk.injEq]
+        intro h
+        ext u
+        simp only [TensorProduct.AlgebraTensorModule.curry_apply, TensorProduct.curry_apply,
+          LinearMap.coe_restrictScalars]
+        rw [funext_iff] at h
+        specialize h u
+        exact h
+      · intro φ
+        let ψ : TensorProduct A B M →ₗ[B] N := by
+          have f : B →ₗ[A] M →ₗ[A] N := by
+            refine LinearMap.mk ?_ ?_
+            · refine AddHom.mk ?_ ?_
+              · intro b
+                refine LinearMap.mk ?_ ?_
+                · refine AddHom.mk (fun x => b • (φ x)) ?_
+                  · intro m1 m2
+                    simp only [map_add, smul_add]
+                · intro a m
+                  simp only [map_smul, RingHom.id_apply]
+                  exact smul_comm b a (φ m)
+              · intro b1 b2
+                congr
+                simp only [LinearMap.coe_mk, AddHom.coe_mk]
+                ext m
+                simp only [Pi.add_apply]
+                exact Module.add_smul b1 b2 (φ m)
+            · intro a b
+              simp only [smul_assoc, RingHom.id_apply]
+              exact rfl
+          refine TensorProduct.AlgebraTensorModule.lift ?_
+          refine LinearMap.mk ?_ ?_
+          · refine AddHom.mk ?_ ?_
+            · intro b
+              refine LinearMap.mk ?_ ?_
+              · refine AddHom.mk ?_ ?_
+                · exact (fun x => b • (φ x))
+                · intro m1 m2
+                  simp only [map_add, smul_add]
+              · intro a m
+                simp only [map_smul, RingHom.id_apply]
+                exact smul_comm b a (φ m)
+            · intro b1 b2
+              congr
+              simp only [LinearMap.coe_mk, AddHom.coe_mk]
+              ext m
+              simp only [Pi.add_apply]
+              exact Module.add_smul b1 b2 (φ m)
+          · intro b1 b2
+            simp only [smul_eq_mul, RingHom.id_apply]
+            ext m
+            simp only [LinearMap.coe_mk, AddHom.coe_mk, LinearMap.smul_apply]
+            exact mul_smul b1 b2 (φ m)
+        · use ψ
+          ext m
+          simp only [LinearMap.coe_mk, AddHom.coe_mk]
+          rw [@TensorProduct.AlgebraTensorModule.lift_tmul]
+          simp only [LinearMap.coe_mk, AddHom.coe_mk, one_smul]
+  · exact { map_add := fun x ↦ congrFun rfl, map_smul := fun c ↦ congrFun rfl }
 
 
 #min_imports
