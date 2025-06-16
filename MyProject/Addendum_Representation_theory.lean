@@ -1272,9 +1272,6 @@ theorem Induced_character_is_character_induced_center [h : NeZero ↑(Fintype.ca
   sorry
 
 
-/--Frobenius reciprocicty law-/
---theorem Frobenius_center (ψ : FDRep k G) :
-
 end Frobenius_reciprocity
 
 #min_imports
