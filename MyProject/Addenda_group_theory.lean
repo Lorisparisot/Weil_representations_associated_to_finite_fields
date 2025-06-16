@@ -6,7 +6,7 @@ import Mathlib.Tactic.Group
 
 
 /-!
-# Addendato the group theory in mathlib
+# Addenda to the group theory in mathlib
 
 This file adds some basic results about group theory and more specificially finite group
 quotiented by their center.
@@ -61,8 +61,8 @@ instance : Finite H := Subgroup.instFiniteSubtypeMem H
 instance system_of_repr_center_set_is_finite (h : Finite G) : Finite (system_of_repr_center_set G) := by
   exact Finite.Set.finite_range Quot.out
 
-/--`system_of_rep_center_set` is a system of representatives for the classes, ie `g≠g'` implies
-classes are different-/
+/-`system_of_rep_center_set` is a system of representatives for the classes, ie `g≠g'` implies
+classes are different
 theorem system_of_repr_center_set_disjoint (g g' : G) (hG : g ∈ (system_of_repr_center_set G)) (hG': g' ∈ system_of_repr_center_set G) :
   (g ≠ g') → {x | (QuotientGroup.con (Subgroup.center G)).toSetoid x g} ∩ {x | (QuotientGroup.con (Subgroup.center G)).toSetoid x g'} = ∅ := by
   contrapose!
@@ -83,7 +83,7 @@ theorem system_of_repr_center_set_disjoint (g g' : G) (hG : g ∈ (system_of_rep
     simp only [inv_smul_smul]
   have := MulAction.orbit_eq_iff.mpr h2
   simp at hG hG'
-  sorry
+  sorry-/
 
 omit inst3 in
 /--Union of the classes of elements of `system_of_repr_center_set` is the whole group.-/

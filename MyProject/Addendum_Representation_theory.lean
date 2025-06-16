@@ -1,3 +1,4 @@
+import MyProject.Addenda_group_theory.lean
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.RepresentationTheory.Character
 import Mathlib.RepresentationTheory.Maschke
@@ -217,8 +218,6 @@ noncomputable instance Coe : CoeOut (module_sub_rep k G W θ) (tensor k G W θ) 
     · intro m x
       simp
       unfold kG_kH_Module.RingMorphism_KH_KG
-      simp only [MonoidAlgebra.mapDomainRingHom_apply, Subgroup.coe_subtype, ZeroHom.toFun_eq_coe,
-        AddMonoidHom.toZeroHom_coe, Finsupp.mapDomain.addMonoidHom_apply]
       exact rfl
   have h1 := LinearMap.rTensor θ.asModule h2
   let x1 := h1 x
