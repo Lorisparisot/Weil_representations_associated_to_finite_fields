@@ -11,15 +11,11 @@ import Mathlib.Data.Set.Disjoint
 
 This file adds some lemmas about direct sums in mathlib.
 
-## Main results
-The goal of this file is to formalize the induced representation for finite group and
-particular subgroup (commutative one) and the Frobenius reciprocity.
 
 ## Contents
-+ Adds to `MonoidAlgebra`theory over a group, to create some particular tensor products.
-+ `Induced_rep_center.tensor` : the representation induced by the center of a group `G`.
-+ Frobenius reciprocity in the case...
-
++ `DirectSum_equiv_linearmap` : if `β ≃ₗ[A] γ` then DirectSum ι β ≃ₗ[A] DirectSum ι γ
++ `DirectSum_eq_sum_direct` : Given a family `x : (i : ι) → β i` of indexed types on a fintype `ι`,
+we have the identity : `(∑ (i : ι), (DirectSum.of β i) (x i)) j = x j`.
 -/
 
 /--If two types `β` and `γ` are indexed by a same type `ι`, then we have an `AddEquiv` between
