@@ -1,5 +1,5 @@
 import Mathlib
-import MyProject.Addenda_group_theory.lean
+import MyProject.Addenda_group_theory
 
 
 /-!
@@ -56,7 +56,7 @@ theorem Map_KHKG_k_linear (c : k) (x : MonoidAlgebra k H): (Map_KHKG k G H) (c �
 
 omit instH in
 /--Coercion from `MonoidAlgebra k H` to `MonoidAlgebra k G` when `H` is a subgroup of `G`-/
-noncomputable instance Coe : CoeOut (MonoidAlgebra k H) (MonoidAlgebra k G) := by
+noncomputable instance Coe_kH_kG : CoeOut (MonoidAlgebra k H) (MonoidAlgebra k G) := by
   refine { coe := Map_KHKG k G H }
 
 /--If `G`is commutative, then `MonoidAlgebra k G` is a commutative semiring.-/
@@ -145,16 +145,16 @@ theorem center_commutes_single (x : MonoidAlgebra k (Subgroup.center G)) (g : G)
   have : ↑a = x1 * g⁻¹ ↔ ↑a = g⁻¹ * x1 := by
     constructor
     · intro ha
-      exact Addenda_group_theory.center_mul G a x1 g⁻¹ ha
+      exact center_mul G a x1 g⁻¹ ha
     · intro ha
-      exact Addenda_group_theory.center_mul G a g⁻¹ x1 ha
+      exact center_mul G a g⁻¹ x1 ha
   exact if_ctx_congr this (congrFun rfl) (congrFun rfl)
 
 /--Coercion from `Set (MonoidAlgebra k H)` to `(Set (MonoidAlgebra k G))`.-/
 noncomputable instance Set_Coe : CoeOut (Set (MonoidAlgebra k H)) (Set (MonoidAlgebra k G)) := by
   refine { coe := ?_ }
   intro x
-  have h := (kG_kH_Module.RingMorphism_KH_KG k G H)
+  have h := (RingMorphism_KH_KG k G H)
   let xG := {h a | a ∈ x}
   exact xG
 
@@ -165,7 +165,7 @@ noncomputable def center_sub_module : Submodule (MonoidAlgebra k (Subgroup.cente
    · refine AddSubmonoid.mk ?_ ?_
      · refine AddSubsemigroup.mk ?_ ?_
        · let h1 := @Set.univ (MonoidAlgebra k (Subgroup.center G))
-         have h := (kG_kH_Module.RingMorphism_KH_KG k G (Subgroup.center G))
+         have h := (RingMorphism_KH_KG k G (Subgroup.center G))
          let xG := {h a | a ∈ h1}
          exact xG
        · intro a b ha hb
@@ -175,7 +175,7 @@ noncomputable def center_sub_module : Submodule (MonoidAlgebra k (Subgroup.cente
          obtain ⟨yb, hb⟩ := hb
          use ya+yb
          rw[<-ha,<-hb]
-         exact RingHom.map_add (kG_kH_Module.Map_KHKG k G (Subgroup.center G)) ya yb
+         exact RingHom.map_add (Map_KHKG k G (Subgroup.center G)) ya yb
      · simp only [Set.mem_univ, true_and, Set.mem_setOf_eq]
        use 0
        simp only [map_zero]
@@ -184,4 +184,4 @@ noncomputable def center_sub_module : Submodule (MonoidAlgebra k (Subgroup.cente
      intro x1 hx1
      use c*x1
      simp only [map_mul]
-     exact congrArg (HMul.hMul ((kG_kH_Module.Map_KHKG k G (Subgroup.center G)) c)) hx1
+     exact congrArg (HMul.hMul ((Map_KHKG k G (Subgroup.center G)) c)) hx1
