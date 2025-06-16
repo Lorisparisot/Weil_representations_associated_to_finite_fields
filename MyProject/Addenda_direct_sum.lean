@@ -1,6 +1,4 @@
-import Mathlib.Algebra.DirectSum.Module
-import Mathlib.LinearAlgebra.TensorProduct
---import Mathlib.LinearAlgebra.TensorProduct.AlgebraTensorModule
+import Mathlib
 
 /-!
 # Addenda to the direct sums and tensor products in mathlib

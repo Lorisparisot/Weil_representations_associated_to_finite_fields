@@ -2,6 +2,6 @@
 -- Import modules here that should be built as part of the library.
 import «MyProject».convention_dual
 import «MyProject».Heisenberg
-import «MyProject».Addenda_group_theory.lean
-import «MyProject».Addenda_direct_sum.lean
+import «MyProject».Addenda_group_theory
+import «MyProject».Addenda_direct_sum
 import «MyProject».Addendum_Representation_theory
