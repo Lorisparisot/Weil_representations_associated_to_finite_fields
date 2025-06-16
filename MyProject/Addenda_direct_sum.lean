@@ -11,6 +11,8 @@ This file adds some lemmas about direct sums and tensor products in mathlib.
 + `DirectSum_equiv_linearmap` : if `β ≃ₗ[A] γ` then DirectSum ι β ≃ₗ[A] DirectSum ι γ
 + `DirectSum_eq_sum_direct` : Given a family `x : (i : ι) → β i` of indexed types on a fintype `ι`,
 we have the identity : `(∑ (i : ι), (DirectSum.of β i) (x i)) j = x j`.
++ `iso_hom_tens` : isomorphism between $Hom_B(B⊗_AM,N)$ and $Hom_A(M,N)$ for $B$ an `A`-algebra, `M` an `A`-module
+and `N` a `B`-module.
 -/
 
 
