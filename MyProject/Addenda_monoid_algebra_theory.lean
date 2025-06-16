@@ -1,10 +1,4 @@
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.RepresentationTheory.Character
-import Mathlib.RepresentationTheory.Maschke
-import Mathlib.RingTheory.SimpleModule.Basic
-import Mathlib.Data.Setoid.Partition
-import Mathlib.Algebra.DirectSum.Ring
-import Mathlib.Data.Set.Disjoint
+import Mathlib
 import MyProject.Addenda_group_theory.lean
 
 
