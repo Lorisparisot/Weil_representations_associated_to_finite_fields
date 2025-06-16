@@ -4,4 +4,5 @@ import «MyProject».convention_dual
 import «MyProject».Heisenberg
 import «MyProject».Addenda_group_theory
 import «MyProject».Addenda_direct_sum
+import «MyProject».Addenda_monoid_algebra_theory
 import «MyProject».Addendum_Representation_theory
