@@ -1247,7 +1247,7 @@ noncomputable def MonoidAlgebra_direct_sum_1 : MonoidAlgebra k G ≃ₗ[MonoidAl
 
 /--Given a representative system `S` of `G` quotiented by its center, we have a k linear equivalence beetween
 `MonoidAlgebra k G` and the direct sum of `g • (MonoidAlgebra k (Subgroup.center G))` for `g ∈ S`.-/
-noncomputable def MonoidAlgebra_direct_sum1 : MonoidAlgebra k G ≃ₗ[MonoidAlgebra k (Subgroup.center G)] DirectSum (system_of_repr_center_set G) (fun g => gkH_set k G g) := by
+noncomputable def MonoidAlgebra_direct_sum_system_of_repr_center_set : MonoidAlgebra k G ≃ₗ[MonoidAlgebra k (Subgroup.center G)] DirectSum (system_of_repr_center_set G) (fun g => gkH_set k G g) := by
   have := DirectSum_equiv_linearmap (MonoidAlgebra k (Subgroup.center G)) (system_of_repr_center_set G) (fun g => gkH_set k G g) (fun g => MonoidAlgebra k (Subgroup.center G))
      (fun g => (gkH_set_iso_kH_module k G g))
   exact LinearEquiv.trans (MonoidAlgebra_direct_sum_1 k G) this.symm
