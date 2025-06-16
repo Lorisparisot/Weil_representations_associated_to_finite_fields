@@ -1,0 +1,261 @@
+import Mathlib.Algebra.Group.Subgroup.Actions
+import Mathlib.Algebra.Group.Subgroup.Finite
+import Mathlib.Algebra.Group.Subgroup.MulOppositeLemmas
+import Mathlib.GroupTheory.QuotientGroup.Defs
+import Mathlib.Tactic.Group
+
+
+/-!
+# Addendato the group theory in mathlib
+
+This file adds some basic results about group theory and more specificially finite group
+quotiented by their center.
+
+
+## Main results
+We create the set of representatives of `G⧸ (Subgroup.center G)` and verify the properties that this
+set is suppose to satisfy.
+We then introduce two maps `G_to_syst` and `G_to_center` that associated to every `g : G` its
+representatives and its `Subgroup.center G` parts.
+
+## Contents
++ `system_of_repr_center_set G` : the set of representatives of `G⧸ (Subgroup.center G)`.
++ `G_to_syst G` : the map that associated to every `g : G` its representative.
++ `G_to_center G` : the map that associated to every `g : G` the elements `h : Subgroup.center G` such
+   that `g = gg*h` where `gg : system_of_repr_center_set G`.
++ `system_of_repr_center_set_center_iso_G` and `system_of_repr_center_set_center_iso_G_sigma` which are
+   bijections between `G` and the cartesian product of `system_of_repr_center_set G` and `Subgroup.center G`
+   as a cartesian product and as a `Sigma` type.
+-/
+
+open Classical
+variable (k G : Type*) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
+variable (H : @Subgroup G inst2) [instH : IsMulCommutative H]
+
+omit inst3 in
+/--An element of type `Subgroup.center G` commutes with every element of type `G`.-/
+theorem center_mul_com (g : G) (h : Subgroup.center G) : h * g = g * h := by
+    have := @Subgroup.mem_center_iff G _ h
+    simp only [SetLike.coe_mem, true_iff] at this
+    exact (this g).symm
+
+omit inst3 in
+/--`simp` lemma associated to `center_mul_com`.-/
+@[simp]
+theorem center_mul (h : Subgroup.center G) (a b : G) (h1 : h =a * b) : h = b*a := by
+  have h2 := mul_inv_eq_of_eq_mul h1
+  rw[center_mul_com] at h2
+  rw[<-h2]
+  simp only [mul_inv_cancel_left]
+
+/--A set of representatives of the classes of `G⧸ (Subgroup.center G)`.-/
+abbrev system_of_repr_center_set : Set G := by
+  exact Set.range (@Quotient.out G (QuotientGroup.con (Subgroup.center G)).toSetoid )
+
+noncomputable instance : Fintype G := by
+  exact Fintype.ofFinite G
+
+instance : Finite H := Subgroup.instFiniteSubtypeMem H
+
+/--`system_of_rep_center_set` is finite.-/
+instance system_of_repr_center_set_is_finite (h : Finite G) : Finite (system_of_repr_center_set G) := by
+  exact Finite.Set.finite_range Quot.out
+
+/--`system_of_rep_center_set` is a system of representatives for the classes, ie `g≠g'` implies
+classes are different-/
+theorem system_of_repr_center_set_disjoint (g g' : G) (hG : g ∈ (system_of_repr_center_set G)) (hG': g' ∈ system_of_repr_center_set G) :
+  (g ≠ g') → {x | (QuotientGroup.con (Subgroup.center G)).toSetoid x g} ∩ {x | (QuotientGroup.con (Subgroup.center G)).toSetoid x g'} = ∅ := by
+  contrapose!
+  unfold QuotientGroup.con QuotientGroup.leftRel MulAction.orbitRel
+  simp
+  intro h
+  rw[Set.Nonempty] at h
+  obtain ⟨x, hg,hg'⟩ := h
+  rw[MulAction.mem_orbit_iff] at hg hg'
+  obtain ⟨hg,hhg⟩ := hg
+  obtain ⟨hg',hhg'⟩ := hg'
+  have h1 : hg • g = hg' • g' := by
+    rw[hhg,<-hhg']
+  have h2 : g ∈ MulAction.orbit ((↥(Subgroup.center G).op)) g' := by
+    rw [@MulAction.mem_orbit_iff]
+    use (hg⁻¹ * hg')
+    rw [@mul_smul,<-h1]
+    simp only [inv_smul_smul]
+  have := MulAction.orbit_eq_iff.mpr h2
+  simp at hG hG'
+  sorry
+
+omit inst3 in
+/--Union of the classes of elements of `system_of_repr_center_set` is the whole group.-/
+theorem system_of_repr_center_set_union : Set.univ = ⋃ (g ∈ system_of_repr_center_set G), {x | (QuotientGroup.con (Subgroup.center G)).toSetoid x g} := by
+  simp only [Set.mem_range, Con.rel_eq_coe, Set.iUnion_exists, Set.iUnion_iUnion_eq']
+  unfold QuotientGroup.con QuotientGroup.leftRel
+  simp
+  refine Set.ext ?_
+  intro x
+  constructor
+  · intro hx
+    simp
+    use Quotient.mk ((QuotientGroup.con (Subgroup.center G)).toSetoid) x
+    exact id (Setoid.symm' (QuotientGroup.con (Subgroup.center G)).toSetoid
+      (@Quotient.mk_out _ ((QuotientGroup.con (Subgroup.center G)).toSetoid) x))
+  · intro hx
+    simp only [Set.mem_univ]
+
+/--`system_of_repr_center G` is equivalent to the image of the application `G → G⧸ (Subgroup.center G)`. -/
+noncomputable def system_of_repr_center_set_bij : system_of_repr_center_set G ≃ Finset.image (Quotient.mk (QuotientGroup.con (Subgroup.center G)).toSetoid) Finset.univ := by
+  unfold system_of_repr_center_set
+  simp
+  refine Equiv.mk ?_ ?_ ?_ ?_
+  · intro x
+    obtain ⟨x1,hx1⟩ := x
+    simp at hx1
+    refine ⟨hx1.choose,?_⟩
+    use Quotient.out hx1.choose
+    simp only [Quotient.out_eq]
+  · intro x
+    obtain ⟨x,hx⟩ := x
+    refine ⟨x.out,?_⟩
+    rw [Set.mem_range]
+    use x
+  · intro u
+    obtain ⟨u,hu⟩ := u
+    simp at hu
+    simp only [Subtype.mk.injEq]
+    conv=> rhs; rw[<-hu.choose_spec]
+  · intro u
+    obtain ⟨u,hu⟩ := u
+    simp only [Quotient.out_inj, choose_eq]
+
+/--A function that associates to every element `g:G` the corresponding representative in `system_of_repr_center_set`. -/
+noncomputable def G_to_syst: G → ↑(system_of_repr_center_set G) := by
+      intro g
+      unfold system_of_repr_center_set
+      refine ⟨?_, ?_⟩
+      · exact Quotient.out (Quotient.mk ((QuotientGroup.con (Subgroup.center G)).toSetoid) g)
+      · simp only [Set.mem_range, Quotient.out_inj, exists_eq]
+
+omit inst3 in
+/--If `h : Subgroup.center G`, then `G_to_syst G (g*h) = G_to_syst G g` for every `g:G`.-/
+@[simp]
+theorem G_to_syst_simp (g : G) (h : Subgroup.center G) : G_to_syst G (g * h) = G_to_syst G g := by
+  unfold G_to_syst
+  simp
+  unfold QuotientGroup.con QuotientGroup.leftRel MulAction.orbitRel MulAction.orbit
+  simp
+
+/--A function that associates to every element `g:G` the corresponding `z : Subgroup.center G` sucht that
+`Quotient.out ↑g = g * z`.-/
+noncomputable def G_to_center : G → Subgroup.center G := by
+      intro u
+      exact ((QuotientGroup.mk_out_eq_mul (Subgroup.center G) u).choose)⁻¹
+
+omit inst3 in
+/--Decomposition of an element `g:G` into a product of an element of `Subgroup.center G` by an element of `G`.-/
+theorem G_to_center_simp (g : G) : g = Quotient.out ((Quotient.mk ((QuotientGroup.con (Subgroup.center G)).toSetoid) g)) * (G_to_center G g) := by
+  change g = ⟦g⟧.out * ((QuotientGroup.mk_out_eq_mul (Subgroup.center G) g).choose)⁻¹
+  simp
+  rw [@eq_mul_inv_iff_mul_eq]
+  have := @QuotientGroup.mk_out_eq_mul G _ (Subgroup.center G) g
+  rw[<-this.choose_spec]
+  congr
+
+
+omit inst3 in
+/--`G_to_center_simp` written with `G_to_syst` and `G_to_center`.-/
+theorem G_to_center_to_syst_simp (g : G) : g = (G_to_syst G g) * (G_to_center G g) := by
+  unfold G_to_syst
+  simp
+  exact G_to_center_simp G g
+
+omit inst3 in
+/--Commutativity of the product of `G_to_center G g` and `G_to_syst G g` for every `g : G`.-/
+theorem G_to_center_to_syst_com (g : G) : (G_to_center G g) * (G_to_syst G g).1 = (G_to_syst G g) * (G_to_center G g) := by
+  exact center_mul_com G (↑(G_to_syst G g)) (G_to_center G g)
+
+omit inst3 in
+/--`G_to_center_to_syst_sim` written with `G_to_center` on the right side of the equality.-/
+theorem G_to_center_syst_simp (g : G) : (G_to_center G g) = g * (G_to_syst G g).1⁻¹ := by
+  conv=> rhs;lhs;rw[G_to_center_to_syst_simp G g]
+  conv=> rhs;lhs; rw [<-G_to_center_to_syst_com G g]
+  group
+
+
+omit inst3 in
+/--If `g : system_of_repr_center_set G` then `G_to_center G g.1` is equal to the neutral of the
+group. -/
+@[simp]
+theorem G_to_center_syst_apply_simp (g : system_of_repr_center_set G): G_to_center G (g.1) = 1 := by
+  unfold system_of_repr_center_set at g
+  conv_lhs => change ((QuotientGroup.mk_out_eq_mul (Subgroup.center G) g).choose)⁻¹
+  simp only [inv_eq_one]
+  have : ∃ (y :  Quotient (QuotientGroup.con (Subgroup.center G)).toSetoid), y.out = g := by
+    refine Set.mem_range.mp ?_
+    exact Subtype.coe_prop g
+  rw[<-this.choose_spec]
+  simp only [Quotient.out_eq, left_eq_mul, OneMemClass.coe_eq_one, choose_eq]
+
+omit inst3 in
+/--If `g : system_of_repr_center_set G` then `G_to_syst G g` is equal to `g`. -/
+@[simp]
+theorem G_to_syst_simp_id (g : system_of_repr_center_set G) : G_to_syst G g = g := by
+  have := G_to_center_to_syst_simp G g.1
+  simp at this
+  exact SetCoe.ext (id (Eq.symm this))
+
+omit inst3 in
+/--For every `g:G` and `h : Subgroup.center G`, we have the following identity :
+`G_to_center G (g*h) = h * G_to_center G g`. -/
+@[simp]
+theorem G_to_center_mul_simp (g : G) (h : Subgroup.center G) : G_to_center G (g * h) = h * G_to_center G g := by
+  have h1 := G_to_center_syst_simp G g
+  have h2 := G_to_center_syst_simp G (g*h)
+  conv at h2 => rhs; rhs; rhs; rhs; rw[G_to_syst_simp G g h]
+  conv at h2 => rhs; lhs; rw[<-center_mul_com]
+  conv at h2 => rhs;rw[mul_assoc]; rhs; rw[<-h1]
+  exact SetLike.coe_eq_coe.mp h2
+
+
+omit inst3 in
+/--`G` is equivalent to the cartesian product of its center and `system_of_repr_center_set G`.-/
+noncomputable def system_of_repr_center_set_center_iso_G : G ≃  Subgroup.center G × system_of_repr_center_set G := by
+  refine Equiv.mk (fun g => (G_to_center G g,G_to_syst G g)) (fun g => g.2*g.1.1) ?_ ?_
+  · intro g
+    simp
+    exact Eq.symm (G_to_center_to_syst_simp G g)
+  · intro g
+    simp
+
+/--`system_of_repr_center_set_center_iso_G` written for `Sigma` types instead of cartesian product.-/
+noncomputable def system_of_repr_center_set_center_iso_G_sigma : (_ : ↥(Subgroup.center G)) × ↑(system_of_repr_center_set G) ≃ G := by
+  refine (Equiv.mk ?_ ?_ ?_ ?_).symm
+  · intro g
+    refine Std.Internal.List.Prod.toSigma ?_
+    exact system_of_repr_center_set_center_iso_G G g
+  · intro g
+    exact (system_of_repr_center_set_center_iso_G G).invFun (g.fst,g.snd)
+  · intro g
+    simp
+    unfold system_of_repr_center_set_center_iso_G
+    simp
+    rw[Std.Internal.List.Prod.toSigma]
+    simp
+    exact Eq.symm (G_to_center_to_syst_simp G g)
+  · intro g
+    simp
+    exact rfl
+
+omit inst3 in
+/--`system_of_repr_center_set_center_iso_G` written as sets.-/
+theorem system_of_repr_center_set_center_eq_G : @Set.univ G = { g.1 * h | (g : system_of_repr_center_set G) (h : Subgroup.center G)} := by
+  refine Set.ext ?_
+  intro x
+  constructor
+  · intro hx
+    dsimp
+    use (G_to_syst G x)
+    use (G_to_center G x)
+    exact (G_to_center_to_syst_simp G x).symm
+  · simp
+
+#min_imports
