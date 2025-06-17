@@ -10,13 +10,14 @@ import Mathlib.Data.Set.Disjoint
 
 
 /-!
-# Addendum to the representation theory in mathlib
+# Addenda to the representation theory in mathlib
 
 This file adds some properties about representation theory in mathlib.
 
 ## Main results
-The goal of this file is to formalize the induced representation for finite group and
-particular subgroup (commutative one) and the Frobenius reciprocity.
+The goal of this file is to formalize the induced representation by the center of finite groups and
+and the Frobenius reciprocity. We also aim to formalize the formula of the character of
+this induced representation.
 
 ## Contents
 + Adds to `MonoidAlgebra`theory over a group, to create some particular tensor products.

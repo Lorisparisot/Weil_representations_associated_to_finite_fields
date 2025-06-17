@@ -1,6 +1,10 @@
-import Mathlib
-import MyProject.Addenda_group_theory
+import Mathlib.Algebra.EuclideanDomain.Field
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.GroupTheory.GroupAction.Ring
+import Mathlib.GroupTheory.MonoidLocalization.Basic
+import Mathlib.LinearAlgebra.FreeProduct.Basic
 import MyProject.Addenda_direct_sum
+import MyProject.Addenda_group_theory
 
 /-!
 # Addenda to the monoid algebra theory in mathlib
@@ -10,12 +14,17 @@ This file adds some properties about monoid algebra theory in mathlib.
 ## Main results
 The goal of this file is to add to the monoid algebra theory some preliminary results
 to construct the character on the induced representation by the center of a finite group.
+The main theorem proved here is the decomposition of `MonoidAlgebra k G` as a direct sum
+of `g • MonoidAlgebra k (Subgroup.center G)` indexed by elements of a system of representatives
+of `G⧸ (Subgroup.center G)` as defined in `system_of_repr_center_set`.
 
 ## Contents
 + Adds to `MonoidAlgebra`theory over a group, to create some particular tensor products.
-+ `Induced_rep_center.tensor` : the representation induced by the center of a group `G`.
-+ Frobenius reciprocity in the case...
-
++ `MonoidAlgebra_MulAction_basis` : a system of representatives `system_of_repr_center_set G` of `G⧸ (Subgroup.center G)`
+defines a basis of `MonoidAlgebra k G` on `MonoidAlgebra k (Subgroup.center G)`.
++ `MonoidAlgebra_direct_sum_system_of_repr_center_set ` : given a representative system `system_of_repr_center_set G` of `G⧸ (Subgroup.center G)`,
+we have a `MonoidAlgebra k (Subgroup.center G)` linear bijection between
+`MonoidAlgebra k G` and the direct sum of `g • (MonoidAlgebra k (Subgroup.center G))` for `g : system_of_repr_center_set G`.
 -/
 
 open Classical DirectSum
@@ -24,8 +33,6 @@ variable (k G W : Type) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
 [inst4 : AddCommGroup W] [inst5 : Module k W] [inst6 : Module.Finite k W]
 
 variable (H : @Subgroup G inst2) [instH : IsMulCommutative H]
-
-variable (θ : Representation k (Subgroup.center G) W)
 
 instance Finite_H : Finite H := Subgroup.instFiniteSubtypeMem H
 
@@ -604,3 +611,5 @@ noncomputable def MonoidAlgebra_direct_sum_system_of_repr_center_set : MonoidAlg
   have := DirectSum_equiv_linearmap (MonoidAlgebra k (Subgroup.center G)) (system_of_repr_center_set G) (fun g => gkH_set k G g) (fun g => MonoidAlgebra k (Subgroup.center G))
      (fun g => (gkH_set_iso_kH_module k G g))
   exact LinearEquiv.trans (MonoidAlgebra_direct_sum_1 k G) this.symm
+
+#min_imports
