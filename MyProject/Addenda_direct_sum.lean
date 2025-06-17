@@ -56,7 +56,7 @@ def DirectSum_equiv (ι : Type v) (β : ι → Type w) (γ : ι →  Type w) [(i
     intro i
     simp only [DFinsupp.coe_mk', map_add, DirectSum.add_apply]
 
-/--`DirectSum_equiv` as a k linear equivalence.-/
+/--`DirectSum_equiv` as a `k` linear equivalence.-/
 def DirectSum_equiv_linearmap (A : Type) [Semiring A] (ι : Type v) (β : ι → Type w) (γ : ι →  Type w) [(i : ι) → AddCommMonoid (β i)] [(i : ι) → AddCommMonoid (γ i)] [(i : ι) → Module A (β i)]
   [(i : ι) → Module A (γ i)] (h : ∀ (i : ι), β i ≃ₗ[A] γ i) : DirectSum ι β ≃ₗ[A] DirectSum ι γ := by
   refine Equiv.toLinearEquiv ((DirectSum_equiv ι β γ (fun i ↦ (h i).toAddEquiv)).toEquiv) ?_
