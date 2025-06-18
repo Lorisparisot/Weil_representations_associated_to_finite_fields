@@ -102,7 +102,7 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
 
 \begin{definition}
     \label{def:G_to_syst}
-    \uses{system_of_repr_center_set}
+    \uses{def:system_of_repr_center_set}
     \lean{system_of_repr_center.G_to_syst}
     \leanok
     We define a map $\varphi_{G\mathcal{S}} : G \rightarrow \mathcal{S}_{G/\mathcal{Z}_G}$ that
@@ -123,7 +123,7 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
 
 \begin{definition}
     \label{def:G_to_center}
-    \uses{system_of_repr_center_set}
+    \uses{def:system_of_repr_center_set}
     \lean{system_of_repr_center.G_to_center}
     \leanok
     We define a map $\psi_{G\mathcal{Z}_G} : G \rightarrow \mathcal{Z}_G$ that
@@ -198,7 +198,7 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
 \end{proof}
 
 \begin{definition}
-    \label{def:system_of_repr_set_center_iso_G}
+    \label{def:system_of_repr_center_set_center_iso_G}
     \uses{prop:system_of_repr_center_G_to_center_mul_simp,prop:system_of_repr_center_G_to_syst_simp_id}
     \lean{system_of_repr_center.set_center_iso_G}
     \leanok
@@ -215,7 +215,8 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
     \uses{def:system_of_repr_center_set_center_iso_G}
     \lean{system_of_repr_center.set_center_iso_G_sigma}
     \leanok
-    Bijection \ref{def:set_center_iso_G} empacked as Sigma type instead of cartesian product.
+    The bijection \ref{def:system_of_repr_center_set_center_iso_G} empacked as Sigma type instead of cartesian product.
+    Useful for $LEAN$.
 \end{definition}
 
 \begin{proposition}
