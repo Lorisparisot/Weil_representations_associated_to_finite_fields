@@ -64,7 +64,7 @@ instance : Finite H := Subgroup.instFiniteSubtypeMem H
 instance finite (h : Finite G) : Finite (system_of_repr_center.set G) := by
   exact Finite.Set.finite_range Quot.out
 
-/--`system_of_rep_center_set` is a system of representatives for the classes, ie `g≠g'` implies
+/-`system_of_rep_center_set` is a system of representatives for the classes, ie `g≠g'` implies
 classes are different-/
 theorem classes_disjoint (g g' : G) (hG : g ∈ (system_of_repr_center.set G)) (hG': g' ∈ system_of_repr_center.set G) :
   (g ≠ g') → {x | (QuotientGroup.con (Subgroup.center G)).toSetoid x g} ∩ {x | (QuotientGroup.con (Subgroup.center G)).toSetoid x g'} = ∅ := by
