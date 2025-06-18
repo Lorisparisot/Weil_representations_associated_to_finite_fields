@@ -66,12 +66,12 @@ noncomputable instance Coe : CoeOut (module_sub_rep k G W θ) (tensor k G W θ) 
   have h2 : (MonoidAlgebra k ↥(Subgroup.center G)) →ₗ[(MonoidAlgebra k ↥(Subgroup.center G))] (MonoidAlgebra k G) := by
     refine LinearMap.mk ?_ ?_
     · refine AddHom.mk ?_ ?_
-      · exact fun a ↦ RingMorphism_KH_KG k G (Subgroup.center G) a
+      · exact fun a ↦ Map_kHkG k G (Subgroup.center G) a
       · intro x1 y1
         simp only [map_add]
     · intro m x
       simp
-      unfold RingMorphism_KH_KG
+      unfold Map_kHkG
       exact rfl
   have h1 := LinearMap.rTensor θ.asModule h2
   let x1 := h1 x
