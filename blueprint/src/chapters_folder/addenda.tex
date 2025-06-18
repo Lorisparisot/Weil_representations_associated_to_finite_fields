@@ -32,3 +32,69 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
     Suppose $h=ab$. Then $a=hb^{-1}=b^{-1}h$ because $h\in\mathcal{Z}_G$. Thus $ba=h$.
 \end{proof}
 
+\subsection{Quotient of a group by its center}
+
+\begin{definition}[Representatives system]
+    \label{def:system_of_repr_center_set}
+    \lean{system_of_repr_center.set}
+    \leanok
+    We define the system of representatives of $G/\mathcal{Z}_G$ by picking up exactly one element
+    in every classes. We denote it by $\mathcal{S}_{G/\mathcal{Z}_G}$ from now on and denote
+    by $C_s$ the classe of $s$.
+    \begin{proof}
+        \leanok
+        To do that in $LEAN$, we take the image of $G$ by the map $G \rightarrow G/\mathcal{Z}_G\to G$.
+    \end{proof}
+\end{definition}
+
+\begin{proposition}
+    \label{prop:system_of_repr_center_set_finite}
+    \uses{def:system_of_repr_center_set}
+    \lean{system_of_repr_center.finite}
+    \leanok
+    If $G$ is finite, then the system of representatives of $G/\mathcal{Z}_G$ is finite too.
+\end{proposition}
+\begin{proof}
+    \leanok
+    trivial
+\end{proof}
+
+\begin{proposition}
+    \label{prop:system_of_repr_center_set_classes_disjoints}
+    \uses{def:system_of_repr_center_set}
+    \lean{system_of_repr_center.classes_disjoint}
+    \leanok
+    Given $g$ and $g'$ in the set of representatives of $G/\mathcal{Z}_G$, if $g\ne g'$
+    then the classes of $g$ and $g'$ are disjoint.
+\end{proposition}
+\begin{proof}
+    Add proof
+\end{proof}
+
+\begin{proposition}
+    \label{prop:system_of_repr_center_set_union}
+    \uses{def:system_of_repr_center_set}
+    \lean{system_of_repr_center.classes_union_eq_univ}
+    \leanok
+    We have $\bigcup\limits_{s\in \mathcal{S}_{G/\mathcal{Z}_G}} C_s= G$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    If $x$ is in the union, in particular it belongs to $G$. Let now $g$ be an element of $G$
+    and let show that it belongs to one of the classes. We apply the map defines in \ref{def:system_of_repr_center_set}
+    to $g$ and check that $g$ belongs to the class of this element.
+\end{proof}
+
+\begin{proposition}
+    \label{def:system_of_repr_center_set_bij}
+    \uses{def:system_of_repr_center_set}
+    \lean{system_of_repr_center.set_bij}
+    \leanok
+    We have a bijection between $\mathcal{S}_{G/\mathcal{Z}_G}$ and $\{\bar{g} \in G/\mathcal{Z}_G\}$
+    given by the map $s\to \bar{s}$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We check it is a bijection.
+\end{proof}
+
