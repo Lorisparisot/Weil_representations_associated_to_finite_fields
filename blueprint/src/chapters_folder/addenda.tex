@@ -71,7 +71,8 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
     \leanok
     Suppose that the classes aren't disjoints. Then there exists $y$
     such that $y\sim g$ and $y\sim g'$. Thus $g \sim g'$ and their classes
-    are equal. 
+    are equal. But $g$ and $g'$ belongs to the set of representatives.
+    Thus $g=g'$.
 \end{proof}
 
 \begin{proposition}
@@ -181,4 +182,56 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
     But $\psi_{G\mathcal{Z}_G}(g)=e_G$ by \ref{prop:system_of_repr_center_G_to_center_syst_apply_simp}.
     Thus we get the result.
 \end{proof}
+
+\begin{proposition}
+    \label{prop:system_of_repr_center_G_to_center_mul_simp}
+    \uses{prop:system_of_repr_center_G_to_center_eq_G_G_to_syst_simp}
+    \lean{system_of_repr_center.G_to_center_mul_simp}
+    \leanok
+    For every $g\in G$ and $h\in\mathcal{Z}_G$, we have $\psi_{G\mathcal{Z}_G}(gh)=h\psi_{G\mathcal{Z}_G}(g)$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    With \label{prop:system_of_repr_center_G_to_center_eq_G_G_to_syst_simp} we have $\psi_{G\mathcal{Z}_G}(g)=g\varphi_{G\mathcal{S}}(g)^{-1}$
+    and $\psi_{G\mathcal{Z}_G}(gh)=gh\varphi_{G\mathcal{S}}(gh)^{-1}$.
+    But with \ref{prop:G_to_syst_simp}, we have $\varphi_{G\mathcal{S}}(gh)=\varphi_{G\mathcal{S}} (g)$.
+    Thus, $\psi_{G\mathcal{Z}_G}(gh)=gh\varphi_{G\mathcal{S}}(gh)^{-1}=gh\varphi_{G\mathcal{S}} (g)^{-1}=
+    hg\varphi_{G\mathcal{S}} (g)^{-1}=h\psi_{G\mathcal{Z}_G}(g)$ withe the first equality.
+\end{proof}
+
+\begin{definition}
+    \label{def:system_of_repr_center_set_center_iso_G}
+    \uses{prop:system_of_repr_center_G_to_center_mul_simp,prop:system_of_repr_center_G_to_syst_simp_id}
+    \lean{system_of_repr_center.set_center_iso_G}
+    \leanok
+    We define a bijection from $G$ to $\mathcal{Z}_G\times\mathcal{S}_{G/\mathcal{Z}_G}$ by 
+    $g\mapsto (\psi_{G\mathcal{Z}_G}(g),\varphi_{G\mathcal{S}} (g))$.
+    \begin{proof}
+        \leanok
+        We check the axioms of a bijection.
+    \end{proof}
+\end{definition}
+
+\begin{definition}
+    \label{system_of_repr_set_center_iso_G_sigma}
+    \uses{def:system_of_repr_center_set_center_iso_G}
+    \lean{system_of_repr_center.set_center_iso_G_sigma}
+    \leanok
+    The bijection \ref{def:system_of_repr_center_set_center_iso_G} empacked as Sigma type instead of cartesian product.
+    Useful for $LEAN$.
+\end{definition}
+
+\begin{proposition}
+    \label{prop:system_of_repr_center_set_center_eq_G }
+    \uses{prop:system_of_repr_center_G_to_center_eq_G_G_to_syst_simp}
+    \lean{system_of_repr_center.set_center_eq_G}
+    \leanok
+    We have $G = \{gh,\ g\in \mathcal{S}_{G/\mathcal{Z}_G},\ h\in \mathcal{Z}_G\}$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    The inclusion $\{gh,\ g\in \mathcal{S}_{G/\mathcal{Z}_G},\ h\in \mathcal{Z}_G\}$ is trivial.
+    The converse is given by \ref{prop:system_of_repr_center_G_to_center_eq_G_G_to_syst_simp}.
+\end{proof}
+
 
