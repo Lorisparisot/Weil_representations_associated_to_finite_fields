@@ -504,7 +504,7 @@ $\mathbb{K}[G] \cong \bigoplus\limits_{g\in \mathcal{S}_{G/\mathcal{Z}_G} } g \m
     \lean{gkH_map}
     \leanok
     Let $g\in G$ be fixed. The morphism $\varhpi_g : \mathcal{Z}_G\rightarrow G$ defined by
-    $\varphi_G(x)=gx$ induced a $\mathbb{K}$-linear map $\Gamma$ from $\mathbb{K}[\mathcal{Z}_G]$ to $\mathbb{K}[G]$.
+    $\varphi_G(x)=gx$ induced a $\mathbb{K}$-linear map $\Gamma_g$ from $\mathbb{K}[\mathcal{Z}_G]$ to $\mathbb{K}[G]$.
     \begin{proof}    
         \leanok
         Trivial.
@@ -512,13 +512,132 @@ $\mathbb{K}[G] \cong \bigoplus\limits_{g\in \mathcal{S}_{G/\mathcal{Z}_G} } g \m
 \end{definition}
 
 \begin{proposition}
+    \label{prop:gkH_map_Injective}
+    \uses{def:gkH_map}
+    \lean{gkH_map_Injective}
+    \leanok
+    The map $\Gamma_g$ defined in \ref{def:gkH_map} is injective.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
+
+\begin{proposition}
     \label{prop:gkH_map_eq}
     \uses{def:gkH_map,def:hmul_g_kH_kG}
     \lean{gkH_map_eq}
     \leanok
-    For all $x\in\mathbb{K}[\mathcal{Z}[G]]$, we have $\Gamma(x)=g\times x$
+    For all $x\in\mathbb{K}[\mathcal{Z}[G]]$, we have $\Gamma_g(x)=g\times x$
 \end{proposition}
 \begin{proof}
     \leanok
     LEAN stuff to setup a simp lemma.
 \end{proof}
+
+\begin{definition}
+    \label{def:gkH_set}
+    \uses{def:gkH_map}
+    \lean{gkH_set}
+    \leanok
+    We define the set $\Omega_g$ to be the image of $\mathbb{K}[\mathcal{Z}_G]$
+    by $\Gamma_G$.
+    \begin{proof}    
+        \leanok
+        Nothing useful mathematically, it's just simpler for translating LEAN stuff.
+    \end{proof}
+\end{definition}
+
+\begin{definition}
+    \label{def:gkH_set_iso_kH_k}
+    \uses{def:gkH_map,prop:gkH_map_eq,prop:gkH_map_Injective,prop:Map_kHkG_k_linear}
+    \lean{gkH_set_iso_kH_k}
+    \leanok
+    The map $\Gamma_g$ defines a $k$-linear bijection between $\Omega_g$ and $\mathbb{K}[\mathcal{Z}_G]$.
+    \begin{proof}    
+        \leanok
+        It's injective like we saw before, and $g^{-1}\times x$ is a preimage for $x$.
+    \end{proof}
+\end{definition}
+
+We will now put some structure on $\Omega_g$ to makes it understand by LEAN as
+ a $\mathbb{K}[\mathcal{Z}_G]$ module.
+
+\begin{definition}
+    \label{def:gkH_set_SMul}
+    \uses{def:Map_kHkG,prop:gkH_map_eq,def:hmul_g_kG,prop:gkH_map_eq,prop:center_commutes_single}
+    \lean{gkH_set_SMul}
+    \leanok
+    We define a multiplication between $x\in\mathbb{K}[\mathcal{Z}_G]$ and $y\in\Omega_g$ by 
+    $x\times y$.
+    \begin{proof}    
+        \leanok
+        LEAN stuff.
+    \end{proof}
+\end{definition}
+
+\begin{definition}
+    \label{def:gkH_set_MulAction}
+    \uses{def:gkH_set_SMul}
+    \lean{gkH_set_MulAction}
+    \leanok
+    The multiplication defined in \ref{def:gkH_set_SMul} induced an action of $\mathbb{K}[\mathcal{Z}_G]$
+    on $\Omega_g$.
+    \begin{proof}    
+        \leanok
+        We check the axioms.
+    \end{proof}
+\end{definition}
+
+\begin{proposition}
+    \label{prop:gkH_set_DistribMulAction}
+    \uses{def:gkH_set_MulAction}
+    \lean{gkH_set_DistribMulAction}
+    \leanok
+    The action defined in \ref{def:gkH_set_MulAction} is indeed distributive.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We check the axioms.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:gkH_set_Module}
+    \uses{prop:gkH_set_DistribMulAction}
+    \lean{gkH_set_Module}
+    \leanok
+    $\Omega_g$ is a $\mathbb{K}[\mathcal{Z}_G]$ module for the action defined in \ref{def:gkH_set_MulAction}.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We check the axioms.
+\end{proof}
+
+\begin{definition}
+    \label{def:gkH_set_iso_kH_module}
+    \uses{prop:gkH_set_Module,def:gkH_set_iso_kH_k,prop:gkH_map_eq}
+    \lean{gkH_set_iso_kH_module}
+    \leanok
+    The bijection defined in \ref{def:gkH_set_iso_kH_k} is indeed a $\mathbb{K}[\mathcal{Z}_G]$-linear map.
+    \begin{proof}    
+        \leanok
+        We check the linearity.
+    \end{proof}
+\end{definition}
+
+\begin{proposition}
+    \label{prop:MonoidAlgebra_MulAction_basis}
+    \uses{}
+    \lean{MonoidAlgebra_MulAction_basis}
+    \leanok
+    Elements of $\mathcal{S}_{G/\mathcal{Z}_G}$ seen as elements of $\mathbb{K}[G]$ defined 
+    a basis of $\mathbb{K}[G]$ as a $\mathbb{K}[\mathcal{Z}_G]$ algebra.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We show the independence of the family and then that it generates the whole algebra.
+    \newline
+    We suppose that there exists a family $(a_i)_{i\in \mathcal{S}_{G/\mathcal{Z}_G}}$ of elements
+    of $\mathbb{K}[\mathcal{Z}_G]$ such that $\sum\limits_{i\in\mathcal{S}_{G/\mathcal{Z}_G}}a_i gi=0$.
+\end{proof}
+
