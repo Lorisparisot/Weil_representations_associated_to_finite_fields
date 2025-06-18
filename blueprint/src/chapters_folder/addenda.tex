@@ -92,7 +92,7 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
     \uses{def:system_of_repr_center_set}
     \lean{system_of_repr_center.set_bij}
     \leanok
-    We have a bijection between $\mathcal{S}_{G/\mathcal{Z}_G}$ and $\{\bar{g} \in G/\mathcal{Z}_G}$
+    We have a bijection between $\mathcal{S}_{G/\mathcal{Z}_G}$ and $\{\bar{g} \in G/\mathcal{Z}_G\}$
     given by the map $s\to \bar{s}$.
 \end{proposition}
 \begin{proof}
@@ -503,7 +503,7 @@ $\mathbb{K}[G] \cong \bigoplus\limits_{g\in \mathcal{S}_{G/\mathcal{Z}_G} } g \m
     \uses{}
     \lean{gkH_map}
     \leanok
-    Let $g\in G$ be fixed. The morphism $\varhpi_g : \mathcal{Z}_G\rightarrow G$ defined by
+    Let $g\in G$ be fixed. The morphism $\varphi_g : \mathcal{Z}_G\rightarrow G$ defined by
     $\varphi_G(x)=gx$ induced a $\mathbb{K}$-linear map $\Gamma_g$ from $\mathbb{K}[\mathcal{Z}_G]$ to $\mathbb{K}[G]$.
     \begin{proof}    
         \leanok
@@ -658,7 +658,7 @@ We will now put some structure on $\Omega_g$ to makes it understand by LEAN as
         &=\sum\limits_{g\in G}a_g g 
     \end{align*}
     which is equal to 0. But $(g)_{g\in G}$ seen as a family of elements of $\mathbb{K}[G]$ is a 
-    basis of $\mathb{K}[G]$ as a $\mathbb{K}$ vector space. Finally, $\forall g\in G,\ a_g=0$ and the family is independent.
+    basis of $\mathbb{K}[G]$ as a $\mathbb{K}$ vector space. Finally, $\forall g\in G,\ a_g=0$ and the family is independent.
     \newline
 
     Let shows the family generates the whole algebra. Let $x\in \mathbb{K}[G]$.
