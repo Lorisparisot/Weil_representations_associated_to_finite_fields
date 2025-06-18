@@ -10,7 +10,6 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
 
 \begin{proposition}
     \label{prop:center_mul_comm}
-    \uses{}
     \lean{center_mul_comm}
     \leanok
     If $h$ is an element of the center of $G$, it commutes with every element of $G$.
@@ -33,11 +32,10 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
     Suppose $h=ab$. Then $a=hb^{-1}=b^{-1}h$ because $h\in\mathcal{Z}_G$. Thus $ba=h$.
 \end{proof}
 
-\subsection{Quotient of $G$ by its center}
+\subsection{Quotient of a group by its center}
 
-\begin{definition}
+\begin{definition}[Representatives system]
     \label{def:system_of_repr_center_set}
-    \uses{}
     \lean{system_of_repr_center.set}
     \leanok
     We define the system of representatives of $G/\mathcal{Z}_G$ by picking up exactly one element
@@ -146,7 +144,7 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
 \begin{proposition}
     \label{prop:system_of_repr_center_G_to_center_eq_G_G_to_syst_simp}
     \uses{prop:system_of_repr_center_G_to_center_G_to_syst_simp}
-    \lean{system_of_repr_center.G_eq_G_to_center_G_to_syst_simp}
+    \lean{system_of_repr_center.G_to_center_eq_G_G_to_syst_simp}
     \leanok
     For every $g\in G$ the following identity holds : $\psi_{G\mathcal{Z}_G}(g)=g\varphi_{G\mathcal{S}}(g)^{-1}$.
 \end{proposition}
@@ -239,7 +237,6 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
 
 \begin{definition}
     \label{def:DirectSum_equiv}
-    \uses{}
     \lean{DirectSum_equiv}
     \leanok
     If we have two families $(\beta_i)_{i\in I}$ and $(\gamma_i)_{i\in I}$ of additive commutative
@@ -271,7 +268,6 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
 
 \begin{proposition}
     \label{prop:DirectSum_eq_sum_direct}
-    \uses{}
     \lean{DirectSum_eq_sum_direct}
     \leanok
     Let $I$ be a finite set and $(\beta_i)_{i\in I}$ a family of additive commutative monoids.
@@ -289,7 +285,6 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
 
 \begin{definition}
     \label{def:iso_hom_tens}
-    \uses{}
     \lean{iso_hom_tens}
     \leanok
     Let $A$ be ring, $B$ an $A-$algebra, $M$ an $A-$module and $N$ a $B-$module. Then,
@@ -320,8 +315,7 @@ We define $mathcal{Z}_G$ as the center of $G$.
 
 \begin{definition}
     \label{def:Map_kHkG}
-    \uses{}
-    \lean{Map_KHKG}
+    \lean{Map_kHkG}
     \leanok
     Given $\mathbb{K}$ a field, $G$ a group and $H$ a subgroup of $G$, 
     we have a trivial ring homomorphism $\varphi_{kHkG}$ from $\mathbb{K}[H]$ to $\mathbb{K}[G]$.
@@ -501,7 +495,6 @@ $\mathbb{K}[G] \cong \bigoplus\limits_{g\in \mathcal{S}_{G/\mathcal{Z}_G} } g \m
 
 \begin{definition}
     \label{def:gkH_map}
-    \uses{}
     \lean{gkH_map}
     \leanok
     Let $g\in G$ be fixed. The morphism $\varphi_g : \mathcal{Z}_G\rightarrow G$ defined by
@@ -628,7 +621,7 @@ We will now put some structure on $\Omega_g$ to makes it understand by LEAN as
 
 \begin{proposition}
     \label{prop:MonoidAlgebra_MulAction_basis}
-    \uses{}
+    \uses{def:system_of_repr_center_set,def:gkH_set_iso_kH_module}
     \lean{MonoidAlgebra_MulAction_basis}
     \leanok
     Elements of $\mathcal{S}_{G/\mathcal{Z}_G}$ seen as elements of $\mathbb{K}[G]$ defined 
