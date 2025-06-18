@@ -64,6 +64,7 @@ instance : Finite H := Subgroup.instFiniteSubtypeMem H
 instance finite (h : Finite G) : Finite (system_of_repr_center.set G) := by
   exact Finite.Set.finite_range Quot.out
 
+omit inst3 in
 /-`system_of_rep_center_set` is a system of representatives for the classes, ie `g≠g'` implies
 classes are different-/
 theorem classes_disjoint (g g' : G) (hG : g ∈ (system_of_repr_center.set G)) (hG': g' ∈ system_of_repr_center.set G) :
@@ -85,8 +86,15 @@ theorem classes_disjoint (g g' : G) (hG : g ∈ (system_of_repr_center.set G)) (
     rw [@mul_smul,<-h1]
     simp only [inv_smul_smul]
   have := MulAction.orbit_eq_iff.mpr h2
-  simp at hG hG'
-  sorry
+  obtain ⟨yg,hG⟩ := hG
+  obtain ⟨yg',hG'⟩ := hG'
+  rw[<-hG,<-hG'] at this
+  rw[<-hG,<-hG']
+  rw[Quotient.out_inj]
+  refine Quotient.out_equiv_out.mp ?_
+  rw[hG,hG']
+  exact h2
+
 
 omit inst3 in
 /--Union of the classes of elements of `system_of_repr_center.set` is the whole group.-/
