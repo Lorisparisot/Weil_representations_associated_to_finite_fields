@@ -17,7 +17,7 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
 \end{proposition}
     \begin{proof}
         \leanok
-        Trivial, just a reformulation in terms of type instead of memebership.
+        Trivial, just a reformulation in terms of type instead of memebership, useful for the $LEAN$ part.
     \end{proof}
 
 \begin{proposition}
@@ -45,7 +45,7 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
     by $C_s$ the classe of $s$.
     \begin{proof}
         \leanok
-        To do that in $L\exist\forall N$, we take the image of $G$ by the map $G \rightarrow G/\mathcal{Z}_G\to G$.
+        To do that in $LEAN$, we take the image of $G$ by the map $G \rightarrow G/\mathcal{Z}_G\to G$.
     \end{proof}
 \end{definition}
 
@@ -638,6 +638,37 @@ We will now put some structure on $\Omega_g$ to makes it understand by LEAN as
     We show the independence of the family and then that it generates the whole algebra.
     \newline
     We suppose that there exists a family $(a_i)_{i\in \mathcal{S}_{G/\mathcal{Z}_G}}$ of elements
-    of $\mathbb{K}[\mathcal{Z}_G]$ such that $\sum\limits_{i\in\mathcal{S}_{G/\mathcal{Z}_G}}a_i gi=0$.
+    of $\mathbb{K}[\mathcal{Z}_G]$ such that
+    \begin{equation*}
+        \sum\limits_{i\in\mathcal{S}_{G/\mathcal{Z}_G}}a_i g_i=0
+    \end{equation*}
+    Using the fact that the family $(h)_{h\in\mathcal{Z}_G}$ seen as a family of elements
+    of $\mathbb{K}[\mathcal{Z}_G]$ is indeed a basis of $\mathbb{K}[\mathcal{Z}_G]$ as 
+    a $\mathbb{K}$ vector space we get :
+    \begin{equation*}
+        \sum\limits_{i\in\mathcal{S}_{G/\mathcal{Z}_G}}\left(\sum\limits_{h\in\mathcal{Z}_G}a_{ih}h\right) g_i=0
+    \end{equation*}
+    where the $a_{ih}$ are elements of $\mathbb{K}$. Those sums are finite, and moreover, 
+    the family $(ih)_{(i,h)\in \mathcal{S}_{G/\mathcal{Z}_G}\times \mathcal{Z}_G}$ is a partition
+    of $G$.
+    \newline
+    Thus, we get :
+    \begin{align*}
+        \sum\limits_{i\in\mathcal{S}_{G/\mathcal{Z}_G}}\left(\sum\limits_{h\in\mathcal{Z}_G}a_{ih}h\right) g_i &= \sum\limits_{i\in\mathcal{S}_{G/\mathcal{Z}_G}}\sum\limits_{h\in\mathcal{Z}_G}a_{ih}g_ih\\
+        &=\sum\limits_{g\in G}a_g g 
+    \end{align*}
+    which is equal to 0. But $(g)_{g\in G}$ seen as a family of elements of $\mathbb{K}[G]$ is a 
+    basis of $\mathb{K}[G]$ as a $\mathbb{K}$ vector space. Finally, $\forall g\in G,\ a_g=0$ and the family is independent.
+    \newline
+
+    Let shows the family generates the whole algebra. Let $x\in \mathbb{K}[G]$.
+    Using the natural basis $G$ of $\mathbb{K}[G]$ and that $(ih)_{(i,h)\in \mathcal{S}_{G/\mathcal{Z}_G}\times \mathcal{Z}_G}$ is a partition
+    of $G$, we get : 
+    \begin{align*}
+        x&=\sum\limits_{g\in G}a_gg\\
+        &=\sum\limits_{i\in\mathcal{S}_{G/\mathcal{Z}_G}}\sum\limits_{h\in \mathcal{Z}_G} a_{ih} ih\\
+        &=\sum\limits_{i\in\mathcal{S}_{G/\mathcal{Z}_G}}\left(\underbrace{\sum\limits_{h\in \mathcal{Z}_G} a_{ih} h}_{\in\mathbb{K}[\mathcal{Z}_G]}\right) i
+    \end{align*}
+    So it generates the whole algebra and finally we get a basis.
 \end{proof}
 
