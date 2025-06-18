@@ -68,7 +68,10 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
     then the classes of $g$ and $g'$ are disjoint.
 \end{proposition}
 \begin{proof}
-    Add proof
+    \leanok
+    Suppose that the classes aren't disjoints. Then there exists $y$
+    such that $y\sim g$ and $y\sim g'$. Thus $g \sim g'$ and their classes
+    are equal. 
 \end{proof}
 
 \begin{proposition}
@@ -96,5 +99,86 @@ We denote by $\mathcal{Z}_G$ the center of $G$ and by $e_G$ the neutral of $G$.
 \begin{proof}
     \leanok
     We check it is a bijection.
+\end{proof}
+
+\begin{definition}
+    \label{def:G_to_syst}
+    \uses{def:system_of_repr_center_set}
+    \lean{system_of_repr_center.G_to_syst}
+    \leanok
+    We define a map $\varphi_{G\mathcal{S}} : G \rightarrow \mathcal{S}_{G/\mathcal{Z}_G}$ that
+    send every $g\in G$ to its representative.
+\end{definition}
+
+\begin{proposition}
+    \label{prop:G_to_syst_simp}
+    \uses{def:G_to_syst}
+    \lean{system_of_repr_center.G_to_syst_simp}
+    \leanok
+    For every $g\in G$ and $h\in\mathbb{Z}_G$, we have $\varphi_{G\mathcal{S}}(gh)=\varphi_{G\mathcal{S}} (g)$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    By definition $g*h$ belongs to the orbit of $g$, thus they have the same representative.
+\end{proof}
+
+\begin{definition}
+    \label{def:G_to_center}
+    \uses{def:system_of_repr_center_set}
+    \lean{system_of_repr_center.G_to_center}
+    \leanok
+    We define a map $\psi_{G\mathcal{Z}_G} : G \rightarrow \mathcal{Z}_G$ that
+    send every $g\in G$ to the corresponding $h\in \mathcal{Z}_G$ such that 
+    $g=sh$ where $s$ is the representative of $g$.
+\end{definition}
+
+\begin{proposition}
+    \label{prop:system_of_repr_center_G_to_center_G_to_syst_simp}
+    \uses{prop:G_to_syst_simp,def:G_to_center}
+    \lean{system_of_repr_center.G_eq_G_to_center_G_to_syst_simp}
+    \leanok
+     For every $g\in G$ the following identity holds : $g=\varphi_{G\mathcal{S}}(g) \psi_{G\mathcal{Z}_G}(g)$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    By definition of $G/\mathcal{Z}_G$.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:system_of_repr_center_G_to_center_eq_G_G_to_syst_simp}
+    \uses{prop:system_of_repr_center_G_to_center_G_to_syst_simp}
+    \lean{system_of_repr_center.G_to_center_eq_G_G_to_syst_simp}
+    \leanok
+    For every $g\in G$ the following identity holds : $\psi_{G\mathcal{Z}_G}(g)=g\varphi_{G\mathcal{S}}(g)^{-1}$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Trivial with \ref{prop:system_of_repr_center_G_to_center_G_to_syst_simp}
+\end{proof}
+
+\begin{proposition}
+    \label{prop:system_of_repr_center_G_to_center_syst_apply_simp}
+    \uses{def:G_to_center}
+    \lean{system_of_repr_center.G_to_center_syst_apply_simp}
+    \leanok
+    For every $g\in \mathcal{S}_{G/\mathcal{Z}_G}$, we have $\psi_{G\mathcal{Z}_G}(g)=e_G$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    By definition of the map $\psi_{G\mathcal{Z}_G}$.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:system_of_repr_center_G_to_syst_simp_id}
+    \uses{prop:system_of_repr_center_G_to_center_syst_apply_simp,prop:system_of_repr_center_G_to_center_eq_G_G_to_syst_simp}
+    \lean{system_of_repr_center.G_to_syst_simp_id}
+    \leanok
+    For every $g\in \mathcal{S}_{G/\mathcal{Z}_G}$, we have $\varphi_{G\mathcal{S}}(g)=g$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We have $g=\varphi_{G\mathcal{S}}(g) \psi_{G\mathcal{Z}_G}(g)$ by \ref{prop:system_of_repr_center_G_to_center_G_to_syst_simp}.
+    But $\psi_{G\mathcal{Z}_G}(g)=e_G$ by \ref{prop:system_of_repr_center_G_to_center_syst_apply_simp}.
+    Thus we get the result.
 \end{proof}
 
