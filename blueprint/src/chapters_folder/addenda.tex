@@ -721,11 +721,20 @@ and to formalize its character.
 \newline
 
 From now on, $\mathbb{K}$ is a field and $G$ is a group. We denote by
-$\mathcal{Z}_G$ its center. $W$ is a $\mathbb{K}-$vector space. Fnally,
+$\mathcal{Z}_G$ its center. $W$ is a $\mathbb{K}-$vector space. Finally,
 $\theta$ is a representation of $\mathcal{Z}_G$ in $W$.
 
 \subsection{Building the induced representation}
 
+\begin{definition}[Induced representation as module]
+    \label{def:induced_tensor}
+    \uses{prop:kG_is_kCenter_Algebra}
+    \lean{Induced_rep_center.tensor}
+    \leanok
+    Given $G$ a group, $\mathbb{K}$ a field, $W$ a $k$ vector space and $\theta$ a representation of
+    $\mathcal{Z}_G$ on $W$, we define the tensor product $V:=\mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$,
+    where $V_\theta$ is the $\mathbb{K}[\mathcal{Z}_G]$ module associated to $\theta$.
+\end{definition}
 
 
 
