@@ -921,5 +921,68 @@ $\theta$ is a representation of $\mathcal{Z}_G$ in $W$.
     Compute the axioms.
 \end{proof}
 
+\begin{proposition}[Induced reprensentation property]
+    \label{prop:induced_property}
+    \uses{def:iso_hom_tens, def:induced_tensor}
+    \lean{Induced_rep_center.iso_induced_as_tensor}
+    \leanok 
+    Let $E$ be a $\mathbb{K}[G]$ module. We have an isomorphism $Hom_{\mathbb{K}[G]}
+    \left(\mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta,\ E\right)\simeq Hom_{\mathbb{K}[\mathcal{Z}_G]}
+    \left(\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta,\ E\right)$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We use \ref{prop:def:iso_hom_tens} two times.
+\end{proof}
+
 \subsection{Character of the induced representation}
 
+\begin{definition}[Central function]
+    \label{def:central_fun}
+    \uses{}
+    \lean{Frobenius_reciprocity.conj_class_fun}
+    \leanok 
+    Given $G$ a group, a function $f$ over $G$ is called central if it is constant on
+    the conjugacy classes of $G$ : $f(g^{-1}xg)=f(x)$ for all $g\in G$ and $x\in G$.
+\end{definition}
+
+\begin{definition}[Induced central function]
+    \label{def:induced_central_fun}
+    \uses{def:central_fun}
+    \lean{Frobenius_reciprocity.Ind_conj_class_fun}
+    \leanok 
+    If $H$ is a subgroup of $G$ a finite group, and if $f$ is a function over $H$, we define a central function 
+    $f_G$ over $G$ (called the induced central function on $f$) by the formula :
+    \begin{equation*}
+        f_G(x)=\frac{1}{\text{Card}(H)}\sum\limits_{g\in G\ \wedge\ g^{-1}xg\in H}f(g^{-1}xg)
+    \end{equation*}
+\begin{proof} 
+    \leanok
+    We check the axiom by reordering the sum with the bijection $x\mapsto g^{-1}x$.
+\end{proof}
+\end{definition}
+
+begin{definition}[Character as central function]
+    \label{def:char_central_fun}
+    \uses{def:central_fun}
+    \lean{Frobenius_reciprocity.character_as_conj_class_fun}
+    \leanok 
+    A character is of course a central function over $G$. We empacked this definition
+    in Lean.
+    \begin{proof}
+        \leanok
+        Trivial.
+    \end{proof}
+\end{definition}
+
+\begin{proposition}[Induced representation is semisimple]
+    \label{prop:tensor_semi_simple}
+    \uses{def:induced_tensor}
+    \lean{Frobenius_reciprocity.tensor_semisimple}
+    \leanok 
+    If $|G|\nmid Char(k)$, then the module defined in \ref{def:induced_tensor} is semisimple.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Consequences of .
+\end{proof}
