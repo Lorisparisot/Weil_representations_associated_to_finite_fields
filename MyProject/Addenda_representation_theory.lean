@@ -215,14 +215,19 @@ noncomputable def subrep : θ.asModule ≃ₗ[MonoidAlgebra k (Subgroup.center G
         simp only [LinearEquiv.invFun_eq_symm, TensorProduct.rid_symm_apply,
           TensorProduct.comm_symm_tmul, id_eq, LinearEquiv.coe_symm_mk, TensorProduct.map_tmul,
           Algebra.linearMap_apply, map_one, LinearMap.id_coe] at h
+        rw[MonoidAlgebra.one_def] at h
         sorry
       · intro y
         unfold subsubsub at y
         obtain ⟨hy, hy1⟩ := y
-        obtain ⟨ hy2,hy3⟩ := hy1
+        obtain ⟨ hy2,⟨hy31,hy32⟩⟩ := hy1
         use hy2
-        simp
-        simp at hy3
+        simp at hy32
+        simp only [LinearEquiv.invFun_eq_symm,id_eq]
+        conv=> rhs;lhs;rw[<-hy32]
+
+
+
         sorry
   sorry
 

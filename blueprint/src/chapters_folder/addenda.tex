@@ -855,5 +855,71 @@ $\theta$ is a representation of $\mathcal{Z}_G$ in $W$.
     It comes from \ref{def:Map_kHkG}.
 \end{proof}
 
+\begin{proposition}[Coercion set]
+    \label{prop:induced_rep_coe_set}
+    \uses{def:induced_tensor,def:induced_rep,def:Map_kHkG}
+    \lean{Induced_rep_center.Coe}
+    \leanok 
+   We have a coercion from element of type $Set : \mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$
+   to element of type $Set : \mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from \ref{def:Map_kHkG}.
+\end{proof}
+
+
+\begin{proposition}[$V_\theta$ as submodule]
+    \label{prop:theta_submodule}
+    \uses{}
+    \lean{Induced_rep_center.subrep_sub_module}
+    \leanok 
+    The set of elements of $V_\theta$ defines a $\mathbb{K}[\mathcal{Z}_G]$-submodule of itself.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
+
+\begin{proposition}[$V_\theta$ as submodule isomorphic to $V_\theta$]
+    \label{prop:theta_submodule_triv}
+    \uses{prop:theta_submodule}
+    \lean{Induced_rep_center.subrep_sub_module_iso}
+    \leanok 
+    The submodule defined in \ref{prop:theta_submodule} is isomorphic to $V_\theta$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
+
+\begin{proposition}[Subrepresentation of the induced one as submodule]
+    \label{prop:center_times_theta_submodule}
+    \uses{prop:center_submodule,prop:theta_submodule_triv}
+    \lean{Induced_rep_center.is_sub_rep_submodule_iso}
+    \leanok 
+    The image of the map sending \ref{prop:center_submodule} and \ref{prop:theta_submodule_triv}
+    to their tensor product defines a $\mathbb{K}[\mathcal{Z}_G]$-submodule of 
+    $\mathbb{K}[G]\otimes_{\mathbb{k}[\mathcal{Z}_G]}V_\theta$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Trivial.
+\end{proof}
+
+\begin{proposition}[Image of $V_\theta$ as submodule]
+    \label{prop:subsubsub}
+    \uses{prop:subrep_iso_theta,prop:module_sub_rep_iso}
+    \lean{Induced_rep_center.subsubsub}
+    \leanok 
+    The image of $V_\theta$ by \ref{prop:module_sub_rep_iso} defines a $\mathbb{K}[\mathcal{Z}_G]$-submodule of 
+    $\mathbb{K}[G]\otimes_{\mathbb{k}[\mathcal{Z}_G]}V_\theta$, ie $V_\theta$ is a 
+    subrepresentation of the induced.
+\end{proposition}
+\begin{proof}
+    \leanok
+    Compute the axioms.
+\end{proof}
+
 \subsection{Character of the induced representation}
 
