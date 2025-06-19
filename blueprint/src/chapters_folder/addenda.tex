@@ -676,7 +676,7 @@ We will now put some structure on $\Omega_g$ to makes it understand by LEAN as
     \lean{G_to_direct_sum}
     \leanok
     We define a map on $\mathcal{S}_{G/\mathcal{Z}_G}$ that associated to every elements
-    $g\in\mathcal{S}_{G/\mathcal{Z}_G}$ the natural element of $bigoplus\limits{s\in\mathcal{S}_{G/\mathcal{Z}_G}}\mathbb{K}[H]$,
+    $g\in\mathcal{S}_{G/\mathcal{Z}_G}$ the natural element of $bigoplus\limits{s\in\mathcal{S}_{G/\mathcal{Z}_G}}\mathbb{K}[\mathcal{Z}_G]$,
     that is $1$ of $\mathbb{K}[H]$ on the $g-$th component and 0 elsewhere.
 \end{definition}
 
@@ -686,7 +686,7 @@ We will now put some structure on $\Omega_g$ to makes it understand by LEAN as
     \uses{def:G_to_direct_sum,prop:MonoidAlgebra_MulAction_basis}
     \lean{MonoidAlgebra_direct_sum_linear}
     \leanok
-    We construct a $\mathbb{K}[\mathcal{Z}_G]$-linear map on $\bigoplus\limits_{g\in\mathcal{S}_{G/\mathcal{Z}_G}}\mathbb{K[\mathcal{Z}_G]}$
+    We construct a $\mathbb{K}[\mathcal{Z}_G]$-linear map on $\bigoplus\limits_{g\in\mathcal{S}_{G/\mathcal{Z}_G}}\mathbb{K}[\mathcal{Z}_G]$
     by using the images of the element of the basis \ref{prop:MonoidAlgebra_MulAction_basis} by the map \ref{def:G_to_direct_sum}.
 \end{definition}
 
@@ -706,7 +706,7 @@ We will now put some structure on $\Omega_g$ to makes it understand by LEAN as
     \uses{def:MonoidAlgebra_direct_sum_1,def:gkH_set_iso_kH_module}
     \lean{MonoidAlgebra_direct_sum_system_of_repr_center.set }
     \leanok
-    We have an isomorphism $\mathbb{K}[G]\cong \bigoplus\limits_{g\in\mathcal{S}_{G/\mathcal{Z}_G}}g\mathbb{K}[H]$
+    We have an isomorphism $\mathbb{K}[G]\cong \bigoplus\limits_{g\in\mathcal{S}_{G/\mathcal{Z}_G}}g\mathbb{K}[\mathcal{Z}_G]$
     which is $\mathbb{K}[\mathcal{Z}_G]$-linear.
     \begin{proof}
         We compose the maps \ref{def:MonoidAlgebra_direct_sum_1} and \ref{gkH_set_iso_kH_module}.
