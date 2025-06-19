@@ -736,7 +736,124 @@ $\theta$ is a representation of $\mathcal{Z}_G$ in $W$.
     where $V_\theta$ is the $\mathbb{K}[\mathcal{Z}_G]$ module associated to $\theta$.
 \end{definition}
 
+\begin{proposition}
+    \label{prop:induced_add_comm_mono}
+    \uses{def:induced_tensor}
+    \lean{Induced_rep_center.tensor_add_comm_mon}
+    \leanok 
+    The $V$ defined in \ref{def:induced_tensor} is an additive commutative monoid.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from the fact that $\mathbb{K}[G]$ and $\mathbb{K}[\mathcal{Z}_G]$ are
+    additive commutative monoids.
+\end{proof}
 
+\begin{proposition}
+    \label{prop:tensor_module_mono}
+    \uses{prop:kG_is_kCenter_Algebra,def:induced_tensor}
+    \lean{Induced_rep_center.tensor_module}
+    \leanok 
+    The $V$ defined in \ref{def:induced_tensor} is a $\mathbb{K}[G]$ module.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We do \textit{mettre la preuve}.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:tensor_module_sub}
+    \uses{prop:kG_is_kCenter_Algebra,def:induced_tensor}
+    \lean{Induced_rep_center.tensor_module_sub}
+    \leanok 
+    The $V$ defined in \ref{def:induced_tensor} is a $\mathbb{K}[\mathcal{Z}_G]$ module.
+\end{proposition}
+\begin{proof}
+    \leanok
+    We do \textit{mettre la preuve}.
+\end{proof}
+
+\begin{definition}[Induced representation by the center]
+    \label{def:induced_rep}
+    \uses{prop:tensor_module_mono,prop:induced_add_comm_mono}
+    \lean{Induced_rep_center.as_rep}
+    \leanok
+    The $V$ defined in \ref{def:induced_tensor} defined a representation of $G$ called the
+    induced representation by $\mathcal{Z}_G$.
+\end{definition}
+
+\begin{definition}[Subrepresentation of the induced]
+    \label{def:induced_rep_subrep}
+    \uses{def:induced_rep}
+    \lean{Induced_rep_center.module_sub_rep}
+    \leanok
+    We define the subrepresentation of \ref{def:induced_rep} by 
+    $\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$,
+    where $V_\theta$ is the $\mathbb{K}[\mathcal{Z}_G]$ module associated to $\theta$.
+\end{definition}
+
+\begin{proposition}
+    \label{prop:subrep_addmon}
+    \uses{def:induced_rep_subrep}
+    \lean{Induced_rep_center.module_sub_rep_addcommmon}
+    \leanok 
+   The tensor product defined in \ref{def:induced_rep_subrep} is an additive commutative monoid.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from general properties of tensor products.
+\end{proof}
+
+\begin{proposition}
+    \label{prop:subrep_module}
+    \uses{prop:subrep_addmon}
+    \lean{Induced_rep_center.module_sub_rep_addcommmon}
+    \leanok 
+   The tensor product defined in \ref{def:induced_rep_subrep} is a $\mathbb{K}[\mathcal{Z}_G]$ module.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from general properties of tensor products.
+\end{proof}
+
+
+\begin{proposition}
+    \label{prop:induced_rep_is_module}
+    \uses{def:induced_rep}
+    \lean{Induced_rep_center.module_sub_rep_module}
+    \leanok 
+   The induced representation defined in \ref{def:induced_rep} is a $\mathbb{K}[\mathcal{Z}_G]$ module.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from general properties of tensor products.
+\end{proof}
+
+
+\begin{proposition}
+    \label{prop:module_sub_rep_iso}
+    \uses{def:induced_rep,prop:subrep_module}
+    \lean{Induced_rep_center.module_sub_rep_iso}
+    \leanok
+    We have an isomorphism between $\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$ and $V_\theta$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from a special case of a theorem \textit{à ajouter}.
+\end{proof}
+
+\begin{proposition}[Coercion]
+    \label{prop:induced_rep_coe}
+    \uses{def:induced_tensor,def:induced_rep,def:Map_kHkG}
+    \lean{Induced_rep_center.Coe}
+    \leanok 
+   We have a coercion from element of type $\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$
+   to element of type $\mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$.
+\end{proposition}
+\begin{proof}
+    \leanok
+    It comes from \ref{def:Map_kHkG}.
+\end{proof}
 
 \subsection{Character of the induced representation}
 
