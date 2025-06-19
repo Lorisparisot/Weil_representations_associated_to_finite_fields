@@ -703,13 +703,14 @@ We will now put some structure on $\Omega_g$ to makes it understand by LEAN as
 
 \begin{definition}
     \label{def:MonoidAlgebra_direct_sum_system_of_repr_center.set }
-    \uses{def:MonoidAlgebra_direct_sum_1,def:gkH_set_iso_kH_module}
+    \uses{def:MonoidAlgebra_direct_sum_1,def:gkH_set_iso_kH_module,def:DirectSum_equiv_linearmap}
     \lean{MonoidAlgebra_direct_sum_system_of_repr_center.set }
     \leanok
     We have an isomorphism $\mathbb{K}[G]\cong \bigoplus\limits_{g\in\mathcal{S}_{G/\mathcal{Z}_G}}g\mathbb{K}[\mathcal{Z}_G]$
     which is $\mathbb{K}[\mathcal{Z}_G]$-linear.
     \begin{proof}
-        We compose the maps defined in \ref{def:MonoidAlgebra_direct_sum_1} and \ref{def:gkH_set_iso_kH_module}.
+        We compose the maps defined in \ref{def:MonoidAlgebra_direct_sum_1} and \ref{def:gkH_set_iso_kH_module} and use
+        the bijection \ref{def:DirectSum_equiv_linearmap}.
     \end{proof}
 \end{definition}
 
