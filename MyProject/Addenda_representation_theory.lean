@@ -1,7 +1,7 @@
 import Mathlib.RepresentationTheory.Character
 import Mathlib.RepresentationTheory.Maschke
 import MyProject.Addenda_monoid_algebra_theory
-
+--import Hammer
 
 /-!
 # Addenda to the representation theory in mathlib
@@ -216,6 +216,8 @@ noncomputable def subrep : θ.asModule ≃ₗ[MonoidAlgebra k (Subgroup.center G
           TensorProduct.comm_symm_tmul, id_eq, LinearEquiv.coe_symm_mk, TensorProduct.map_tmul,
           Algebra.linearMap_apply, map_one, LinearMap.id_coe] at h
         rw[MonoidAlgebra.one_def] at h
+        simp[TensorProduct.tmul] at h
+        have := @FreeAddMonoid.of_injective (MonoidAlgebra k G × θ.asModule) (MonoidAlgebra.single 1 1, x1) (MonoidAlgebra.single 1 1, x2)
         sorry
       · intro y
         unfold subsubsub at y
@@ -245,6 +247,7 @@ noncomputable def iso_induced_as_tensor (E : Type*) [AddCommMonoid E] [Module (M
 end Induced_rep_center
 
 namespace Frobenius_reciprocity
+open Classical
 
 variable (k G W : Type) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
 [inst4 : AddCommGroup W] [inst5 : Module k W] [inst6 : Module.Finite k W]
@@ -335,6 +338,36 @@ noncomputable instance tensor_semisimple [h : NeZero ↑(Fintype.card G : k)] : 
   unfold Induced_rep_center.tensor
   exact @MonoidAlgebra.Submodule.complementedLattice k _ G _ (h) _ (TensorProduct (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G) θ.asModule)
     _ _
+
+
+abbrev induced_rep_tensor_direct_sum_component (g : system_of_repr_center.set G) := TensorProduct (MonoidAlgebra k (Subgroup.center G)) (gkH_set k G g) (θ.asModule)
+
+noncomputable instance (g:system_of_repr_center.set G) : Module (MonoidAlgebra k (Subgroup.center G)) (induced_rep_tensor_direct_sum_component k G W θ g) := by
+  exact TensorProduct.instModule
+
+/--The induced representation `Induced_rep_center.tensor k G W θ` is isomorphic to a direct sum
+of `induced_rep_tensor_direct_sum_component`.-/
+noncomputable def induced_rep_tensor_iso_direct_sum : Induced_rep_center.tensor k G W θ ≃ₗ[MonoidAlgebra k (Subgroup.center G)] DirectSum (system_of_repr_center.set G) (fun g => induced_rep_tensor_direct_sum_component k G W θ g):= by
+  unfold induced_rep_tensor_direct_sum_component Induced_rep_center.tensor
+  let h4 := @TensorProduct.directSumLeft (MonoidAlgebra k (Subgroup.center G)) _ (system_of_repr_center.set G) _
+    (fun g ↦ ↥(gkH_set k G ↑g)) θ.asModule _ _ _ _
+  let h := TensorProduct.congr (MonoidAlgebra_direct_sum_system_of_repr_center_set k G) (LinearEquiv.refl (MonoidAlgebra k ↥(Subgroup.center G)) θ.asModule)
+  refine (Equiv.toLinearEquiv ?_ ?_)
+  · refine Equiv.mk (fun x => (h4 ∘ h) x) (fun x => (h.invFun ∘ h4.invFun ) x) ?_ ?_
+    · intro x
+      simp only [LinearEquiv.invFun_eq_symm, Function.comp_apply, LinearEquiv.symm_apply_apply]
+    · intro x
+      simp only [LinearEquiv.invFun_eq_symm, Function.comp_apply, LinearEquiv.apply_symm_apply]
+  · refine { map_add := ?_, map_smul := ?_ }
+    · intro x y
+      simp only [Function.comp_apply, LinearEquiv.invFun_eq_symm, Equiv.coe_fn_mk, map_add]
+    · intro c x
+      simp only [Function.comp_apply, LinearEquiv.invFun_eq_symm, Equiv.coe_fn_mk, map_smul]
+
+
+
+
+
 
 
 /--Given the character of a representation `θ` of `Subgroup.center G` on `k`, the character

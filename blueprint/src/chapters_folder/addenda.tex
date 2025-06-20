@@ -702,9 +702,9 @@ We will now put some structure on $\Omega_g$ to makes it understand by LEAN as
 \end{definition}
 
 \begin{definition}
-    \label{def:MonoidAlgebra_direct_sum_system_of_repr_center.set }
+    \label{def:MonoidAlgebra_direct_sum_system_of_repr_center_set }
     \uses{def:MonoidAlgebra_direct_sum_1,def:gkH_set_iso_kH_module,def:DirectSum_equiv_linearmap}
-    \lean{MonoidAlgebra_direct_sum_system_of_repr_center.set }
+    \lean{MonoidAlgebra_direct_sum_system_of_repr_center_set }
     \leanok
     We have an isomorphism $\mathbb{K}[G]\cong \bigoplus\limits_{g\in\mathcal{S}_{G/\mathcal{Z}_G}}g\mathbb{K}[\mathcal{Z}_G]$
     which is $\mathbb{K}[\mathcal{Z}_G]$-linear.
@@ -987,3 +987,26 @@ $\theta$ is a representation of $\mathcal{Z}_G$ in $W$.
     \leanok
     Consequences of .
 \end{proof}
+
+\begin{definition}
+    \label{def:induced_rep_tensor_direct_sum_component}
+    \uses{def:induced_tensor}
+    \lean{Frobenius_reciprocity.induced_rep_tensor_direct_sum_component}
+    \leanok
+    We define the $\mathbb{K}[\mathcal{Z}_G]$ module $W_g:= g\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$
+    for $g\in \mathcal{S}_{G/\mathcal{Z}_G}$.
+\end{definition}
+
+\begin{definition}
+    \label{def:induced_rep_tensor_iso_direct_sum}
+    \uses{def:induced_rep_tensor_direct_sum_component,def:MonoidAlgebra_direct_sum_system_of_repr_center_set}
+    \lean{Frobenius_reciprocity.induced_rep_tensor_iso_direct_sum}
+    \leanok
+    We have an isomorphism between $\mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}V_\theta$
+    and $\bigoplus\limits_{g\in \mathcal{S}_{G/\mathcal{Z}_G}}W_g=\bigoplus\limits_{g\in \mathcal{S}_{G/\mathcal{Z}_G}} g \mathbb{K}[\mathcal{Z}_G]
+    \otimes_{\mathbb{K}[\mathcal{Z}_G]} V_\theta$.
+    \begin{proof}
+        We get the resultat with the isomorphism $\mathbb{K}[G] \cong \otimes_{\mathbb{K}[\mathcal{Z}_G]} g\mathbb{K}[\mathcal{Z}_G]$ 
+        defined in \ref{def:MonoidAlgebra_direct_sum_system_of_repr_center_set}.
+    \end{proof}
+\end{definition}

@@ -8,6 +8,8 @@ package «my_project» where
   ]
   -- add any additional package configuration options here
 
+--require Hammer from git "https://github.com/JOSHCLUNE/LeanHammer" @ "main"
+
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git"
 
