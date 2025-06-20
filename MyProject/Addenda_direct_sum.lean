@@ -166,8 +166,4 @@ noncomputable def iso_hom_tens (A M N B: Type*) [CommSemiring A] [Semiring B] [A
 
 
 
-noncomputable def TensorProduct.map_equiv {R : Type u_1} [CommSemiring R] {M : Type u_5} {N : Type u_6} {P : Type u_7} {Q : Type u_8} [AddCommMonoid M] [AddCommMonoid N] [AddCommMonoid P] [AddCommMonoid Q] [Module R M] [Module R N] [Module R Q] [Module R P] (f : M ≃ₗ[R] P) (g : N ≃ₗ[R] Q) :
-  TensorProduct R M N ≃ₗ[R] TensorProduct R P Q := by
-  exact congr f g
-
 #min_imports
