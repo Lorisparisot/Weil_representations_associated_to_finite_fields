@@ -155,6 +155,7 @@ theorem G_to_syst_simp (g : G) (h : Subgroup.center G) : G_to_syst G (g * h) = G
   unfold QuotientGroup.con QuotientGroup.leftRel MulAction.orbitRel MulAction.orbit
   simp
 
+
 /--A function that associates to every element `g:G` the corresponding `z : Subgroup.center G` sucht that
 `Quotient.out ↑g = g * z`.-/
 noncomputable def G_to_center : G → Subgroup.center G := by
@@ -228,6 +229,14 @@ theorem G_to_center_mul_simp (g : G) (h : Subgroup.center G) : G_to_center G (g 
 
 
 omit inst3 in
+theorem G_to_syst_mul (g : G) (gbar : system_of_repr_center.set G) : G_to_syst G (g * gbar) = G_to_syst G (G_to_syst G g * gbar) := by
+  conv=> lhs; rhs; lhs; rw[G_eq_G_to_center_G_to_syst_simp G g]
+  conv=> lhs;rhs; lhs; rw[<-center_mul_comm]
+  conv=> lhs;rhs;rw[mul_assoc];rw[center_mul_comm]
+  conv=>lhs; rw[G_to_syst_simp]
+
+
+omit inst3 in
 /--`G` is equivalent to the cartesian product of its center and `system_of_repr_center.set G`.-/
 noncomputable def set_center_iso_G : G ≃  Subgroup.center G × system_of_repr_center.set G := by
   refine Equiv.mk (fun g => (G_to_center G g,G_to_syst G g)) (fun g => g.2*g.1.1) ?_ ?_
@@ -268,5 +277,49 @@ theorem set_center_eq_G : @Set.univ G = { g.1 * h | (g : system_of_repr_center.s
     exact (G_eq_G_to_center_G_to_syst_simp G x).symm
   · simp only [Subtype.exists, exists_prop, Set.mem_range, exists_exists_eq_and, Set.mem_setOf_eq,
     Set.mem_univ, implies_true]
+
+noncomputable def equiv_perm_fun (g : G) : (system_of_repr_center.set G) → (system_of_repr_center.set G):= by
+  exact (fun gi => G_to_syst G (g*gi))
+
+omit inst3 in
+theorem equiv_perm_fun_apply (g : G) : ∀ (gi : system_of_repr_center.set G), g*gi.1 = equiv_perm_fun G g gi * G_to_center G (g*gi.1) := by
+  intro gi
+  unfold equiv_perm_fun
+  exact G_eq_G_to_center_G_to_syst_simp G (g*gi)
+
+
+noncomputable def equiv_perm (g : G) : Equiv.Perm (system_of_repr_center.set G) := by
+  unfold Equiv.Perm
+  refine Equiv.mk ?_ ?_ ?_ ?_
+  · exact equiv_perm_fun G g
+  · exact (fun gbar => G_to_syst G (g⁻¹*gbar))
+  · intro x
+    simp
+    have := equiv_perm_fun_apply G g x
+    have : ↑(equiv_perm_fun G g x) = g * ↑x * (↑(G_to_center G (g * ↑x)))⁻¹ := by
+      rw[this]
+      simp
+    rw[this]
+    group
+    simp
+    have  h1 := G_to_syst_simp G x ((↑(G_to_center G (g * ↑x)))⁻¹)
+    rw[<-G_to_syst_simp_id G x]
+    conv => rhs; rw[<-h1]
+    simp
+  · intro x
+    have := equiv_perm_fun_apply G g ((G_to_syst G (g⁻¹ * ↑x)))
+    simp
+    unfold equiv_perm_fun
+    have h1 := G_eq_G_to_center_G_to_syst_simp G ((g⁻¹ * ↑x))
+    have h2 :  g⁻¹ * ↑x * ↑(G_to_center G (g⁻¹ * ↑x))⁻¹ = ↑(G_to_syst G (g⁻¹ * ↑x)):= by
+      rw[h1]
+      simp
+    conv=> lhs; rhs;rhs; rw[<-h2]
+    conv=> lhs;rhs;rw[<-mul_assoc];simp
+    have := G_to_syst_simp G x (↑(G_to_center G (g⁻¹ * ↑x)))⁻¹
+    conv=> rhs;rw[<-G_to_syst_simp_id G x]
+    rw[<-this]
+    simp
+
 
 #min_imports
