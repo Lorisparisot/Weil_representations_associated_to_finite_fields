@@ -369,7 +369,6 @@ noncomputable def induced_rep_tensor_iso_direct_sum : Induced_rep_center.tensor 
 
 
 
-
 /--Given the character of a representation `θ` of `Subgroup.center G` on `k`, the character
 of the induced representation `tensor` on `G` is the `Ind_conj_class_fun` of the character of
 `θ`.

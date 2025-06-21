@@ -287,7 +287,6 @@ theorem equiv_perm_fun_apply (g : G) : ∀ (gi : system_of_repr_center.set G), g
   unfold equiv_perm_fun
   exact G_eq_G_to_center_G_to_syst_simp G (g*gi)
 
-
 noncomputable def equiv_perm (g : G) : Equiv.Perm (system_of_repr_center.set G) := by
   unfold Equiv.Perm
   refine Equiv.mk ?_ ?_ ?_ ?_
@@ -298,28 +297,32 @@ noncomputable def equiv_perm (g : G) : Equiv.Perm (system_of_repr_center.set G) 
     have := equiv_perm_fun_apply G g x
     have : ↑(equiv_perm_fun G g x) = g * ↑x * (↑(G_to_center G (g * ↑x)))⁻¹ := by
       rw[this]
-      simp
+      simp only [G_to_center_mul_simp, G_to_center_syst_apply_simp, mul_one, mul_inv_cancel_right]
     rw[this]
     group
-    simp
+    simp only [Int.reduceNeg, zpow_neg, zpow_one]
     have  h1 := G_to_syst_simp G x ((↑(G_to_center G (g * ↑x)))⁻¹)
     rw[<-G_to_syst_simp_id G x]
     conv => rhs; rw[<-h1]
-    simp
+    simp only [G_to_syst_simp_id, InvMemClass.coe_inv]
   · intro x
     have := equiv_perm_fun_apply G g ((G_to_syst G (g⁻¹ * ↑x)))
-    simp
     unfold equiv_perm_fun
     have h1 := G_eq_G_to_center_G_to_syst_simp G ((g⁻¹ * ↑x))
     have h2 :  g⁻¹ * ↑x * ↑(G_to_center G (g⁻¹ * ↑x))⁻¹ = ↑(G_to_syst G (g⁻¹ * ↑x)):= by
       rw[h1]
-      simp
+      simp only [G_to_center_mul_simp, G_to_center_syst_apply_simp, mul_one, InvMemClass.coe_inv,
+        mul_inv_cancel_right, G_to_syst_simp, G_to_syst_simp_id]
     conv=> lhs; rhs;rhs; rw[<-h2]
-    conv=> lhs;rhs;rw[<-mul_assoc];simp
+    conv=> lhs;rhs;rw[<-mul_assoc];simp only [mul_inv_cancel_left, InvMemClass.coe_inv]
     have := G_to_syst_simp G x (↑(G_to_center G (g⁻¹ * ↑x)))⁻¹
     conv=> rhs;rw[<-G_to_syst_simp_id G x]
     rw[<-this]
-    simp
+    simp only [InvMemClass.coe_inv]
 
+theorem equiv_perm_exists (g : G) : ∃ (σ : Equiv.Perm (system_of_repr_center.set G)), ∀ (gbar : system_of_repr_center.set G), g*gbar= (σ gbar) * G_to_center G (g*gbar) := by
+  use equiv_perm G g
+  intro gbar
+  exact equiv_perm_fun_apply G g gbar
 
 #min_imports
