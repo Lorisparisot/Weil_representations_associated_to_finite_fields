@@ -1,6 +1,8 @@
 import Mathlib.RepresentationTheory.Character
 import Mathlib.RepresentationTheory.Maschke
 import MyProject.Addenda_monoid_algebra_theory
+import Mathlib.RepresentationTheory.Induced
+
 --import Hammer
 
 /-!
@@ -54,6 +56,7 @@ noncomputable instance tensor_module : Module (MonoidAlgebra k G) (tensor k G W 
 /--Induced representation on `G` by a representation `Representation k (Subgroup.center G) W`
 seen as a representation. -/
 noncomputable def as_rep := @Representation.ofModule k G _ _ (tensor k G W θ) _ _
+
 
 /--Subrepresentation of `tensor` as module.-/
 def module_sub_rep := TensorProduct (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k (Subgroup.center G)) (θ.asModule)
@@ -345,6 +348,7 @@ abbrev induced_rep_tensor_direct_sum_component (g : system_of_repr_center.set G)
 noncomputable instance (g:system_of_repr_center.set G) : Module (MonoidAlgebra k (Subgroup.center G)) (induced_rep_tensor_direct_sum_component k G W θ g) := by
   exact TensorProduct.instModule
 
+
 /--The induced representation `Induced_rep_center.tensor k G W θ` is isomorphic to a direct sum
 of `induced_rep_tensor_direct_sum_component`.-/
 noncomputable def induced_rep_tensor_iso_direct_sum : Induced_rep_center.tensor k G W θ ≃ₗ[MonoidAlgebra k (Subgroup.center G)] DirectSum (system_of_repr_center.set G) (fun g => induced_rep_tensor_direct_sum_component k G W θ g):= by
@@ -365,6 +369,21 @@ noncomputable def induced_rep_tensor_iso_direct_sum : Induced_rep_center.tensor 
       simp only [Function.comp_apply, LinearEquiv.invFun_eq_symm, Equiv.coe_fn_mk, map_smul]
 
 
+noncomputable instance induced_rep_tensor_direct_sum_component_coe (g : system_of_repr_center.set G) : CoeOut (induced_rep_tensor_direct_sum_component k G W θ g) (Induced_rep_center.tensor k G W θ) := by
+  refine CoeOut.mk ?_
+  unfold induced_rep_tensor_direct_sum_component Induced_rep_center.tensor
+  intro x
+  have h1 := LinearMap.comp (Algebra.linearMap (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G)) (gkH_set_iso_kH_module k G g).toLinearMap
+  have := TensorProduct.map h1 (@LinearMap.id (MonoidAlgebra k (Subgroup.center G)) (θ.asModule) _ _ _ )
+  exact (this) x
+
+noncomputable instance test (g:system_of_repr_center.set G) : CoeOut (induced_rep_tensor_direct_sum_component k G W θ g) ((RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ))) := by
+  refine { coe := ?_ }
+
+  sorry
+
+noncomputable def induced_rep_component_perm (g : G) (gbar : system_of_repr_center.set G)  : Set.image ((Induced_rep_center.as_rep k G W θ) g) (induced_rep_tensor_direct_sum_component k G W θ gbar) ≃ induced_rep_tensor_direct_sum_component k G W θ (equiv_perm G gbar) := by
+  sorry
 
 
 
@@ -379,5 +398,41 @@ theorem Induced_character_is_character_induced_center [h : NeZero ↑(Fintype.ca
 
 
 end Frobenius_reciprocity
+
+
+namespace representation_theory_general
+
+variable (k G W : Type) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
+[inst4 : AddCommGroup W] [inst5 : Module k W] [inst6 : Module.Finite k W]
+
+variable (H : @Subgroup G inst2) [instH : IsMulCommutative H]
+
+variable (θ : Representation k (Subgroup.center G) W)
+
+
+def test1 (h :G) (h1 : h∈ Subgroup.center G) : Subgroup.center G :=by
+  exact ⟨h, by exact⟩
+  sorry
+
+instance : Module.Finite k (Representation.IndV (Subgroup.center G).subtype θ) := by
+  sorry
+
+
+theorem test  (h h' : G) (h1 : h ∉ Subgroup.center G) (h2 : ⁅h, h'⁆ ∈ Subgroup.center G) (h3 : FDRep.character (FDRep.of θ) (⟨⁅h, h'⁆, by exact h2⟩ ) ≠ 1)  : (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G := by
+  rw [@Function.support_eq_iff]
+  sorry
+
+theorem testbis : (∀ (h : G), (h ∉ Subgroup.center G ) → ∃ (h' : G), (h1:(⁅h, h'⁆ ∈ Subgroup.center G)) → FDRep.character (FDRep.of θ) (⟨⁅h, h'⁆, by exact h1⟩ ) ≠ 1) → ( (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G) := by
+  sorry
+
+theorem testbisbis (g : G) (h1 : ∃ g' : G, (⁅g, g'⁆ ∈ Subgroup.center G)) (h2 : FDRep.character (FDRep.of θ) (⟨⁅g, h1.choose⁆,by exact h1.choose_spec⟩) ≠ 1) : (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G  := by
+sorry
+
+theorem testtest : ∀ (g : G), (∃ g' : G, (⁅g, g'⁆ ∈ Subgroup.center G) ∧ (FDRep.character (FDRep.of θ) (⟨⁅g, g'⁆,by simp⟩) ≠ 1)) → (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G  := by
+  sorry
+
+end representation_theory_general
+
+
 
 #min_imports
