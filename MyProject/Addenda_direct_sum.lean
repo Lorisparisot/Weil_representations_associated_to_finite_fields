@@ -51,7 +51,6 @@ def DirectSum_equiv (ι : Type v) (β : ι → Type w) (γ : ι →  Type w) [(i
     · simp only [DFinsupp.toFun_eq_coe, cast_heq]
   · simp only [DFinsupp.toFun_eq_coe, eq_mpr_eq_cast, cast_eq, DirectSum.add_apply]
     intro x y
-    dsimp
     refine DirectSum.ext_iff.mpr ?_
     intro i
     simp only [DFinsupp.coe_mk', map_add, DirectSum.add_apply]

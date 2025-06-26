@@ -5,6 +5,8 @@ import Mathlib.GroupTheory.MonoidLocalization.Basic
 import Mathlib.LinearAlgebra.FreeProduct.Basic
 import MyProject.Addenda_direct_sum
 import MyProject.Addenda_group_theory
+import MyProject.Addenda_direct_sum
+import MyProject.Addenda_group_theory
 
 /-!
 # Addenda to the monoid algebra theory in mathlib
@@ -111,11 +113,11 @@ noncomputable instance kG_is_kCenter_Algebra : Algebra (MonoidAlgebra k (Subgrou
         mul_eq_of_eq_mul_inv (id (Eq.symm hf))]
       rw[hf,hf1]
     · push_neg at hf
-      rw [← @Finset.not_mem_singleton] at hf
+      rw [← @Finset.notMem_singleton] at hf
       rw [Set.indicator,@ite_eq_iff]
       right
       constructor
-      · refine Set.not_mem_singleton_iff.mpr ?_
+      · refine Set.notMem_singleton_iff.mpr ?_
         rw [Finset.mem_singleton] at hf
         exact hf
       · rw[Set.indicator,@eq_ite_iff]
