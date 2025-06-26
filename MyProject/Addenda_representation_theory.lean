@@ -411,8 +411,7 @@ variable (θ : Representation k (Subgroup.center G) W)
 
 
 def test1 (h :G) (h1 : h∈ Subgroup.center G) : Subgroup.center G :=by
-  exact ⟨h, by exact⟩
-  sorry
+  exact ⟨h, by exact h1⟩
 
 instance : Module.Finite k (Representation.IndV (Subgroup.center G).subtype θ) := by
   sorry
@@ -426,6 +425,7 @@ theorem testbis : (∀ (h : G), (h ∉ Subgroup.center G ) → ∃ (h' : G), (h1
   sorry
 
 theorem testbisbis (g : G) (h1 : ∃ g' : G, (⁅g, g'⁆ ∈ Subgroup.center G)) (h2 : FDRep.character (FDRep.of θ) (⟨⁅g, h1.choose⁆,by exact h1.choose_spec⟩) ≠ 1) : (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G  := by
+
 sorry
 
 theorem testtest : ∀ (g : G), (∃ g' : G, (⁅g, g'⁆ ∈ Subgroup.center G) ∧ (FDRep.character (FDRep.of θ) (⟨⁅g, g'⁆,by simp⟩) ≠ 1)) → (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G  := by
