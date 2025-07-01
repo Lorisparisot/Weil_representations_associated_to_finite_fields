@@ -29,10 +29,10 @@ this induced representation.
 
 namespace Induced_rep_center
 
-variable (k G W : Type) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
-[inst4 : AddCommGroup W] [inst5 : Module k W]
+variable (k G W : Type) [Field k] [Group G] [Finite G]
+[AddCommGroup W] [Module k W]
 
-variable (H : @Subgroup G inst2) [instH : IsMulCommutative H]
+variable (H : Subgroup G) [IsMulCommutative H]
 
 variable (θ : Representation k (Subgroup.center G) W)
 
@@ -55,7 +55,8 @@ noncomputable instance tensor_module : Module (MonoidAlgebra k G) (tensor k G W 
 
 /--Induced representation on `G` by a representation `Representation k (Subgroup.center G) W`
 seen as a representation. -/
-noncomputable def as_rep := @Representation.ofModule k G _ _ (tensor k G W θ) _ _
+noncomputable def as_rep := Representation.ofModule (tensor k G W θ) (k := k) (G := G)
+
 
 
 /--Subrepresentation of `tensor` as module.-/
@@ -122,7 +123,7 @@ noncomputable def subrep_sub_module : Submodule (MonoidAlgebra k (Subgroup.cente
   refine Submodule.mk ?_ ?_
   · refine AddSubmonoid.mk ?_ ?_
     · refine AddSubsemigroup.mk ?_ ?_
-      · exact (@Set.univ θ.asModule)
+      · exact Set.univ
       · simp only [Set.mem_univ, imp_self, implies_true]
     · simp only [Set.mem_univ]
   · simp only [Set.mem_univ, imp_self, implies_true]
@@ -171,18 +172,18 @@ noncomputable def subsubsub : Submodule (MonoidAlgebra k (Subgroup.center G)) (t
   refine Submodule.mk ?_ ?_
   · refine AddSubmonoid.mk ?_ ?_
     · refine AddSubsemigroup.mk ?_ ?_
-      · let theta := @Set.univ θ.asModule
+      · let theta := Set.univ (α := θ.asModule)
         have h := module_sub_rep_iso k G W θ
         unfold module_sub_rep at h
-        let theta1 := Set.image (h.invFun) theta
+        let theta1 := Set.image (h.invFun) Set.univ (α := θ.asModule)
         have : MonoidAlgebra k (Subgroup.center G) →ₗ[MonoidAlgebra k (Subgroup.center G)] MonoidAlgebra k G := by
           exact Algebra.linearMap (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G)
         have theta2 := @TensorProduct.map (MonoidAlgebra k (Subgroup.center G)) _ (MonoidAlgebra k (Subgroup.center G)) (θ.asModule) (MonoidAlgebra k G) (θ.asModule) _ _ _ _ _ _ _ _ this (LinearMap.id)
         have theta3 := theta2 ∘ h.invFun
         rw [tensor]
-        let thetaim := Set.image theta3 (@Set.univ θ.asModule)
-        exact thetaim
-      · simp
+        exact Set.image theta3 theta
+      · simp only [LinearEquiv.invFun_eq_symm, Function.comp_apply, Set.image_univ, eq_mpr_eq_cast,
+        cast_eq, Set.mem_range, forall_exists_index]
         intro a b thetaA ha thetaB hb
         use (thetaA + thetaB)
         simp
@@ -252,10 +253,10 @@ end Induced_rep_center
 namespace Frobenius_reciprocity
 open Classical
 
-variable (k G W : Type) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
-[inst4 : AddCommGroup W] [inst5 : Module k W] [inst6 : Module.Finite k W]
+variable (k G W : Type) [Field k] [Group G] [Finite G]
+[AddCommGroup W] [Module k W] [Module.Finite k W]
 
-variable (H : @Subgroup G inst2) [instH : IsMulCommutative H]
+variable (H : Subgroup G) [IsMulCommutative H]
 
 variable (θ : Representation k (Subgroup.center G) W)
 
@@ -264,7 +265,6 @@ instance Finite_H : Finite H := Subgroup.instFiniteSubtypeMem H
 noncomputable instance Fintype_G : Fintype G := by
   exact Fintype.ofFinite G
 
-omit inst3 inst5 inst6 in
 /--Definition of a class function : given G a group, a class function is a function $f : G → G$
 which is contant over the conjugacy classes of $G$.-/
 class conj_class_fun where
@@ -295,7 +295,7 @@ noncomputable def Ind_conj_class_fun (f : H → W) : conj_class_fun G W := by
     refine Finset.sum_equiv ?_ ?_ ?_
     · exact bij
     · intro i
-      simp
+      simp only [Finset.mem_univ]
     · intro a ha
       unfold bij
       dsimp
@@ -309,7 +309,7 @@ noncomputable instance character_as_conj_class_fun (U : FDRep k G) : conj_class_
   · intro x g
     rw[FDRep.char_mul_comm,mul_inv_cancel_left]
 
-omit inst3 in
+
 @[simp]
 theorem character_as_conj_class_fun_is_character (U : FDRep k G) : (character_as_conj_class_fun k G U).Fun = U.character := by rfl
 
@@ -337,10 +337,10 @@ noncomputable instance tensor_module_restrictscalars_isfinite : Module.Finite k 
   sorry
 
 /--`tensor` is a semisimple module.-/
-noncomputable instance tensor_semisimple [h : NeZero ↑(Fintype.card G : k)] : IsSemisimpleModule (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ) := by
+noncomputable instance tensor_semisimple [NeZero ↑(Fintype.card G : k)] : IsSemisimpleModule (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ) := by
   unfold Induced_rep_center.tensor
-  exact @MonoidAlgebra.Submodule.complementedLattice k _ G _ (h) _ (TensorProduct (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G) θ.asModule)
-    _ _
+  exact MonoidAlgebra.Submodule.complementedLattice
+
 
 
 abbrev induced_rep_tensor_direct_sum_component (g : system_of_repr_center.set G) := TensorProduct (MonoidAlgebra k (Subgroup.center G)) (gkH_set k G g) (θ.asModule)
@@ -379,7 +379,6 @@ noncomputable instance induced_rep_tensor_direct_sum_component_coe (g : system_o
 
 noncomputable instance test (g:system_of_repr_center.set G) : CoeOut (induced_rep_tensor_direct_sum_component k G W θ g) ((RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ))) := by
   refine { coe := ?_ }
-
   sorry
 
 noncomputable def induced_rep_component_perm (g : G) (gbar : system_of_repr_center.set G)  : Set.image ((Induced_rep_center.as_rep k G W θ) g) (induced_rep_tensor_direct_sum_component k G W θ gbar) ≃ induced_rep_tensor_direct_sum_component k G W θ (equiv_perm G gbar) := by
@@ -402,10 +401,10 @@ end Frobenius_reciprocity
 
 namespace representation_theory_general
 
-variable (k G W : Type) [inst1 : Field k] [inst2 : Group G] [inst3 : Finite G]
-[inst4 : AddCommGroup W] [inst5 : Module k W] [inst6 : Module.Finite k W]
+variable (k G W : Type) [Field k] [Group G] [Finite G]
+[AddCommGroup W] [Module k W] [Module.Finite k W]
 
-variable (H : @Subgroup G inst2) [instH : IsMulCommutative H]
+variable (H : Subgroup G) [IsMulCommutative H]
 
 variable (θ : Representation k (Subgroup.center G) W)
 
@@ -417,19 +416,44 @@ instance : Module.Finite k (Representation.IndV (Subgroup.center G).subtype θ) 
   sorry
 
 
-theorem test  (h h' : G) (h1 : h ∉ Subgroup.center G) (h2 : ⁅h, h'⁆ ∈ Subgroup.center G) (h3 : FDRep.character (FDRep.of θ) (⟨⁅h, h'⁆, by exact h2⟩ ) ≠ 1)  : (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G := by
-  rw [@Function.support_eq_iff]
-  sorry
+theorem testtest : (∀ (h : G), ∃ (h' : G) (h₁ : ⁅h',h⁆ ∈ Subgroup.center G), (FDRep.character (FDRep.of θ) (⟨⁅h', h⁆, h₁⟩) ≠ 1)) → (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G  := by
+  intro hyp
+  rw [Function.support_eq_iff]
+  constructor
+  · intro h hcenter
+    rw[FDRep.character]
+    simp
+    unfold Representation.IndV Representation.tprod Representation.Coinvariants
+    simp
+    congr
 
-theorem testbis : (∀ (h : G), (h ∉ Subgroup.center G ) → ∃ (h' : G), (h1:(⁅h, h'⁆ ∈ Subgroup.center G)) → FDRep.character (FDRep.of θ) (⟨⁅h, h'⁆, by exact h1⟩ ) ≠ 1) → ( (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G) := by
-  sorry
+    sorry
+  · intro h hncenter
+    have hyp2:= hyp h
+    obtain ⟨h',⟨h1, hh1⟩⟩ := hyp2
+    have hhh0 : (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).character h = (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).character (⁅h',h⁆ * h) := by
+      rw[Bracket.bracket, commutatorElement]
+      simp only [inv_mul_cancel_right]
+      rw[<-FDRep.char_conj _ h h']
+    have hhh2 : (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).character (⁅h', h⁆ * h) = (FDRep.of θ).character (⟨⁅h', h⁆,h1⟩) * (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).character (h) := by
+      unfold FDRep.character
+      conv=> lhs;rhs;rw[map_mul]
+      have : (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).ρ ⁅h', h⁆ =  ((LinearMap.trace k ↑(FDRep.of θ).V) ((FDRep.of θ).ρ ⟨⁅h', h⁆, h1⟩)) • LinearMap.id := by
+        ext u
+        simp only [FGModuleCat.of_carrier, FDRep.of_ρ', Representation.ind_apply,
+          commutatorElement_inv, LinearMap.smul_apply, LinearMap.id_coe, id_eq]
 
-theorem testbisbis (g : G) (h1 : ∃ g' : G, (⁅g, g'⁆ ∈ Subgroup.center G)) (h2 : FDRep.character (FDRep.of θ) (⟨⁅g, h1.choose⁆,by exact h1.choose_spec⟩) ≠ 1) : (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G  := by
+      rw[this]
+      rw[smul_mul_assoc,map_smul]
+      exact rfl
+    rw[hhh2] at hhh0
+    apply Lean.Grind.IntModule.sub_eq_zero_iff.mpr at hhh0
+    conv at hhh0=> lhs; rw[<-one_sub_mul ((FDRep.of θ).character ⟨⁅h', h⁆, h1⟩) ((FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).character h)]
+    rw[mul_eq_zero] at hhh0
+    (expose_names; exact eq_zero_of_mul_eq_self_left hh1 (id (Eq.symm hhh0_1)))
 
-sorry
 
-theorem testtest : ∀ (g : G), (∃ g' : G, (⁅g, g'⁆ ∈ Subgroup.center G) ∧ (FDRep.character (FDRep.of θ) (⟨⁅g, g'⁆,by simp⟩) ≠ 1)) → (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G  := by
-  sorry
+
 
 end representation_theory_general
 
