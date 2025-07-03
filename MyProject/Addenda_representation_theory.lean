@@ -410,7 +410,7 @@ instance : Module.Finite k (Representation.IndV (Subgroup.center G).subtype θ) 
 
 open Classical
 
-theorem ind_simp (h : Subgroup.center G) : (Representation.ind (Subgroup.center G).subtype θ) h = θ h := by
+theorem ind_simp (h : Subgroup.center G) : (Representation.ind (Subgroup.center G).subtype θ) h = Representation.IndV.mk ((Subgroup.center G).subtype) θ h := by
   sorry
 
 theorem testtest : (∀ (h : G), ∃ (h' : G) (h₁ : ⁅h',h⁆ ∈ Subgroup.center G), (FDRep.character (FDRep.of θ) (⟨⁅h', h⁆, h₁⟩) ≠ 1)) → (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G  := by
