@@ -314,11 +314,6 @@ noncomputable instance character_as_conj_class_fun (U : FDRep k G) : conj_class_
 theorem character_as_conj_class_fun_is_character (U : FDRep k G) : (character_as_conj_class_fun k G U).Fun = U.character := by rfl
 
 
-#check @character_as_conj_class_fun k (Subgroup.center G) _ _ (FDRep.of θ)
-#check (Induced_rep_center.as_rep k G W θ)
-
-#check @FDRep.of k G _ _ (RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ)) (sorry) (sorry) (sorry) _
-
 noncomputable instance tensor_addcommgroup_restrictscalars : AddCommGroup (RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ)) := by
   unfold Induced_rep_center.tensor
   exact
@@ -409,12 +404,14 @@ variable (H : Subgroup G) [IsMulCommutative H]
 variable (θ : Representation k (Subgroup.center G) W)
 
 
-def test1 (h :G) (h1 : h∈ Subgroup.center G) : Subgroup.center G :=by
-  exact ⟨h, by exact h1⟩
 
 instance : Module.Finite k (Representation.IndV (Subgroup.center G).subtype θ) := by
   sorry
 
+open Classical
+
+theorem ind_simp (h : Subgroup.center G) : (Representation.ind (Subgroup.center G).subtype θ) h = θ h := by
+  sorry
 
 theorem testtest : (∀ (h : G), ∃ (h' : G) (h₁ : ⁅h',h⁆ ∈ Subgroup.center G), (FDRep.character (FDRep.of θ) (⟨⁅h', h⁆, h₁⟩) ≠ 1)) → (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G  := by
   intro hyp
@@ -422,10 +419,9 @@ theorem testtest : (∀ (h : G), ∃ (h' : G) (h₁ : ⁅h',h⁆ ∈ Subgroup.ce
   constructor
   · intro h hcenter
     rw[FDRep.character]
-    simp
-    unfold Representation.IndV Representation.tprod Representation.Coinvariants
-    simp
-    congr
+    by_contra hf
+    simp at hf
+
 
     sorry
   · intro h hncenter
@@ -439,10 +435,25 @@ theorem testtest : (∀ (h : G), ∃ (h' : G) (h₁ : ⁅h',h⁆ ∈ Subgroup.ce
       unfold FDRep.character
       conv=> lhs;rhs;rw[map_mul]
       have : (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).ρ ⁅h', h⁆ =  ((LinearMap.trace k ↑(FDRep.of θ).V) ((FDRep.of θ).ρ ⟨⁅h', h⁆, h1⟩)) • LinearMap.id := by
-        ext u
-        simp only [FGModuleCat.of_carrier, FDRep.of_ρ', Representation.ind_apply,
-          commutatorElement_inv, LinearMap.smul_apply, LinearMap.id_coe, id_eq]
+        unfold FDRep.ρ
+        simp only [FGModuleCat.of_carrier, RingHom.toMonoidHom_eq_coe, RingEquiv.toRingHom_eq_coe,
+          MonoidHom.coe_comp, MonoidHom.coe_coe, RingHom.coe_coe, Function.comp_apply,
+          commutatorElement_inv, RingEquiv.apply_symm_apply]
+        ext u x
+        simp only [Representation.ind_apply, commutatorElement_inv,
+          Representation.Coinvariants.map_comp_mk, LinearMap.coe_comp, Function.comp_apply,
+          Finsupp.lsingle_apply, TensorProduct.AlgebraTensorModule.curry_apply,
+          LinearMap.restrictScalars_comp, TensorProduct.curry_apply, LinearMap.coe_restrictScalars,
+          LinearMap.rTensor_tmul, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single,
+          LinearMap.restrictScalars_smul, LinearMap.smul_apply, LinearMap.id_coe, id_eq]
+        rw [← map_smul]
+        congr
+        simp only [Finsupp.smul_single, smul_eq_mul, mul_one]
+        ext g
+        rw[Finsupp.single_apply]
 
+
+        sorry
       rw[this]
       rw[smul_mul_assoc,map_smul]
       exact rfl

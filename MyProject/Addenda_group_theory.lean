@@ -32,14 +32,12 @@ open Classical
 variable (k G : Type*) [Field k] [Group G]
 variable (H : Subgroup G) [IsMulCommutative H]
 
---omit inst3 in
 /--An element of type `Subgroup.center G` commutes with every element of type `G`.-/
 theorem center_mul_comm (g : G) (h : Subgroup.center G) : h * g = g * h := by
     have := @Subgroup.mem_center_iff G _ h
     simp only [SetLike.coe_mem, true_iff] at this
     exact (this g).symm
 
---omit inst3 in
 /--`simp` lemma associated to `center_mul_comm`.-/
 @[simp]
 theorem center_mul (h : Subgroup.center G) (a b : G) (h1 : h =a * b) : h = b*a := by

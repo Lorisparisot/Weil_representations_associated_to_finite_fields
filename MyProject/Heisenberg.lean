@@ -26,9 +26,8 @@ The main results are :
 -/
 
 
-variable (V k : Type*) [inst1 : Field k] [inst2 : AddCommGroup  V] [inst3 : Module k V] [inst4 : FiniteDimensional k V]
+variable (V k : Type*) [Field k] [AddCommGroup  V] [Module k V] --[inst4 : FiniteDimensional k V]
 
---local notation "q" => Fintype.card k
 
 /- On trouvera ici les propriétés relatives aux groupes d'Heisenberg-/
 
@@ -41,7 +40,7 @@ structure Heisenberg where
 
 namespace Heisenberg
 
---Loi de groupe sur Heisenberg
+
 variable {V k}
 /--Intern law over `Heisenberg` -/
 def mul
@@ -52,7 +51,7 @@ def mul
 def inverse (H : Heisenberg V k) : Heisenberg V k :=
   ⟨ -H.z - (H.y (-H.x)), - H.x ,- H.y⟩
 
-/-- Together with `Heisenberg.mul` and `Heisenberg.inverse`, `Heisenberg`forms a group. -/
+/-- Together with `Heisenberg.mul` and `Heisenberg.inverse`, `Heisenberg` forms a group. -/
 instance group : Group (Heisenberg V k) := {
   mul := mul,
   mul_assoc := by
@@ -121,50 +120,6 @@ instance center_is_subgroup : Subgroup (Heisenberg V k) :=
       rw [ha.2]
 }
 
-/--`Heisenberg.center` is the center of `Heisenberg` -/
-instance center_eq :
-  Subgroup.center (Heisenberg V k) = Heisenberg.center_is_subgroup V k := by
-  ext h
-  constructor
-  · intro h1
-    rw [Subgroup.mem_center_iff] at h1
-    change ( ∀ (g : Heisenberg V k), mul g h = mul h g) at h1
-    unfold mul at h1
-    simp at h1
-    ring_nf at h1
-    simp at h1
-    have h11 : ∀ (g : Heisenberg V k), ((form_commutator V k) (h.x, h.y)) (g.x, g.y) = 0 ∧ g.x + h.x = h.x + g.x ∧ g.y + h.y = h.y + g.y :=by
-      unfold form_commutator
-      simp
-      intro g
-      specialize h1 g
-      constructor
-      · exact add_eq_zero_iff_neg_eq.mpr (congrArg Neg.neg (id (Eq.symm h1.left)))
-      · exact h1.right
-    have h12 := form_commutator_non_degenerate V k
-    rw[LinearMap.BilinForm.Nondegenerate] at h12
-    specialize h12 ⟨h.x,h.y⟩
-    change ((h.x=0 ∧ h.y =0))
-    have h13 : ∀ (g : Heisenberg V k), ((form_commutator V k) (h.x, h.y)) (g.x, g.y) = 0:= by
-      intro g
-      specialize h11 g
-      exact h11.1
-    rw[Prod.mk_eq_zero] at h12
-    apply h12
-    intro n
-    specialize h13 ⟨0, n.1, n.2⟩
-    simp at h13
-    rw[<-h13]
-  · intro H
-    rw[Subgroup.mem_center_iff]
-    intro g
-    change (mul g h = mul h g)
-    unfold mul
-    simp
-    rw[H.1, H.2]
-    simp
-    rw [@AddCommMonoidWithOne.add_comm]
-
 
 /--The map $(z,x,y) ↦ (z,0,0)$ defines a homorphism from `Heisenberg` to its center `Heisenberg.center`. -/
 def Hom_k_to_H : AddMonoidHom k (Additive (Heisenberg V k)) :=by
@@ -205,7 +160,7 @@ def exact_sequence :
   Function.Exact (Hom_k_to_H V k) (Hom_H_to_V_x_Dual V k) := by
   refine Function.Exact.of_comp_of_mem_range rfl ?_
   intro H h1
-  rw [@Set.mem_range]
+  rw [Set.mem_range]
   rw[Hom_H_to_V_x_Dual] at h1
   use H.z
   rw[Hom_k_to_H]
@@ -260,8 +215,8 @@ instance Hom_H_to_V_x_Dual_sub_V_commutative : IsMulCommutative (Hom_H_to_V_x_Du
   rw[<-hxa.2, <- hxb.2]
   simp
   constructor
-  · rw [@AddCommMonoid.add_comm]
-  · rw [@AddCommMonoid.add_comm]
+  · rw [AddCommMonoid.add_comm]
+  · rw [AddCommMonoid.add_comm]
 
 /--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_V` is a normal subgroup. -/
 instance Hom_H_to_V_x_Dual_sub_V_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub_V V k) :=by
@@ -282,7 +237,7 @@ instance Hom_H_to_V_x_Dual_sub_V_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub
   simp only [AddMonoidHom.mk'_apply, Prod.mk.injEq] at hx1
   exact hx1.2
 
-omit inst4 in
+
 /--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_V` is maximal among the commutative
 subgroups of `Heisenberg`-/
 theorem Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : IsMulCommutative (Hom_H_to_V_x_Dual_sub_V V k) ∧ (((Hom_H_to_V_x_Dual_sub_V V k) < Q ) → ¬ (IsMulCommutative Q)) := by
@@ -290,7 +245,7 @@ theorem Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : IsMulC
   · exact Hom_H_to_V_x_Dual_sub_V_commutative V k
   · intro h
     by_contra hf
-    rw [@SetLike.lt_iff_le_and_exists] at h
+    rw [SetLike.lt_iff_le_and_exists] at h
     obtain ⟨x,⟨left,right⟩⟩ := h.2
     apply right
     rw [Hom_H_to_V_x_Dual_sub_V]
@@ -302,7 +257,7 @@ theorem Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : IsMulC
         simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
         use b
         rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
-      exact @Subgroup.mul_comm_of_mem_isMulCommutative _ _ Q hf x ⟨0, b, 0⟩ left (h.1 h2)
+      exact Subgroup.mul_comm_of_mem_isMulCommutative Q left (h.1 h2)
     unfold mul at h1
     simp only [add_zero, zero_add, LinearMap.zero_apply, mk.injEq, add_eq_left, and_true] at h1
     rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
@@ -365,9 +320,8 @@ instance Hom_H_to_V_x_Dual_sub_Dual_commutative : IsMulCommutative (Hom_H_to_V_x
   rw[<-hxa.2, <- hxb.2, <-hxa.1, <-hxb.1, map_zero, add_zero]
   simp only [true_and]
   constructor
-  · rw [map_zero, add_zero]
-    rw [@AddCommMonoidWithOne.add_comm]
-  · rw [@AddCommMonoid.add_comm]
+  · rw [map_zero, add_zero, AddCommMonoidWithOne.add_comm]
+  · rw [AddCommMonoid.add_comm]
 
 /--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_Dual` is a normal subgroup. -/
 instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub_Dual V k) :=by
@@ -395,7 +349,7 @@ instance Hom_H_to_V_x_Dual_sub_Dual_maximal [FiniteDimensional k V] (Q : Subgrou
   · exact Hom_H_to_V_x_Dual_sub_Dual_commutative V k
   · intro h
     by_contra hf
-    rw [@SetLike.lt_iff_le_and_exists] at h
+    rw [SetLike.lt_iff_le_and_exists] at h
     obtain ⟨x,⟨ left, right⟩ ⟩ := h.2
     apply right
     rw [Hom_H_to_V_x_Dual_sub_Dual]
@@ -421,99 +375,18 @@ instance Hom_H_to_V_x_Dual_sub_Dual_maximal [FiniteDimensional k V] (Q : Subgrou
 
 variable{V k}
 
- omit [FiniteDimensional k V] in
+
  /--Commutator of two elements of `Heisenberg` -/
  @[simp]
  theorem commutator_of_elements (H1 H2 : Heisenberg V k) :
   ⁅H1, H2⁆ = ⟨ H1.y (H2.x) - H2.y (H1.x), 0, 0 ⟩ := by
-  rw [@commutatorElement_def]
+  rw [commutatorElement_def]
   change ((mul (mul (mul H1 H2) (inverse H1)) (inverse H2)) = { z := H1.y H2.x - H2.y H1.x, x := 0, y := 0 })
   rw[mul,mul, mul, inverse, inverse,map_neg]
   simp only [map_neg, sub_neg_eq_add, LinearMap.add_apply, add_neg_cancel_comm, add_neg_cancel,
     mk.injEq, and_self, and_true]
   ring
 
-variable (V k) [inst5 : Nontrivial V]
-/--The commutator subgroup of `Heisenberg` is non trivial -/
- theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
-  simp
-  rw[_root_.commutator]
-  by_contra hf
-  rw [@Subgroup.commutator_eq_bot_iff_le_centralizer,Subgroup.coe_top, top_le_iff, Subgroup.centralizer_eq_top_iff_subset,
-    Set.univ_subset_iff, Subgroup.coe_eq_univ,@Subgroup.eq_top_iff'] at hf
-  obtain ⟨h11,h12⟩ := (nontrivial_iff_exists_ne 0).mp inst5
-  specialize hf ⟨0,h11,0⟩
-  rw[Heisenberg.center_eq,Heisenberg.center_is_subgroup,Subgroup.mem_mk,Heisenberg.center,Set.mem_setOf_eq] at hf
-  simp only [and_true] at hf
-  contradiction
-
-
-variable {V k}
-omit inst5 in
-/--Caracterisation of elements in the commutator of `Heisenberg` -/
-theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Heisenberg V k)) → (p.x=0 ∧ p.y=0) :=by
-  intro h
-  rw [commutator_def,← @SetLike.mem_coe,@Subgroup.commutator_def,Subgroup.closure] at h
-  simp only [Subgroup.mem_top, true_and, Subgroup.coe_sInf, Set.mem_setOf_eq, Set.mem_iInter,
-    SetLike.mem_coe] at h
-  specialize h (Subgroup.center (Heisenberg V k))
-  rw[Heisenberg.center_eq,center_is_subgroup,Subgroup.coe_set_mk, Subgroup.mem_mk,center] at h
-  simp only [Set.setOf_subset_setOf, forall_exists_index, Set.mem_setOf_eq] at h
-  apply h
-  intro a x x1
-  rw[Heisenberg.commutator_of_elements]
-  intro h
-  rw[<-h]
-  simp only [and_self]
-
-/-- `Heisenberg` is a twostep nilpotent group -/
-theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ lowerCentralSeries (Heisenberg V k) 2 = ⊥ :=by
-  constructor
-  · exact commutator_ne_bot V k
-  · rw [@Subgroup.eq_bot_iff_forall]
-    intro x hx
-    rw [@mem_lowerCentralSeries_succ_iff] at hx
-    simp at hx
-    rw[_root_.commutator] at hx
-    change( x ∈ Subgroup.closure {x | ∃ p ∈ ⁅⊤, ⊤⁆, ∃ q, ⁅p, q⁆ = x}) at hx
-    rw[Subgroup.closure,Subgroup.mem_sInf] at hx
-    simp only [Set.mem_setOf_eq] at hx
-    specialize hx ⊥
-    rw [← @Subgroup.mem_bot]
-    apply hx
-    intro u hu
-    obtain ⟨p, hp, q, hq⟩ := hu
-    rw[Heisenberg.commutator_of_elements] at hq
-    simp
-    change (u = ⟨0,0,0⟩)
-    rw[<-hq,mk.injEq]
-    simp only [and_self, and_true]
-    rw[((Heisenberg.commutator_caracterisation p) hp).1, ((Heisenberg.commutator_caracterisation p) hp).2]
-    simp
-
-variable (V k)
-
-/-- $H(V)$ is in bijection with $H(V*)$. -/
-noncomputable def equiv_Dual:
-  Heisenberg V k ≃ Heisenberg (Module.Dual k V) k := by
-  refine Equiv.mk (fun a ↦ ⟨a.z, a.y , ((convention_eval_iso V k).toFun (-a.x)) ⟩ ) (fun a ↦ ⟨a.z, ((convention_eval_iso V k).invFun (-a.y)) , a.x⟩) ?_ ?_
-  · intro H
-    simp
-  · intro H
-    simp
-
-/--With the convention $(x,y)=-(y,x)$, $H(V)$ is antiisomorphic to $H(V*)$. -/
-noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k V) k)ᵐᵒᵖ := by
-  refine MulEquiv.mk (Equiv.trans (equiv_Dual V k) (MulOpposite.opEquiv)) ?_
-  intro H1 H2
-  simp only [Equiv.toFun_as_coe, Equiv.trans_apply, MulOpposite.opEquiv_apply]
-  rw [← @MulOpposite.op_mul,MulOpposite.op_inj]
-  change ((equiv_Dual V k) (mul H1 H2) = mul ((equiv_Dual V k) H2) ((equiv_Dual V k) H1))
-  rw[equiv_Dual,mul,mul]
-  simp
-  constructor
-  · rw [@AddCommMonoid.add_comm]
-  · rw [@AddCommMonoid.add_comm]
 
 /-- The trivial bijection between `Heisenberg`and $k× V× V^*$. -/
 instance bij_k_V_Dual : (Heisenberg V k) ≃ (k × V × (Module.Dual k V)) :=by
@@ -528,25 +401,156 @@ instance bij_k_center : Heisenberg.center V k ≃ k := by
   refine Equiv.mk (fun h => h.val.z) (fun z => ⟨⟨z, 0, 0⟩, by simp [Heisenberg.center, Subgroup.center]⟩) ?_ ?_
   · intro h
     simp only
-    rw [@Subtype.ext_iff_val]
+    rw [Subtype.ext_iff_val]
     simp only
     obtain ⟨h1, h2⟩ := h
     simp only
-    rw [@Set.mem_def] at h2
+    obtain ⟨h21,h22⟩ := h2
     ext u
-    rw [center,@Set.setOf_app_iff] at h2
     · simp only
-      exact h2.1.symm
-    · simp only [LinearMap.zero_apply]
-      rw[h2.2,@LinearMap.zero_apply]
-  · intro h
+    · rw[h21]
+    · rw[h22]
+  · intro x
+    simp only
+
+
+/-- Cardinal of  `Heisenberg.center` -/
+theorem card_center : Nat.card (Heisenberg.center V k) = Nat.card k := by
+   rw [Nat.card_congr (bij_k_center)]
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+variable [inst4 : FiniteDimensional k V]
+/--`Heisenberg.center` is the center of `Heisenberg` -/
+instance center_eq :
+  Subgroup.center (Heisenberg V k) = Heisenberg.center_is_subgroup V k := by
+  ext h
+  constructor
+  · intro h1
+    rw [Subgroup.mem_center_iff] at h1
+    change ( ∀ (g : Heisenberg V k), mul g h = mul h g) at h1
+    unfold mul at h1
+    simp at h1
+    ring_nf at h1
+    simp at h1
+    have h11 : ∀ (g : Heisenberg V k), ((form_commutator V k) (h.x, h.y)) (g.x, g.y) = 0 ∧ g.x + h.x = h.x + g.x ∧ g.y + h.y = h.y + g.y :=by
+      unfold form_commutator
+      simp
+      intro g
+      specialize h1 g
+      constructor
+      · exact add_eq_zero_iff_neg_eq.mpr (congrArg Neg.neg (id (Eq.symm h1.left)))
+      · exact h1.right
+    have h12 := form_commutator_non_degenerate V k
+    rw[LinearMap.BilinForm.Nondegenerate] at h12
+    specialize h12 ⟨h.x,h.y⟩
+    change ((h.x=0 ∧ h.y =0))
+    have h13 : ∀ (g : Heisenberg V k), ((form_commutator V k) (h.x, h.y)) (g.x, g.y) = 0:= by
+      intro g
+      specialize h11 g
+      exact h11.1
+    rw[Prod.mk_eq_zero] at h12
+    apply h12
+    intro n
+    specialize h13 ⟨0, n.1, n.2⟩
+    simp at h13
+    rw[<-h13]
+  · intro H
+    rw[Subgroup.mem_center_iff]
+    intro g
+    change (mul g h = mul h g)
+    unfold mul
+    simp
+    rw[H.1, H.2]
+    simp
+    rw [AddCommMonoidWithOne.add_comm]
+
+
+
+/--Caracterisation of elements in the commutator of `Heisenberg` -/
+theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Heisenberg V k)) → (p.x=0 ∧ p.y=0) :=by
+  intro h
+  rw [commutator_def,← SetLike.mem_coe,Subgroup.commutator_def,Subgroup.closure] at h
+  simp only [Subgroup.mem_top, true_and, Subgroup.coe_sInf, Set.mem_setOf_eq, Set.mem_iInter,
+    SetLike.mem_coe] at h
+  specialize h (Subgroup.center (Heisenberg V k))
+  rw[Heisenberg.center_eq,center_is_subgroup,Subgroup.coe_set_mk, Subgroup.mem_mk,center] at h
+  simp only [Set.setOf_subset_setOf, forall_exists_index, Set.mem_setOf_eq] at h
+  apply h
+  intro a x x1
+  rw[Heisenberg.commutator_of_elements]
+  intro h
+  rw[<-h]
+  simp only [and_self]
+
+/-- $H(V)$ is in bijection with $H(V*)$. -/
+noncomputable def equiv_Dual:
+  Heisenberg V k ≃ Heisenberg (Module.Dual k V) k := by
+  refine Equiv.mk (fun a ↦ ⟨a.z, a.y , ((convention_eval_iso V k).toFun (-a.x)) ⟩ ) (fun a ↦ ⟨a.z, ((convention_eval_iso V k).invFun (-a.y)) , a.x⟩) ?_ ?_
+  · intro H
+    simp
+  · intro H
     simp
 
+/--With the convention $(x,y)=-(y,x)$, $H(V)$ is antiisomorphic to $H(V*)$. -/
+noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k V) k)ᵐᵒᵖ := by
+  refine MulEquiv.mk (Equiv.trans (equiv_Dual) (MulOpposite.opEquiv)) ?_
+  intro H1 H2
+  simp only [Equiv.toFun_as_coe, Equiv.trans_apply, MulOpposite.opEquiv_apply]
+  rw [← MulOpposite.op_mul,MulOpposite.op_inj]
+  change ((equiv_Dual) (mul H1 H2) = mul ((equiv_Dual) H2) ((equiv_Dual) H1))
+  rw[equiv_Dual,mul,mul]
+  simp
+  constructor
+  · rw [AddCommMonoid.add_comm]
+  · rw [AddCommMonoid.add_comm]
+
+
+variable [inst5 : Nontrivial V]
+/--The commutator subgroup of `Heisenberg` is non trivial -/
+ theorem commutator_ne_bot : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ :=by
+  simp
+  rw[_root_.commutator]
+  by_contra hf
+  rw [Subgroup.commutator_eq_bot_iff_le_centralizer,Subgroup.coe_top, top_le_iff, Subgroup.centralizer_eq_top_iff_subset,
+    Set.univ_subset_iff, Subgroup.coe_eq_univ,Subgroup.eq_top_iff'] at hf
+  obtain ⟨h11,h12⟩ := (nontrivial_iff_exists_ne 0).mp inst5
+  specialize hf ⟨0,h11,0⟩
+  rw[Heisenberg.center_eq,Heisenberg.center_is_subgroup,Subgroup.mem_mk,Heisenberg.center,Set.mem_setOf_eq] at hf
+  simp only [and_true] at hf
+  contradiction
+
+/-- `Heisenberg` is a twostep nilpotent group -/
+theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ lowerCentralSeries (Heisenberg V k) 2 = ⊥ :=by
+  constructor
+  · exact commutator_ne_bot
+  · rw [Subgroup.eq_bot_iff_forall]
+    intro x hx
+    rw [mem_lowerCentralSeries_succ_iff] at hx
+    simp at hx
+    rw[_root_.commutator] at hx
+    change( x ∈ Subgroup.closure {x | ∃ p ∈ ⁅⊤, ⊤⁆, ∃ q, ⁅p, q⁆ = x}) at hx
+    rw[Subgroup.closure,Subgroup.mem_sInf] at hx
+    simp only [Set.mem_setOf_eq] at hx
+    specialize hx ⊥
+    rw [← Subgroup.mem_bot]
+    apply hx
+    intro u hu
+    obtain ⟨p, hp, q, hq⟩ := hu
+    rw[Heisenberg.commutator_of_elements] at hq
+    simp
+    change (u = ⟨0,0,0⟩)
+    rw[<-hq,mk.injEq]
+    simp only [and_self, and_true]
+    rw[((Heisenberg.commutator_caracterisation p) hp).1, ((Heisenberg.commutator_caracterisation p) hp).2]
+    simp
 
 omit inst5 in
 /-- Cardinal of `Heisenberg` when $k$ is a finite field -/
 theorem card_H [inst6 : Fintype k] : Nat.card (Heisenberg V k) = (Nat.card k)*(Nat.card V)^2 := by
-  rw[Nat.card_congr (bij_k_V_Dual V k),Nat.pow_two]
+  rw[Nat.card_congr (bij_k_V_Dual),Nat.pow_two]
   simp
   left
   rw [← @Basis.linearEquiv_dual_iff_finiteDimensional] at inst4
@@ -554,16 +558,12 @@ theorem card_H [inst6 : Fintype k] : Nat.card (Heisenberg V k) = (Nat.card k)*(N
   apply LinearEquiv.toEquiv at h
   rw [Nat.card_congr h]
 
-omit inst4 inst5 in
-/-- Cardinal of  `Heisenberg.center` -/
-theorem card_center : Nat.card (Heisenberg.center V k) = Nat.card k := by
-   rw [Nat.card_congr (bij_k_center V k)]
-
 omit inst5 in
 /--The index of the center of `Heisenberg` is equal to the cardinal of $V$ to the square.-/
-theorem ord_V [inst6 : Fintype k]: (Subgroup.index (Subgroup.center (Heisenberg V k))) = (Nat.card V)^2 :=by
+theorem ord_V [inst6 : Fintype k] : (Subgroup.index (Subgroup.center (Heisenberg V k))) = (Nat.card V)^2 :=by
   have h3 : (Nat.card k)*(Nat.card V)^2 / (Nat.card k) = (Nat.card V)^2 := by
-    simp
+    simp only [Nat.card_eq_fintype_card, ne_eq, Fintype.card_ne_zero, not_false_eq_true,
+      mul_div_cancel_left₀]
   rw[<-h3,<-card_H,<-Subgroup.index_mul_card (Subgroup.center (Heisenberg V k))]
   have h4 : Nat.card (Subgroup.center (Heisenberg V k)) = Nat.card k := by
     rw[center_eq, center_is_subgroup]
@@ -572,7 +572,5 @@ theorem ord_V [inst6 : Fintype k]: (Subgroup.index (Subgroup.center (Heisenberg 
   rw[h4]
   simp only [Nat.card_eq_fintype_card, ne_eq, Fintype.card_ne_zero, not_false_eq_true,
     mul_div_cancel_right₀]
-
-
 
 #min_imports
