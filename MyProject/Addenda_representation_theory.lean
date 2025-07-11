@@ -2,6 +2,8 @@ import Mathlib.RepresentationTheory.Character
 import Mathlib.RepresentationTheory.Maschke
 import MyProject.Addenda_monoid_algebra_theory
 import Mathlib.RepresentationTheory.Induced
+import Mathlib.Algebra.Category.ModuleCat.Simple
+
 
 --import Hammer
 
@@ -404,64 +406,191 @@ variable (H : Subgroup G) [IsMulCommutative H]
 variable (θ : Representation k (Subgroup.center G) W)
 
 
-
-instance : Module.Finite k (Representation.IndV (Subgroup.center G).subtype θ) := by
-  sorry
-
 open Classical
 
-theorem ind_simp (h : Subgroup.center G) : (Representation.ind (Subgroup.center G).subtype θ) h = Representation.IndV.mk ((Subgroup.center G).subtype) θ h := by
-  sorry
+--theorem ind_simp (h : Subgroup.center G) : (Representation.ind (Subgroup.center G).subtype θ) h = Representation.IndV.mk ((Subgroup.center G).subtype) θ h := by
+  --sorry
 
-theorem testtest : (∀ (h : G), ∃ (h' : G) (h₁ : ⁅h',h⁆ ∈ Subgroup.center G), (FDRep.character (FDRep.of θ) (⟨⁅h', h⁆, h₁⟩) ≠ 1)) → (FDRep.character (FDRep.of (Representation.ind ((Subgroup.center G).subtype) θ))).support = Subgroup.center G  := by
-  intro hyp
+theorem lemma121 (ζ : (Subgroup.center G) →* kˣ) (hh : ¬ (ringChar k) ∣ (Module.finrank k W)): (∀ (h : G), ∃ (h' : G) (h₁ : ⁅h',h⁆ ∈ Subgroup.center G), ζ (⟨⁅h', h⁆, h₁⟩) ≠ 1) →
+  (∀ (η : Representation k G W), (MonoidHom.restrict η (Subgroup.center G) = (fun (z : Subgroup.center G) ↦ ↑(ζ (z)) • LinearMap.id (R := k) (M := W))) → (FDRep.character (FDRep.of η)).support = Subgroup.center G) := by
+  intro h0 η hη
   rw [Function.support_eq_iff]
   constructor
-  · intro h hcenter
+  · intro x hx
     rw[FDRep.character]
+    simp only [FGModuleCat.of_carrier, FDRep.of_ρ']
+    rw [funext_iff] at hη
+    have := hη ⟨x,hx⟩
+    simp only [MonoidHom.restrict_apply] at this
+    rw[this]
+    simp only [LinearMap.map_smul_of_tower, LinearMap.trace_id]
     by_contra hf
-    simp at hf
+    rw [smul_eq_zero_iff_eq, CharP.cast_eq_zero_iff] at hf
+    apply hh
+    exact hf
+  · intro x hx
+    obtain ⟨h',⟨hh1,hh2⟩⟩ := h0 x
+    unfold FDRep.character
+    simp only [FGModuleCat.of_carrier, FDRep.of_ρ']
+    have := h0 x
+    obtain ⟨h',⟨h1,hh1⟩⟩ := this
+    rw [funext_iff] at hη
+    specialize hη ⟨⁅h', x⁆,h1⟩
+    simp only [MonoidHom.restrict_apply] at hη
+    have h2 : (LinearMap.trace k W) (η x) = (LinearMap.trace k W) (η (⁅h', x⁆*x)) := by
+      unfold Bracket.bracket commutatorElement
+      simp only [inv_mul_cancel_right, map_mul]
+      rw [LinearMap.trace_mul_cycle]
+      rw[<-map_mul]
+      simp only [inv_mul_cancel, map_one, one_mul]
+    conv at h2 => rhs; rhs; rw[map_mul,hη, smul_mul_assoc];rhs;rw [@Module.End.mul_eq_comp,LinearMap.id_comp]
+    rw[LinearMap.map_smul_of_tower,<-sub_eq_zero] at h2
+    conv at h2 => lhs;lhs;rw[<-MulAction.one_smul (α := k) ((LinearMap.trace k W) (η x))]
+    have h3 : (1:k) • (LinearMap.trace k W) (η x) - ζ ⟨⁅h', x⁆, h1⟩ • (LinearMap.trace k W) (η x) = ((1:k) - ζ ⟨⁅h', x⁆, h1⟩) • (LinearMap.trace k W) (η x) := by
+      rw [@sub_smul]
+      simp only [one_smul, smul_eq_mul, one_mul, sub_right_inj]
+      exact rfl
+    rw[h3] at h2
+    rw [smul_eq_zero,sub_eq_zero] at h2
+    symm at hh1
+    rw [Ne.eq_def] at hh1
+    cases h2
+    · exfalso
+      apply hh1
+      (expose_names; exact Units.eq_iff.mp h)
+    · (expose_names; exact h)
+
+
+lemma FDRep_simple_iff (V : FDRep k G) : CategoryTheory.Simple V ↔ CategoryTheory.Simple ((CategoryTheory.forget₂ (FDRep k G) (Rep k G)).obj V) := by
+  constructor
+  intro h
+  refine { mono_isIso_iff_nonzero := ?_ }
+  intro Y f hf
+  constructor
+  · intro h1
+    by_contra h2
+    rw [CategoryTheory.ConcreteCategory.hom_ext_iff] at h2
+    rw [CategoryTheory.isIso_iff_mono_and_epi] at h1
+    have h11:= h1.2
+    rw? at h11
+  sorry
+
+lemma Rep_simple_iff (V : Rep k G) : CategoryTheory.Simple V ↔ IsSimpleModule (MonoidAlgebra k G) (Rep.toModuleMonoidAlgebra.obj V) := by
+  constructor
+  · intro h
+    refine (simple_iff_isSimpleModule' (Rep.toModuleMonoidAlgebra.obj V)).mp ?_
+    sorry
+  · intro h
+    sorry
+
+  sorry
+
+example (V : FDRep k G) [IsAlgClosed k] (hhhh : CharZero k) (hhh:↑(Fintype.card G) ≠ 0) :
+    CategoryTheory.Simple V ↔ ∑ g : G, V.character g * V.character g⁻¹ = Fintype.card G where
+  mp h := by
+    have := @FDRep.char_orthonormal k _ G _ _ _ (by refine invertibleOfNonzero (Nat.cast_ne_zero.mpr hhh)) V V _ _
+    simp only [Nonempty.intro (CategoryTheory.Iso.refl V), ↓reduceIte] at this
+    apply_fun (fun x ↦ x * (Fintype.card G : k)) at this
+    rw [mul_comm, ← smul_eq_mul, smul_smul, mul_invOf_self] at this
+    simp only [smul_eq_mul, one_mul] at this
+    exact this
+  mpr h := by
+    have eq := @FDRep.scalar_product_char_eq_finrank_equivariant k _ G _ _ (by refine invertibleOfNonzero (Nat.cast_ne_zero.mpr hhh)) V V
+    rw [h] at eq
+    simp only [invOf_eq_inv, smul_eq_mul, inv_mul_cancel_of_invertible] at eq
+    rw [FDRep_simple_iff, Rep_simple_iff]
+    simp only [ne_eq, Nat.cast_eq_zero, Fintype.card_ne_zero, not_false_eq_true,
+      inv_mul_cancel₀] at eq
+    rw [← Rep_simple_iff,<-FDRep_simple_iff]
+    rw [MonCat.one_of] at eq
 
 
     sorry
-  · intro h hncenter
-    have hyp2:= hyp h
-    obtain ⟨h',⟨h1, hh1⟩⟩ := hyp2
-    have hhh0 : (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).character h = (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).character (⁅h',h⁆ * h) := by
-      rw[Bracket.bracket, commutatorElement]
-      simp only [inv_mul_cancel_right]
-      rw[<-FDRep.char_conj _ h h']
-    have hhh2 : (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).character (⁅h', h⁆ * h) = (FDRep.of θ).character (⟨⁅h', h⁆,h1⟩) * (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).character (h) := by
-      unfold FDRep.character
-      conv=> lhs;rhs;rw[map_mul]
-      have : (FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).ρ ⁅h', h⁆ =  ((LinearMap.trace k ↑(FDRep.of θ).V) ((FDRep.of θ).ρ ⟨⁅h', h⁆, h1⟩)) • LinearMap.id := by
-        unfold FDRep.ρ
-        simp only [FGModuleCat.of_carrier, RingHom.toMonoidHom_eq_coe, RingEquiv.toRingHom_eq_coe,
-          MonoidHom.coe_comp, MonoidHom.coe_coe, RingHom.coe_coe, Function.comp_apply,
-          commutatorElement_inv, RingEquiv.apply_symm_apply]
-        ext u x
-        simp only [Representation.ind_apply, commutatorElement_inv,
-          Representation.Coinvariants.map_comp_mk, LinearMap.coe_comp, Function.comp_apply,
-          Finsupp.lsingle_apply, TensorProduct.AlgebraTensorModule.curry_apply,
-          LinearMap.restrictScalars_comp, TensorProduct.curry_apply, LinearMap.coe_restrictScalars,
-          LinearMap.rTensor_tmul, Finsupp.lmapDomain_apply, Finsupp.mapDomain_single,
-          LinearMap.restrictScalars_smul, LinearMap.smul_apply, LinearMap.id_coe, id_eq]
-        rw [← map_smul]
-        congr
-        simp only [Finsupp.smul_single, smul_eq_mul, mul_one]
-        ext g
-        rw[Finsupp.single_apply]
 
 
-        sorry
-      rw[this]
-      rw[smul_mul_assoc,map_smul]
+theorem lemma123 (ζ : (Subgroup.center G) →* kˣ) (hh :  IsAlgClosed k) (hhhh : CharZero k) (hhh:(Fintype.card G) ≠ 0) (hhhhh : Module.finrank k W ≠ 0): (∀ (h : G), ∃ (h' : G) (h₁ : ⁅h',h⁆ ∈ Subgroup.center G), ζ (⟨⁅h', h⁆, h₁⟩) ≠ 1) →
+  (∀ (η : Representation k G W), (MonoidHom.restrict η (Subgroup.center G) = (fun (z : Subgroup.center G) ↦ ↑(ζ (z)) • LinearMap.id (R := k) (M := W))) →
+    ((CategoryTheory.Simple (FDRep.of η)) ↔ ((Subgroup.index (Subgroup.center G) = (Module.finrank k W)^2 )))) := by
+    intro h1 η h2
+    have h3 : ∀ (z : Subgroup.center G), (LinearMap.trace k W) (η z) = (ζ z) * Module.finrank k W := by
+      intro z
+      rw[funext_iff] at h2
+      have h21:= h2 z
+      simp only [MonoidHom.restrict_apply] at h21
+      rw[h21]
+      simp only [LinearMap.map_smul_of_tower, LinearMap.trace_id]
       exact rfl
-    rw[hhh2] at hhh0
-    apply Lean.Grind.IntModule.sub_eq_zero_iff.mpr at hhh0
-    conv at hhh0=> lhs; rw[<-one_sub_mul ((FDRep.of θ).character ⟨⁅h', h⁆, h1⟩) ((FDRep.of (Representation.ind (Subgroup.center G).subtype θ)).character h)]
-    rw[mul_eq_zero] at hhh0
-    (expose_names; exact eq_zero_of_mul_eq_self_left hh1 (id (Eq.symm hhh0_1)))
+    have h6 := lemma121 k G W ζ (by simp[hhhh,hhhhh]) h1 η h2
+    have h7 : ∑ x, (FDRep.of η).character x * (FDRep.of η).character x⁻¹ = ∑ (x : Function.support (FDRep.of η).character) , (FDRep.of η).character x * (FDRep.of η).character x⁻¹ := by
+        refine
+          Finset.sum_congr_set (Function.support (FDRep.of η).character)
+            (fun i ↦ (FDRep.of η).character i * (FDRep.of η).character i⁻¹)
+            (fun i ↦ (FDRep.of η).character ↑i * (FDRep.of η).character (↑i)⁻¹)
+            (fun x ↦ congrFun rfl) ?_
+        intro x hx
+        simp only [Function.mem_support, ne_eq, Decidable.not_not, mul_eq_zero] at hx ⊢
+        left
+        exact hx
+    have hinutile : Invertible (α := k) ↑(Fintype.card G) := by
+        exact invertibleOfNonzero (Nat.cast_ne_zero.mpr hhh)
+    constructor
+    · intro h4
+      simp only [FGModuleCat.of_carrier] at h4
+      have h5 := FDRep.char_orthonormal (FDRep.of η) (FDRep.of η)
+      rw[if_pos (CategoryTheory.Iso.nonempty_iso_refl (FDRep.of η))] at h5
+      simp only [invOf_eq_inv, smul_eq_mul] at h5
+      have h5 := Mathlib.Tactic.LinearCombination.mul_const_eq h5 ((↑(Fintype.card G)))
+      simp only [mul_one] at h5
+      ring_nf at h5
+      simp only [mul_inv_cancel_of_invertible, one_mul] at h5
+      rw[h6] at h7
+      rw[h7] at h5
+      unfold FDRep.character at h5
+      conv at h5 => lhs; rhs;intro x;lhs;simp[h3]
+      conv at h5 => lhs; rhs;intro x;rhs;simp;change (LinearMap.trace k W) (η ((↑x⁻¹)));rw[h3]
+      simp only [SetLike.coe_sort_coe, map_inv, Units.val_inv_eq_inv_val] at h5
+      conv at h5 => lhs; rhs; intro x; ring_nf;rw[mul_comm];simp only [ne_eq, Units.ne_zero,
+        not_false_eq_true, inv_mul_cancel_left₀]
+      rw[Finset.sum_const,<-Nat.card_eq_fintype_card,<-Subgroup.index_mul_card (Subgroup.center G)] at h5
+      simp at h5
+      rw[mul_comm] at h5
+      rw[<-Nat.cast_inj (R:=k)]
+      symm
+
+      sorry
+    · intro h
+      have h4 := FDRep.scalar_product_char_eq_finrank_equivariant (FDRep.of η) (FDRep.of η)
+      simp only [invOf_eq_inv, smul_eq_mul] at h4
+      rw[<-Nat.card_eq_fintype_card,<-Subgroup.index_mul_card (Subgroup.center G),h] at h4
+      simp only [Nat.card_eq_fintype_card, Nat.cast_mul, Nat.cast_pow, mul_inv_rev] at h4
+      rw[h6] at h7
+      rw[h7] at h4
+      unfold FDRep.character at h4
+      conv at h4 => lhs; rhs; rhs;intro x;lhs;simp[h3]
+      conv at h4 => lhs; rhs; rhs;intro x;rhs;simp only [FGModuleCat.of_carrier, FDRep.of_ρ'];change (LinearMap.trace k W) (η ((↑x⁻¹)));rw[h3]
+      simp only [SetLike.coe_sort_coe, map_inv, Units.val_inv_eq_inv_val] at h4
+      conv at h4 => lhs; rhs; rhs; intro x; ring_nf;rw[mul_comm];simp only [ne_eq, Units.ne_zero,
+        not_false_eq_true, inv_mul_cancel_left₀]
+      rw[Finset.sum_const,<-Nat.card_eq_fintype_card] at h4
+      simp only [Nat.card_eq_fintype_card, Finset.card_univ, nsmul_eq_mul] at h4
+      rw[mul_comm] at h4
+      conv at h4 => lhs;rw[<-mul_assoc];lhs;rw[mul_comm];rw[<-mul_assoc]
+      rw [sq] at h4
+      simp only [mul_inv_rev] at h4
+      rw[<-mul_assoc] at h4
+      have := @inv_mul_cancel₀ _ _ (↑(Fintype.card ↥(Subgroup.center G)):k) (by simp)
+      rw[mul_assoc,this] at h4
+
+
+
+
+
+
+
+  sorry
+
+
+
 
 
 

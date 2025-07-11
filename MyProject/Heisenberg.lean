@@ -422,7 +422,7 @@ theorem card_center : Nat.card (Heisenberg.center V k) = Nat.card k := by
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 
-variable [inst4 : FiniteDimensional k V]
+variable [FiniteDimensional k V]
 /--`Heisenberg.center` is the center of `Heisenberg` -/
 instance center_eq :
   Subgroup.center (Heisenberg V k) = Heisenberg.center_is_subgroup V k := by
@@ -490,9 +490,11 @@ noncomputable def equiv_Dual:
   Heisenberg V k ≃ Heisenberg (Module.Dual k V) k := by
   refine Equiv.mk (fun a ↦ ⟨a.z, a.y , ((convention_eval_iso V k).toFun (-a.x)) ⟩ ) (fun a ↦ ⟨a.z, ((convention_eval_iso V k).invFun (-a.y)) , a.x⟩) ?_ ?_
   · intro H
-    simp
+    simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, LinearEquiv.coe_coe, map_neg, neg_neg,
+      LinearEquiv.invFun_eq_symm, LinearEquiv.symm_apply_apply]
   · intro H
-    simp
+    simp only [LinearEquiv.invFun_eq_symm, map_neg, neg_neg, AddHom.toFun_eq_coe,
+      LinearMap.coe_toAddHom, LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply]
 
 /--With the convention $(x,y)=-(y,x)$, $H(V)$ is antiisomorphic to $H(V*)$. -/
 noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k V) k)ᵐᵒᵖ := by
@@ -502,7 +504,9 @@ noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k
   rw [← MulOpposite.op_mul,MulOpposite.op_inj]
   change ((equiv_Dual) (mul H1 H2) = mul ((equiv_Dual) H2) ((equiv_Dual) H1))
   rw[equiv_Dual,mul,mul]
-  simp
+  simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, LinearEquiv.coe_coe, map_neg,
+    LinearEquiv.invFun_eq_symm, Equiv.coe_fn_mk, map_add, neg_add_rev, LinearMap.neg_apply,
+    convention_eval_iso_apply, neg_neg, mk.injEq, add_left_inj, and_true]
   constructor
   · rw [AddCommMonoid.add_comm]
   · rw [AddCommMonoid.add_comm]
@@ -549,18 +553,18 @@ theorem two_step_nilpotent : lowerCentralSeries (Heisenberg V k) 1 ≠ ⊥ ∧ l
 
 omit inst5 in
 /-- Cardinal of `Heisenberg` when $k$ is a finite field -/
-theorem card_H [inst6 : Fintype k] : Nat.card (Heisenberg V k) = (Nat.card k)*(Nat.card V)^2 := by
+theorem card_H [Fintype k] : Nat.card (Heisenberg V k) = (Nat.card k)*(Nat.card V)^2 := by
   rw[Nat.card_congr (bij_k_V_Dual),Nat.pow_two]
-  simp
+  simp only [Nat.card_prod, Nat.card_eq_fintype_card, mul_eq_mul_left_iff, Fintype.card_ne_zero,
+    or_false]
   left
-  rw [← @Basis.linearEquiv_dual_iff_finiteDimensional] at inst4
-  obtain ⟨h⟩ := inst4
+  obtain ⟨h⟩ := (Basis.linearEquiv_dual_iff_finiteDimensional (V := V) (K := k)).mpr inferInstance
   apply LinearEquiv.toEquiv at h
   rw [Nat.card_congr h]
 
 omit inst5 in
 /--The index of the center of `Heisenberg` is equal to the cardinal of $V$ to the square.-/
-theorem ord_V [inst6 : Fintype k] : (Subgroup.index (Subgroup.center (Heisenberg V k))) = (Nat.card V)^2 :=by
+theorem ord_V [Fintype k] : (Subgroup.index (Subgroup.center (Heisenberg V k))) = (Nat.card V)^2 :=by
   have h3 : (Nat.card k)*(Nat.card V)^2 / (Nat.card k) = (Nat.card V)^2 := by
     simp only [Nat.card_eq_fintype_card, ne_eq, Fintype.card_ne_zero, not_false_eq_true,
       mul_div_cancel_left₀]
