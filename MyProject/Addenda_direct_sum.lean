@@ -37,14 +37,14 @@ def DirectSum_equiv (ι : Type v) (β : ι → Type w) (γ : ι →  Type w) [(i
     exact this
   · intro x
     simp only [AddEquiv.toEquiv_eq_coe, DFinsupp.toFun_eq_coe, Equiv.invFun_as_coe,
-      AddEquiv.coe_toEquiv_symm, eq_mpr_eq_cast, cast_eq, id_eq, DFinsupp.coe_mk', cast_cast]
+      AddEquiv.coe_toEquiv_symm, eq_mpr_eq_cast, cast_eq, DFinsupp.coe_mk', cast_cast]
     congr
     · ext u
       simp only [AddEquiv.symm_apply_apply, DFinsupp.toFun_eq_coe]
     · simp only [DFinsupp.toFun_eq_coe, cast_heq]
   · intro x
     simp only [DFinsupp.toFun_eq_coe, eq_mpr_eq_cast, cast_eq, AddEquiv.toEquiv_eq_coe,
-      Equiv.invFun_as_coe, AddEquiv.coe_toEquiv_symm, id_eq, DFinsupp.coe_mk', cast_cast]
+      Equiv.invFun_as_coe, AddEquiv.coe_toEquiv_symm, DFinsupp.coe_mk', cast_cast]
     congr
     · ext u
       simp only [AddEquiv.apply_symm_apply, DFinsupp.toFun_eq_coe]
@@ -75,18 +75,15 @@ def DirectSum_equiv_linearmap (A : Type) [Semiring A] (ι : Type v) (β : ι →
     rw [← @LinearEquiv.map_smul]
     congr
 
+
 /--Given a family `x : (i : ι) → β i` of indexed types on a fintype `ι`, we have the identity :
 `(∑ (i : ι), (DirectSum.of β i) (x i)) j = x j`.-/
 @[simp]
 theorem DirectSum_eq_sum_direct (ι : Type*) [hi : Fintype ι] (β : ι → Type w)
   [(i : ι) → AddCommMonoid (β i)] [DecidableEq ι] (x : (i : ι) → β i) (j : ι) :
   (∑ (i : ι), (DirectSum.of β i) (x i)) j = x j  := by
-  have := Finset.sum_apply (a := j) (g := fun i ↦ (DirectSum.of β i) (x i)) (s := Finset.univ)
-  rw [DFinsupp.finset_sum_apply, Finset.sum_eq_single j]
-  · simp only [DirectSum.of_eq_same]
-  · intro a _ ha
-    exact DirectSum.of_eq_of_ne _ _ _ ha
-  · simp only [Finset.mem_univ, not_true_eq_false, DirectSum.of_eq_same, IsEmpty.forall_iff]
+  simp[DirectSum]
+  exact Fintype.sum_dite_eq j fun j_1 h ↦ Eq.symm h ▸ x j_1
 
 /--Isomorphism between $Hom_B(B⊗_AM,N)$ and $Hom_A(M,N)$ for $B$ an `A`-algebra, `M` an `A`-module
 and `N` a `B`-module.-/

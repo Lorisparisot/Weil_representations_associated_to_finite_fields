@@ -139,18 +139,18 @@ noncomputable def set_bij [Finite G] : system_of_repr_center.set G ≃ Finset.im
 noncomputable def G_to_syst: G → ↑(system_of_repr_center.set G) := by
       intro g
       unfold system_of_repr_center.set
-      refine ⟨?_, ?_⟩
-      · exact Quotient.out (Quotient.mk ((QuotientGroup.con (Subgroup.center G)).toSetoid) g)
-      · simp only [Set.mem_range, Quotient.out_inj, exists_eq]
+      refine ⟨ Quotient.out (Quotient.mk ((QuotientGroup.con (Subgroup.center G)).toSetoid) g), by simp⟩
 
 
 /--If `h : Subgroup.center G`, then `G_to_syst G (g*h) = G_to_syst G g` for every `g:G`.-/
 @[simp]
 theorem G_to_syst_simp (g : G) (h : Subgroup.center G) : G_to_syst G (g * h) = G_to_syst G g := by
   unfold G_to_syst
-  simp
+  simp only [id_eq, Subtype.mk.injEq, Quotient.out_inj, Quotient.eq, Con.rel_eq_coe]
   unfold QuotientGroup.con QuotientGroup.leftRel MulAction.orbitRel MulAction.orbit
-  simp
+  simp only [Set.mem_range, Subtype.exists, Subgroup.mk_smul, MulOpposite.smul_eq_mul_unop,
+    Subgroup.mem_op, exists_prop, MulOpposite.exists, MulOpposite.unop_op, Con.rel_mk,
+    mul_right_inj, exists_eq_right, SetLike.coe_mem]
 
 
 /--A function that associates to every element `g:G` the corresponding `z : Subgroup.center G` sucht that

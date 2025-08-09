@@ -26,22 +26,22 @@ variable (V k : Type*) [Field k] [AddCommGroup V] [Module k V]
 def convention_dual : Module.Dual k (Module.Dual k V) →ₗ[k] (Module.Dual k V) →ₗ[k] k := by
   refine LinearMap.mk₂ k (fun x y => - x y) ?_ ?_ ?_ ?_
   · intro m n f
-    simp
+    simp only [LinearMap.add_apply, neg_add_rev]
     ring
   · intro c m n
-    simp
+    simp only [LinearMap.smul_apply, smul_eq_mul, mul_neg]
   · intro m n1 n2
-    simp
+    simp only [map_add, neg_add_rev]
     ring
   · intro c m n
-    simp
+    simp only [map_smul, smul_eq_mul, mul_neg]
 
 --ajout d'un lemme simp pour faciliter les calculs.
 @[simp]
 theorem convention (v : Module.Dual k V) (φ : Module.Dual k (Module.Dual k V)) :
   convention_dual V k φ v = - φ v := by
   unfold convention_dual
-  simp
+  simp only [LinearMap.mk₂_apply]
 
 /--The map $V → V^{**}$ satisfying the convention $(x,y)=-y(x)$.  -/
 def convention_eval : V →ₗ[k] Module.Dual k (Module.Dual k V):=by
@@ -51,13 +51,14 @@ def convention_eval : V →ₗ[k] Module.Dual k (Module.Dual k V):=by
     · intro x y
       rw [map_add, neg_add_rev,@eq_add_neg_iff_add_eq,neg_add_cancel_comm]
   · intro m v
-    simp
+    simp only [map_smul, RingHom.id_apply, smul_neg]
 
 --Lemme simp pour faciliter les calculs
 @[simp]
 theorem convention_eval_apply (v : V) (φ :(Module.Dual k V)) : ((convention_eval V k) v) φ = - φ v := by
   rw[convention_eval]
-  simp
+  simp only [LinearMap.coe_mk, AddHom.coe_mk, LinearMap.neg_apply, LinearMap.flip_apply,
+    LinearMap.id_coe, id_eq]
 
 
 /-- The bijection between a reflexive module and its double dual such that (x,y)=-(y,x), bundled as a `LinearEquiv`. -/
@@ -67,19 +68,19 @@ noncomputable def convention_eval_iso [Module.IsReflexive k V] : V ≃ₗ[k] Mod
   · exact (fun x => - ((Module.evalEquiv k V).invFun (x)))
   · intro x
     rw [@neg_eq_iff_eq_neg]
-    simp
+    simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, LinearEquiv.invFun_eq_symm]
     symm
     refine (LinearEquiv.eq_symm_apply (Module.evalEquiv k V)).mpr ?_
     rw[convention_eval]
-    simp
+    simp only [Module.evalEquiv_apply, map_neg, LinearMap.coe_mk, AddHom.coe_mk, neg_inj]
     rw[Module.Dual.eval]
   · intro x
-    simp
+    simp only [LinearEquiv.invFun_eq_symm, AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, map_neg]
     rw[convention_eval]
-    simp
+    simp only [LinearMap.coe_mk, AddHom.coe_mk, neg_neg]
     rw [@LinearMap.ext_iff]
     intro φ
-    simp
+    simp only [LinearMap.flip_apply, LinearMap.id_coe, id_eq, Module.apply_evalEquiv_symm_apply]
 
 --Lemme simp pour faciliter les calculs
 @[simp]

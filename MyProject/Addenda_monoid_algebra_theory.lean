@@ -201,6 +201,7 @@ noncomputable instance hmul_g_kG : HMul G (MonoidAlgebra k G) (MonoidAlgebra k G
   intro g kH
   exact (MonoidAlgebra.of k G g) * kH
 
+
 theorem hmul_g_kH_kG_simp (g : G) (kH : MonoidAlgebra k (Subgroup.center G)) : (hmul_g_kH_kG k G).hMul g kH = (MonoidAlgebra.single g (1 : k)) * kH := by
   exact rfl
 
@@ -398,13 +399,13 @@ theorem Map_kHkG_single_simp (_ : Subgroup.center G) : (Map_kHkG k G (Subgroup.c
 
 /-- A system of representatives `system_of_repr_center.set G` of `G⧸ (Subgroup.center G)`
 defines a basis of `MonoidAlgebra k G` on `MonoidAlgebra k (Subgroup.center G)`.-/
-noncomputable def MonoidAlgebra_MulAction_basis : Basis (system_of_repr_center.set G) (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) := by
-  refine Basis.mk (v := fun g => MonoidAlgebra.single g.1 (1:k)) ?_ ?_
+noncomputable def MonoidAlgebra_MulAction_basis : Module.Basis (system_of_repr_center.set G) (MonoidAlgebra k (Subgroup.center G)) (MonoidAlgebra k G) := by
+  refine Module.Basis.mk (v := fun g => MonoidAlgebra.single g.1 (1:k)) ?_ ?_
   · rw [linearIndependent_iff_injective_finsuppLinearCombination]
     rw[injective_iff_map_eq_zero]
     intro a ha
     rw[Finsupp.linearCombination_apply,Finsupp.sum] at ha
-    conv at ha => lhs;rhs;intro u; rw[<-Basis.sum_repr (@Finsupp.basisSingleOne k (Subgroup.center G) _) (a u)]
+    conv at ha => lhs;rhs;intro u; rw[<-Module.Basis.sum_repr (@Finsupp.basisSingleOne k (Subgroup.center G) _) (a u)]
     conv at ha => lhs;rhs;intro u; rw[Finset.sum_smul]
     rw[Finset.sum_comm] at ha
     conv at ha => lhs;rhs;intro y; rhs; intro x1;simp only [Finsupp.basisSingleOne_repr,
@@ -463,7 +464,7 @@ noncomputable def MonoidAlgebra_MulAction_basis : Basis (system_of_repr_center.s
     have hff : ∑ g with system_of_repr_center.G_to_syst G g ∈ a.support, (a (system_of_repr_center.G_to_syst G g)) (system_of_repr_center.G_to_center G g) • MonoidAlgebra.single g (1:k) =0 := by
       rw[<-ha]
       exact hf.symm
-    have hfff := ((@linearIndependent_iff' G k (MonoidAlgebra k G) (fun g => MonoidAlgebra.single g (1:k)) _ _ _ ).mp (Basis.linearIndependent (@Finsupp.basisSingleOne k G _))) ({g | system_of_repr_center.G_to_syst G g ∈ a.support}) (fun (g : G) => (a (system_of_repr_center.G_to_syst G g)) (system_of_repr_center.G_to_center G g)) (hff)
+    have hfff := ((@linearIndependent_iff' G k (MonoidAlgebra k G) (fun g => MonoidAlgebra.single g (1:k)) _ _ _ ).mp (Module.Basis.linearIndependent (@Finsupp.basisSingleOne k G _))) ({g | system_of_repr_center.G_to_syst G g ∈ a.support}) (fun (g : G) => (a (system_of_repr_center.G_to_syst G g)) (system_of_repr_center.G_to_center G g)) (hff)
     ext u v
     have hffff : ∀ (i : G), (fun g ↦ (a (system_of_repr_center.G_to_syst G g)) (system_of_repr_center.G_to_center G g)) i = 0 := by
       intro i
@@ -525,9 +526,9 @@ theorem MonoidAlgebra_single_basis_simp (x1 : system_of_repr_center.set G) : ((M
   have : (((MonoidAlgebra_MulAction_basis k G).repr ((MonoidAlgebra_MulAction_basis k G) x1))) = ((MonoidAlgebra_MulAction_basis k G).repr (MonoidAlgebra.single (↑x1) 1)) := by
     rw [EquivLike.apply_eq_iff_eq]
     unfold MonoidAlgebra_MulAction_basis
-    simp only [Basis.coe_mk]
+    simp only [Module.Basis.coe_mk]
   rw[<-this]
-  simp only [Basis.repr_self]
+  simp only [Module.Basis.repr_self]
   rw[Finsupp.single_apply]
   refine ite_congr ?_ (congrFun rfl) (congrFun rfl)
   conv=> lhs; rw[eq_comm]
@@ -543,7 +544,7 @@ noncomputable def G_to_direct_sum : ((system_of_repr_center.set G) → ⨁ (_ : 
 /--We define a `MonoidAlgebra k (Subgroup.center G)` linear map by extending the map `G_to_direct_sum k G`
 which is define on the basis `MonoidAlgebra_MulAction_basis k G`.-/
 noncomputable def MonoidAlgebra_direct_sum_linear : MonoidAlgebra k G →ₗ[MonoidAlgebra k (Subgroup.center G)] DirectSum (system_of_repr_center.set G) (fun _ => MonoidAlgebra k (Subgroup.center G)) := by
-  exact Basis.constr (MonoidAlgebra_MulAction_basis k G) k ( G_to_direct_sum k G)
+  exact Module.Basis.constr (MonoidAlgebra_MulAction_basis k G) k ( G_to_direct_sum k G)
 
 /-- The map `MonoidAlgebra_direct_sum_linear k G` is in fact a linear bijection.-/
 noncomputable def MonoidAlgebra_direct_sum_1 : MonoidAlgebra k G ≃ₗ[MonoidAlgebra k (Subgroup.center G)] DirectSum (system_of_repr_center.set G) (fun _ => MonoidAlgebra k (Subgroup.center G)) := by
@@ -554,13 +555,13 @@ noncomputable def MonoidAlgebra_direct_sum_1 : MonoidAlgebra k G ≃ₗ[MonoidAl
       exact ∑ (g : system_of_repr_center.set G), (u g) • (MonoidAlgebra.single g.1 (1:k))
     · intro x
       simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom]
-      apply Basis.ext_elem (MonoidAlgebra_MulAction_basis k G)
+      apply Module.Basis.ext_elem (MonoidAlgebra_MulAction_basis k G)
       intro i
       simp only [map_sum, map_smul, Finsupp.coe_finset_sum, Finsupp.coe_smul, Finset.sum_apply,
         Pi.smul_apply, MonoidAlgebra_single_basis_simp, smul_eq_mul, mul_ite, mul_one, mul_zero,
         Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
       unfold MonoidAlgebra_direct_sum_linear
-      simp only [Basis.constr_apply_fintype, Basis.equivFun_apply]
+      simp only [Module.Basis.constr_apply_fintype, Module.Basis.equivFun_apply]
       unfold G_to_direct_sum
       conv=> lhs;lhs;rhs;intro x1;rw[<-DirectSum.of_smul]
       conv=> lhs;lhs;rhs;intro x1;rhs; simp;rw[<-MonoidAlgebra.one_def,mul_one]
@@ -570,7 +571,7 @@ noncomputable def MonoidAlgebra_direct_sum_1 : MonoidAlgebra k G ≃ₗ[MonoidAl
       rw[DirectSum.ext_iff]
       intro i
       unfold MonoidAlgebra_direct_sum_linear
-      simp only [Basis.constr_apply_fintype, Basis.equivFun_apply, MonoidAlgebra_single_basis_simp,
+      simp only [Module.Basis.constr_apply_fintype, Module.Basis.equivFun_apply, MonoidAlgebra_single_basis_simp,
         ite_smul, one_smul, zero_smul, Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte]
       unfold G_to_direct_sum
       conv=> lhs;lhs;rhs;intro x1;rw[<-DirectSum.of_smul]

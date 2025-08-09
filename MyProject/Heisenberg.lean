@@ -61,7 +61,7 @@ instance group : Group (Heisenberg V k) := {
     ext
     simp
     · ring
-    · simp
+    · simp only
       exact add_assoc a.x b.x c.x
     · simp
       ring
@@ -208,7 +208,7 @@ instance Hom_H_to_V_x_Dual_sub_V_commutative : IsMulCommutative (Hom_H_to_V_x_Du
   change (mul a b = mul b a)
   rw[mul, mul, mk.injEq]
   rw [Hom_H_to_V_x_Dual_sub_V] at ha hb
-  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq] at ha hb
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk] at ha hb
   obtain ⟨xa, hxa⟩ := ha
   obtain ⟨xb, hxb⟩ := hb
   rw [Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply, Prod.mk.injEq] at hxa hxb
@@ -223,9 +223,10 @@ instance Hom_H_to_V_x_Dual_sub_V_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub
   refine Subgroup.Normal.mk ?_
   intro x hx g
   rw[Hom_H_to_V_x_Dual_sub_V,] at hx
-  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq] at hx
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk] at hx
   rw[Hom_H_to_V_x_Dual_sub_V]
-  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk]
+  simp at hx ⊢
   rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
   simp only [Prod.mk.injEq, exists_eq_left]
   change (0 = (mul (mul g x) (inverse g)).y)
@@ -249,17 +250,18 @@ theorem Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : IsMulC
     obtain ⟨x,⟨left,right⟩⟩ := h.2
     apply right
     rw [Hom_H_to_V_x_Dual_sub_V]
-    simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+    simp only [Set.preimage_setOf_eq, Subgroup.mem_mk]
     have h1 : ∀ (b : V), mul x (⟨0, b, 0⟩ : Heisenberg V k) = mul ⟨0, b, 0⟩ x := by
       intro b
       have h2 : ⟨0, b, 0⟩ ∈ Hom_H_to_V_x_Dual_sub_V V k := by
         rw[Hom_H_to_V_x_Dual_sub_V]
-        simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+        simp only [Set.preimage_setOf_eq, Subgroup.mem_mk]
         use b
         rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
       exact Subgroup.mul_comm_of_mem_isMulCommutative Q left (h.1 h2)
     unfold mul at h1
     simp only [add_zero, zero_add, LinearMap.zero_apply, mk.injEq, add_eq_left, and_true] at h1
+    simp only [Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq]
     rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
     simp only [Prod.mk.injEq, exists_eq_left]
     have h3 :  ∀ (b : V), x.y b = 0 := by
@@ -283,7 +285,6 @@ def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
       use (a.y + b.y)
       change ((0, a.y + b.y) = (Hom_H_to_V_x_Dual V k) (mul a b))
       rw[Hom_H_to_V_x_Dual, mul,AddMonoidHom.mk'_apply,Prod.mk.injEq]
-      simp only [true_and]
       rw [Hom_H_to_V_x_Dual] at hx1 hx2
       simp at hx1 hx2
       rw[<-hx1.1, <-hx2.1,add_zero]
@@ -297,7 +298,6 @@ def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
     use ((inverse x).y)
     change ((0, x.inverse.y) = (Hom_H_to_V_x_Dual V k) x.inverse)
     rw[Hom_H_to_V_x_Dual,inverse,map_neg, sub_neg_eq_add, AddMonoidHom.mk'_apply, Prod.mk.injEq, zero_eq_neg]
-    simp only [true_and]
     rw[Hom_H_to_V_x_Dual, AddMonoidHom.mk'_apply, Prod.mk.injEq] at h
     rw[h.1]
     simp only [and_self]
@@ -313,7 +313,7 @@ instance Hom_H_to_V_x_Dual_sub_Dual_commutative : IsMulCommutative (Hom_H_to_V_x
   change (mul a b = mul b a)
   rw[mul, mul, mk.injEq]
   rw [Hom_H_to_V_x_Dual_sub_Dual] at ha hb
-  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq] at ha hb
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk] at ha hb
   obtain ⟨xa, hxa⟩ := ha
   obtain ⟨xb, hxb⟩ := hb
   rw [Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply, Prod.mk.injEq] at hxa hxb
@@ -328,9 +328,10 @@ instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_
   refine Subgroup.Normal.mk ?_
   intro x hx g
   rw[Hom_H_to_V_x_Dual_sub_Dual] at hx
-  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq] at hx
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk] at hx
   rw[Hom_H_to_V_x_Dual_sub_Dual]
-  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+  simp only [Set.preimage_setOf_eq, Subgroup.mem_mk]
+  simp only [Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq]
   rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
   simp only [Prod.mk.injEq, exists_eq_right]
   change (0 = (mul (mul g x) (inverse g)).x)
@@ -353,17 +354,18 @@ instance Hom_H_to_V_x_Dual_sub_Dual_maximal [FiniteDimensional k V] (Q : Subgrou
     obtain ⟨x,⟨ left, right⟩ ⟩ := h.2
     apply right
     rw [Hom_H_to_V_x_Dual_sub_Dual]
-    simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+    simp only [Set.preimage_setOf_eq, Subgroup.mem_mk]
     have h1 : ∀ (b : Module.Dual k V), mul x (⟨0, 0, b⟩ : Heisenberg V k) = mul ⟨0, 0, b⟩ x := by
       intro b
       have h2 : ⟨0, 0, b⟩ ∈ Hom_H_to_V_x_Dual_sub_Dual V k := by
         rw[Hom_H_to_V_x_Dual_sub_Dual]
-        simp only [Set.preimage_setOf_eq, Subgroup.mem_mk, Set.mem_setOf_eq]
+        simp only [Set.preimage_setOf_eq, Subgroup.mem_mk]
         use b
         rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
       exact Subgroup.mul_comm_of_mem_isMulCommutative Q left (h.1 h2)
     unfold mul at h1
     simp only [add_zero, map_zero, zero_add, mk.injEq, left_eq_add, true_and] at h1
+    simp only [Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq]
     rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
     simp only [Prod.mk.injEq, exists_eq_right]
     have h3 :  ∀ (b : Module.Dual k V), b x.x = 0 := by
@@ -398,7 +400,7 @@ instance bij_k_V_Dual : (Heisenberg V k) ≃ (k × V × (Module.Dual k V)) :=by
 
 /-- The trivial bijection beetween `Heisenberg.center`and $k$.-/
 instance bij_k_center : Heisenberg.center V k ≃ k := by
-  refine Equiv.mk (fun h => h.val.z) (fun z => ⟨⟨z, 0, 0⟩, by simp [Heisenberg.center, Subgroup.center]⟩) ?_ ?_
+  refine Equiv.mk (fun h => h.val.z) (fun z => ⟨⟨z, 0, 0⟩, by simp [Heisenberg.center]⟩) ?_ ?_
   · intro h
     simp only
     rw [Subtype.ext_iff_val]
@@ -476,14 +478,15 @@ theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Hei
   simp only [Subgroup.mem_top, true_and, Subgroup.coe_sInf, Set.mem_setOf_eq, Set.mem_iInter,
     SetLike.mem_coe] at h
   specialize h (Subgroup.center (Heisenberg V k))
-  rw[Heisenberg.center_eq,center_is_subgroup,Subgroup.coe_set_mk, Subgroup.mem_mk,center] at h
-  simp only [Set.setOf_subset_setOf, forall_exists_index, Set.mem_setOf_eq] at h
+  rw[Heisenberg.center_eq,center_is_subgroup,Subgroup.coe_set_mk, Subgroup.mem_mk] at h
+  unfold center at h
+  simp only [commutator_of_elements, Submonoid.coe_set_mk, Subsemigroup.coe_set_mk,
+    Set.setOf_subset_setOf, forall_exists_index, Submonoid.mem_mk, Subsemigroup.mem_mk,
+    Set.mem_setOf_eq] at h
   apply h
-  intro a x x1
-  rw[Heisenberg.commutator_of_elements]
-  intro h
-  rw[<-h]
-  simp only [and_self]
+  intro a x x1 hh
+  subst hh
+  simp_all only [and_self]
 
 /-- $H(V)$ is in bijection with $H(V*)$. -/
 noncomputable def equiv_Dual:
@@ -522,8 +525,9 @@ variable [inst5 : Nontrivial V]
     Set.univ_subset_iff, Subgroup.coe_eq_univ,Subgroup.eq_top_iff'] at hf
   obtain ⟨h11,h12⟩ := (nontrivial_iff_exists_ne 0).mp inst5
   specialize hf ⟨0,h11,0⟩
-  rw[Heisenberg.center_eq,Heisenberg.center_is_subgroup,Subgroup.mem_mk,Heisenberg.center,Set.mem_setOf_eq] at hf
-  simp only [and_true] at hf
+  rw[Heisenberg.center_eq,Heisenberg.center_is_subgroup,Subgroup.mem_mk] at hf
+  unfold center at hf
+  simp only [Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq, and_true] at hf
   contradiction
 
 /-- `Heisenberg` is a twostep nilpotent group -/
@@ -572,7 +576,7 @@ theorem ord_V [Fintype k] : (Subgroup.index (Subgroup.center (Heisenberg V k))) 
   have h4 : Nat.card (Subgroup.center (Heisenberg V k)) = Nat.card k := by
     rw[center_eq, center_is_subgroup]
     simp only [Subgroup.mem_mk]
-    rw [card_center]
+    exact card_center (V:= V) (k := k)
   rw[h4]
   simp only [Nat.card_eq_fintype_card, ne_eq, Fintype.card_ne_zero, not_false_eq_true,
     mul_div_cancel_right₀]
