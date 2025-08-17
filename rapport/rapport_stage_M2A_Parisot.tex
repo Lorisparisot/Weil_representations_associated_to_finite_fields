@@ -40,6 +40,9 @@
 \lhead{\includegraphics[scale=0.075]{figure/logo_ENS.jpg}}
 \rhead{\includegraphics[scale=0.075]{figure/logo_UCB.jpg}}
 
+\newcommand{\fonction}[5]{\begin{array}{l|rcl}
+		#1: & #2 & \longrightarrow & #3 \\
+		& #4 & \longmapsto & #5 \end{array}}
 
 
 \usepackage{color}
@@ -74,10 +77,7 @@
 \DeclareMathOperator{\spec}{Spec}
 
 
-\newcommand{\fonction}[5]{\begin{array}{l|ccl}
-		#1: & #2 & \longrightarrow & #3 \\
-		& #4 & \longmapsto & #5 \end{array}}
-	
+
 \newtcolorbox{mybox}[2][]{colback=red!5!white,
 	colframe=red!75!black,fonttitle=\bfseries,
 	colbacktitle=red!85!black,enhanced,
@@ -145,7 +145,8 @@ Cet outil a deux avantages majeurs. Le premier est qu'il permet de structurer le
 
 \subsection{Convention}
 L'article de P. Gérardin ne prend pas pour convention l'identification canonique de $V$ avec $V**$, mais la suivante : pour tout $(y,x)\in V^*\times (V^*)^* $, $\langle x, y\rangle = -\langle y,x\rangle = - y(x)$. 
-Le choix de formalisation fait est d'utiliser la fonction 
+
+Il suffit pour se faire de définir cette application linéaire dans \textit{LEAN}. Toute la machinerie sur le dual d'un espace vectoriel étant d'ors et déjà dans \textit{mathlib}, on peut s'en servir pour se faciliter une part de travail. Pour l'application réciproque, on utilise en particulier \lstinline|Module.evalEquiv k V| qui est la bijection canonique entre $V$ et $V^{**}$. Notre réciproque peut donc s'écrire \lstinline|fun x => - ((Module.evalEquiv k V).invFun (x))|, ce qui nous permet d'utiliser toute la machinerie derrière elle. L'application de $V$ dans $V^{**}$ est définie en utilisant la syntaxe \lstinline|- LinearMap.id.flip x|. 
 
 
 \subsection{Groupe d'Heisenberg}
@@ -210,7 +211,7 @@ Les représentations ont la particularité dans Mathlib de ne pas être implemen
 La première façon de penser aux représentations est celle classiquement enseigné, à savoir un morphisme $\rho : G \rightarrow GL(V)$ où $V$ est un espace vectoriel sur un corps $k$. Toujours dans le soucis d'avoir une librairie la plus généraliste possible, on obtient dans Mathlib la définition suivante : \lstinline|Representation k G V = (G →* V →[k] V)| avec les instances \lstinline|[CommSemiring k] [Monoid G] [AddCommMonoid V] [Module k V]|.
 \newline
 
-Une autre façon de voir les représentations est d'utiliser un point de vue catégorique :
+Une autre façon de voir les représentations est d'utiliser un point de vue catégorique : en effet, on peut, étant donné un monoïde $G$ et un anneau $R$, introduire la catégorie des représentations $R-$linéaires de $G$ en prenant l'action de $G$ sur l'ensemble des modules finis sur $R$.
 \newline
 
 Ces points de vue sont heureusement reliés entre eux via différents lemmes.
@@ -243,8 +244,29 @@ Or, $\mathbb{K}[H]$ n'est a priori pas un anneau commutatif. En revanche, il est
  \end{itemize}
 
 La preuve du premier point est une preuve calculatoire ne présentant pas spécialement de difficulté.
-La preuve du second point utilise le lemme suivant : si $A$ est un un anneau commutatif, $B$ une $A-$algèbre 
+La preuve du second point utilise le lemme suivant : si $A$ est un un anneau commutatif, $B$ une $A-$algèbre, $M$ et $N$ deux $A-$modules, alors on a un isomorphisme $A-$linéaire $\text{Hom}_B(B\otimes_AM,N)\simeq \text{Hom}_A(M,N)$. Pour le montrer, on fourni une application $A-$linéaire et vérifie sa bijectivité, à savoir l'application $\fonction{\Psi}{\text{Hom}_B(B\otimes_AM)}{\text{Hom}_A(M,N)}{\varphi}{\fonction{\Psi_\varphi}{M}{N}{x}{\varphi(1\otimes_A x)}}$. Cette application est bien injective : si $\Psi_\varphi=\Psi_\phi$, alors pour tout $m\in M$, $\varphi(1\otimes_A m)=\phi(1\otimes_Am)$ et donc $\varphi=\phi$. Pour la surjectivité, on fabrique un antécédent explicite de l'application $B$ linéaire $\varphi:M\rightarrow N$ ainsi : on pose $\psi$ application $B$ linéaire de $B\otimes_A M$ dans $N$ définie par $\psi(b\otimes_Am)=b\varphi(m)$. Ainsi, on a bien $\Psi_\psi(x)=\psi(1\otimes_Ax)=\varphi(x)$ pour tout $x$ de $M$.
+\newline
 
+C'est ici que l'on voit tout l'intéret d'avoir choisi le point de vue de $\mathbb{K}[G]$ : la réciprocité de Frobenius devient une application de ce résultat deux fois : une première fois pour avoir l'isomorphisme $\text{Hom}_{\mathbb{K}[G]}(\mathbb{K}[G]\otimes_{\mathbb{K}[\mathcal{Z}_G]}W,E)\simeq\text{Hom}_{\mathbb{K}[\mathcal{Z}_G]}(W,E)$ et une seconde fois en prenant l'inverse de $\text{Hom}_{\mathbb{K}[\mathcal{Z}_G]}(\mathbb{K}[\mathcal{Z}_G]\otimes_{\mathbb{K}[\mathcal{Z}_G]} W)\simeq \text{Hom}_{\mathbb{K}[\mathcal{Z}_G]}(W,E)$
+\newline
+
+On obtient alors le résultat formalisé en seulement une ligne : 
+\begin{center}
+	\begin{tcolorbox}[title = $L\exists\forall N$,width=12cm,text width=12cm,colback=lightgray!30,
+		colframe=gray,sharp corners,
+		rounded corners=uphill ]
+		\begin{lstlisting}
+			noncomputable def iso_induced_as_tensor (E : Type*) [AddCommMonoid E] [Module (MonoidAlgebra k G) E] [Module (MonoidAlgebra k ↥(Subgroup.center G)) E] [inst6 : IsScalarTower (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G) E]:
+			
+			((tensor k G W θ) →ₗ[MonoidAlgebra k G] E) ≃ₗ[MonoidAlgebra k (Subgroup.center G)] ((module_sub_rep k G W θ) →ₗ[MonoidAlgebra k (Subgroup.center G)] E) := by
+			
+			exact ((iso_hom_tens (MonoidAlgebra k ↥(Subgroup.center G)) (θ.asModule) E (MonoidAlgebra k G)).trans (iso_hom_tens (MonoidAlgebra k ↥(Subgroup.center G)) θ.asModule E
+			(MonoidAlgebra k ↥(Subgroup.center G))).symm)
+			
+		\end{lstlisting}
+	\end{tcolorbox}
+\end{center}
+ 
  
 \subsection{Caractère de l'induite}
 Le but de cette section est de formaliser le fait que \og le caractère de l'induit est l'induit du caractère\fg.
@@ -292,10 +314,14 @@ Pour montrer cette décomposition, on introduit certains résultats sur les grou
 		\end{lstlisting}
 	\end{tcolorbox}
 \end{center}
-Le principal avantage de mettre en place cette machinerie est de pouvoir implémenter différents lemmes \lstinline|simp| reliant ces applications et s'en servir pour simplifier des expressions.
+Le principal avantage de mettre en place cette machinerie est de pouvoir implémenter différents lemmes \lstinline|simp| reliant ces applications et s'en servir pour simplifier des expressions. Cela permet également d'avoir des notations plus compactes et lisibles.
 \newline
 
-La preuve de la décomposition s'effectue en deux temps. On montre d'abord qu'on a un isomorphisme entre $\mathbb{K}[\mathcal{Z}_G]$ et $g\cdot \mathbb{K}[\mathcal{Z}_G]$ avec $g$ un élément du système de représentant de $G/\mathcal{Z}_G$, ce qui est obtenu via l'application $x\mapsto gx$. On montre ensuite que les éléments du système de représentants vus comme élément de $\mathbb{K}[G]$ forment une base de $\mathbb{K}[G]$ en tant que $\mathbb{K}[\mathcal{Z}_G]$ algèbre. Pour conclure, on utilise ensuite un lemme sur les sommes directes : 
+La preuve de la décomposition s'effectue en deux temps. On montre d'abord qu'on a un isomorphisme entre $\mathbb{K}[\mathcal{Z}_G]$ et $g\cdot \mathbb{K}[\mathcal{Z}_G]$ avec $g$ un élément du système de représentant de $G/\mathcal{Z}_G$, ce qui est obtenu via l'application $x\mapsto gx$. 
+\newline
+On montre ensuite que les éléments du système de représentants vus comme élément de $\mathbb{K}[G]$ forment une base de $\mathbb{K}[G]$ en tant que $\mathbb{K}[\mathcal{Z}_G]$ algèbre. La preuve n'a rien de bien compliqué sur le papier : une interversion de somme finie. Cependant, l'implémentation en \textit{LEAN} est un peu plus fastidieuse à cause de la gymnastique entre éléments de $\mathbb{K}[\mathcal{Z}_G]$, $\mathbb{K}[G]$ et $G$. 
+On donne ensuite explicitement les applications liant $\mathbb{K}[G]$ et $\bigoplus\limits_{i=1}^rg_i\cdot\mathbb{K}[G]$, à savoir ...
+ Pour implémenter la première, on utilise  un lemme sur les sommes directes : 
 \begin{center}
 	\begin{tcolorbox}[title = $L\exists\forall N$,width=12cm,text width=14cm,colback=lightgray!30,
 		colframe=gray,sharp corners,
@@ -323,6 +349,25 @@ Ce lemme est intéressant, dans le sens où sa preuve ne se comporte pas comme l
 		(∑ (i : ι), (DirectSum.of β i) (x i)) j = x j  := by
 		simp[DirectSum]
 		exact Fintype.sum_dite_eq j fun j_1 h ↦ Eq.symm h ▸ x j_1
+		\end{lstlisting}
+	\end{tcolorbox}
+\end{center}
+Or, \lstinline|DirectSum| est implémenté dans \textit{Lean} comme étant \lstinline|Π₀ i, β i|, c'est-à-dire une fonction dépendante à support fini. Il n'y a donc a priori aucune raison que \lstinline|simp| n'arrive pas à ouvrir la définition. La raison de ce blocage est le manque de lemme à propos des sommes directes.
+
+On arrive finalement au lemme suivant : 
+\begin{center}
+	\begin{tcolorbox}[title = $L\exists\forall N$,width=12cm,text width=14cm,colback=lightgray!30,
+		colframe=gray,sharp corners,
+		rounded corners=uphill ]
+		\begin{lstlisting}
+		/--Given a representative system `system_of_repr_center.set G` of `G⧸ (Subgroup.center G)`,
+		we have a `MonoidAlgebra k (Subgroup.center G)` linear bijection between
+		`MonoidAlgebra k G` and the direct sum of `g • (MonoidAlgebra k (Subgroup.center G))` for `g : system_of_repr_center.set G`.-/
+		
+		noncomputable def MonoidAlgebra_direct_sum_system_of_repr_center_set : MonoidAlgebra k G ≃ₗ[MonoidAlgebra k (Subgroup.center G)] DirectSum (system_of_repr_center.set G) (fun g => gkH_set k G g) := by
+		
+		have := DirectSum_equiv_linearmap (MonoidAlgebra k (Subgroup.center G)) (system_of_repr_center.set G) (fun g => gkH_set k G g) (fun g => MonoidAlgebra k (Subgroup.center G)) 	(fun g => (gkH_set_iso_kH_module k G g))
+		exact LinearEquiv.trans (MonoidAlgebra_direct_sum_1 k G) this.symm
 		\end{lstlisting}
 	\end{tcolorbox}
 \end{center}
