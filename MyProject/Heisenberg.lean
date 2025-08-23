@@ -56,16 +56,6 @@ lemma add_apply (H1 H2 : Heisenberg V k) : H1 + H2 = ⟨H1.z + H2.z, H1.x + H2.x
 instance : One (Heisenberg V k) where
   one := ⟨0, 0, 0⟩
 
-instance : Zero (Heisenberg V k) where
-  zero := ⟨0, 0, 0⟩
-
-instance : AddZeroClass (Heisenberg V k) := by
-  refine { toZero := instZero, toAdd := instAdd, zero_add := ?_, add_zero := ?_ }
-  <;> intro _
-  <;> ext _
-  <;> simp [add_apply]
-  <;> rfl
-
 lemma one_eq : (1 : Heisenberg V k) = ⟨0,0,0⟩ := by
   rfl
 
@@ -87,7 +77,7 @@ instance group : Group (Heisenberg V k) := {
     ext u
     <;> rw[mul_apply,mul_apply,mul_apply,mul_apply]
     <;> simp only [LinearMap.add_apply, map_add]
-    <;> grind
+    <;> grind only
   one_mul := by
     intro a
     rw[one_eq, mul_apply]
@@ -105,12 +95,9 @@ instance group : Group (Heisenberg V k) := {
 
 
 variable (V k)
-/--Center of `Heisenberg` -/
-def center := {H : Heisenberg V k | H.x = 0 ∧ H.y = 0}
-
 
 /--`Heisenberg.center` is a subgroup of `Heisenberg` -/
-instance center_is_subgroup : Subgroup (Heisenberg V k) :=
+instance center : Subgroup (Heisenberg V k) :=
 { carrier := {H : Heisenberg V k | H.x = 0 ∧ H.y = 0},
   one_mem' := by
     rw[one_eq]
@@ -420,7 +407,7 @@ theorem card_center : Nat.card (Heisenberg.center V k) = Nat.card k := by
 variable [FiniteDimensional k V]
 /--`Heisenberg.center` is the center of `Heisenberg` -/
 instance center_eq :
-  Subgroup.center (Heisenberg V k) = Heisenberg.center_is_subgroup V k := by
+  Subgroup.center (Heisenberg V k) = Heisenberg.center V k := by
   ext h
   constructor
   · intro h1
@@ -464,7 +451,7 @@ theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Hei
   simp only [Subgroup.mem_top, true_and, Subgroup.coe_sInf, Set.mem_setOf_eq, Set.mem_iInter,
     SetLike.mem_coe] at h
   specialize h (Subgroup.center (Heisenberg V k))
-  rw[Heisenberg.center_eq,center_is_subgroup,Subgroup.coe_set_mk, Subgroup.mem_mk] at h
+  rw[Heisenberg.center_eq,center,Subgroup.coe_set_mk, Subgroup.mem_mk] at h
   simp at h
   apply h
   intro a x x1 hh
@@ -506,7 +493,7 @@ variable [inst5 : Nontrivial V]
     Set.univ_subset_iff, Subgroup.coe_eq_univ,Subgroup.eq_top_iff'] at hf
   obtain ⟨h11,h12⟩ := (nontrivial_iff_exists_ne 0).mp inst5
   specialize hf ⟨0,h11,0⟩
-  rw[Heisenberg.center_eq,Heisenberg.center_is_subgroup,Subgroup.mem_mk] at hf
+  rw[Heisenberg.center_eq,Heisenberg.center,Subgroup.mem_mk] at hf
   simp only [Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq, and_true] at hf
   contradiction
 
@@ -554,7 +541,7 @@ theorem ord_V [Fintype k] : (Subgroup.index (Subgroup.center (Heisenberg V k))) 
       mul_div_cancel_left₀]
   rw[<-h3,<-card_H,<-Subgroup.index_mul_card (Subgroup.center (Heisenberg V k))]
   have h4 : Nat.card (Subgroup.center (Heisenberg V k)) = Nat.card k := by
-    rw[center_eq, center_is_subgroup]
+    rw[center_eq, center]
     simp only [Subgroup.mem_mk]
     exact card_center (V:= V) (k := k)
   rw[h4]

@@ -90,24 +90,14 @@
 
 \section{Center}
 
-\begin{definition}[Center of Heisenberg]
-    \label{def:center_H}
-    \uses{def:heisenberg}
+\begin{proposition}[Center of Heisenberg]
+    \label{prop:center_H_subgroup}
+    \uses{prop:group_H}
     \lean{Heisenberg.center}
-    \leanok 
+    \leanok
 
     We define the center of $\mathcal{H}(V)$ by the set
     $\mathcal{Z}_{\mathcal{H}(V)}:=\{(z,0,0)\in\mathcal{H}(V),\ z\in k\}$
-\end{definition}
-
-\begin{proposition}[The center is a subgroup]
-    \label{prop:center_H_subgroup}
-    \uses{def:center_H,prop:group_H}
-    \lean{Heisenberg.center_is_subgroup}
-    \leanok
-
-    The center of Heisenberg $\mathcal{Z}_{\mathcal{H}(V)}$ is a subgroup
-    of $\mathcal{H}(V)$.
 \end{proposition}
 \begin{proof}
     \leanok
