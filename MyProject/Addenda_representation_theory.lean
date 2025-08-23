@@ -3,6 +3,7 @@ import Mathlib.RepresentationTheory.Maschke
 import MyProject.Addenda_monoid_algebra_theory
 import Mathlib.RepresentationTheory.Induced
 import Mathlib.Algebra.Category.ModuleCat.Simple
+import Mathlib.LinearAlgebra.Basis.VectorSpace
 
 
 --import Hammer
@@ -246,7 +247,6 @@ noncomputable def subrep : θ.asModule ≃ₗ[MonoidAlgebra k (Subgroup.center G
  to `E` : $Hom_{k[G]}(k[G]⊗_{k[Z(G)]}θ, E) ≃ Hom_{k[H]}(θ,E)$. -/
 noncomputable def iso_induced_as_tensor (E : Type*) [AddCommMonoid E] [Module (MonoidAlgebra k G) E] [Module (MonoidAlgebra k ↥(Subgroup.center G)) E] [inst6 : IsScalarTower (MonoidAlgebra k ↥(Subgroup.center G)) (MonoidAlgebra k G) E]:
 ((tensor k G W θ) →ₗ[MonoidAlgebra k G] E) ≃ₗ[MonoidAlgebra k (Subgroup.center G)] ((module_sub_rep k G W θ) →ₗ[MonoidAlgebra k (Subgroup.center G)] E) := by
-  unfold tensor module_sub_rep
   exact ((iso_hom_tens (MonoidAlgebra k ↥(Subgroup.center G)) (θ.asModule) E (MonoidAlgebra k G)).trans (iso_hom_tens (MonoidAlgebra k ↥(Subgroup.center G)) θ.asModule E
             (MonoidAlgebra k ↥(Subgroup.center G))).symm)
 
@@ -282,7 +282,7 @@ noncomputable def Ind_conj_class_fun (f : H → W) : conj_class_fun G W := by
     let f' : S → W := fun g ↦ f ⟨g.1⁻¹ * x * g.1, g.2⟩
     exact (1 / Fintype.card H) • (∑ g, f' g)
   · intro x g
-    simp only [Set.coe_setOf, Finset.univ_eq_attach]
+    simp only [Set.coe_setOf]
     ring_nf
     let bij :  {g_1 | g_1⁻¹ * (g⁻¹ * x * g) * g_1 ∈ H} ≃ {g | g⁻¹ * x * g ∈ H} := by
       refine Equiv.mk ?_ ?_ ?_ ?_
@@ -374,13 +374,39 @@ noncomputable instance induced_rep_tensor_direct_sum_component_coe (g : system_o
   have := TensorProduct.map h1 (@LinearMap.id (MonoidAlgebra k (Subgroup.center G)) (θ.asModule) _ _ _ )
   exact (this) x
 
-noncomputable instance test (g:system_of_repr_center.set G) : CoeOut (induced_rep_tensor_direct_sum_component k G W θ g) ((RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ))) := by
+noncomputable instance (g:system_of_repr_center.set G) : CoeOut (Set (induced_rep_tensor_direct_sum_component k G W θ g)) (Set (RestrictScalars k (MonoidAlgebra k G) (Induced_rep_center.tensor k G W θ))) := by
   refine { coe := ?_ }
+  unfold induced_rep_tensor_direct_sum_component Induced_rep_center.tensor
+  intro S
+
+  exact Set.univ
+
+noncomputable def induced_rep_tensor_direct_sum_component_perm (g : G) (gbar : system_of_repr_center.set G) : Set.image ((Induced_rep_center.as_rep k G W θ) g) (@Set.univ (induced_rep_tensor_direct_sum_component k G W θ gbar)) ≃ induced_rep_tensor_direct_sum_component k G W θ ((system_of_repr_center.equiv_perm_exists G g).choose gbar) := by
   sorry
 
-noncomputable def induced_rep_component_perm (g : G) (gbar : system_of_repr_center.set G)  : Set.image ((Induced_rep_center.as_rep k G W θ) g) (induced_rep_tensor_direct_sum_component k G W θ gbar) ≃ induced_rep_tensor_direct_sum_component k G W θ (equiv_perm G gbar) := by
+noncomputable instance : FiniteDimensional k (θ.asModule) := by
+  (expose_names; exact inst_5)
+
+/-
+noncomputable def induced_rep_tensor_direct_sum_component_basis (gbar : system_of_repr_center.set G) : Module.Basis (system_of_repr_center.set G) (MonoidAlgebra k (Subgroup.center G)) ((induced_rep_tensor_direct_sum_component k G W θ gbar)) := by
+  let e := Module.Basis.ofVectorSpace k θ.asModule
+  unfold induced_rep_tensor_direct_sum_component
+  let : (gkH_set k G ↑gbar) := by
+    unfold gkH_set gkH_map
+    simp
+    refine ⟨gbar.1 * MonoidAlgebra.single (1:G) (1:k),?_⟩
+    use MonoidAlgebra.single 1 1
+    have := Finsupp.lmapDomain_apply k k (fun (x : Subgroup.center G) ↦ gbar.1 * ↑x) (MonoidAlgebra.single 1 1)
+    sorry
+
+  refine Module.Basis.mk (v := fun i => TensorProduct.tmul (MonoidAlgebra k (Subgroup.center G)) (gbar.1 * MonoidAlgebra.single (k := k) (G:=Subgroup.center G) 1 1) (e i)) ?_ ?_
+
   sorry
 
+
+noncomputable def induced_rep_component_perm (g : G) (gbar : system_of_repr_center.set G)  : Set.image ((Induced_rep_center.as_rep k G W θ) g) (@Set.univ induced_rep_tensor_direct_sum_component k G W θ gbar)) ≃ induced_rep_tensor_direct_sum_component k G W θ (equiv_perm G gbar) := by
+  sorry
+-/
 
 
 
@@ -448,7 +474,7 @@ theorem lemma121 (ζ : (Subgroup.center G) →* kˣ) (hh : ¬ (ringChar k) ∣ (
     conv at h2 => lhs;lhs;rw[<-MulAction.one_smul (α := k) ((LinearMap.trace k W) (η x))]
     have h3 : (1:k) • (LinearMap.trace k W) (η x) - ζ ⟨⁅h', x⁆, h1⟩ • (LinearMap.trace k W) (η x) = ((1:k) - ζ ⟨⁅h', x⁆, h1⟩) • (LinearMap.trace k W) (η x) := by
       rw [@sub_smul]
-      simp only [one_smul, smul_eq_mul, one_mul, sub_right_inj]
+      simp only [smul_eq_mul, one_mul, sub_right_inj]
       exact rfl
     rw[h3] at h2
     rw [smul_eq_zero,sub_eq_zero] at h2
@@ -457,10 +483,10 @@ theorem lemma121 (ζ : (Subgroup.center G) →* kˣ) (hh : ¬ (ringChar k) ∣ (
     cases h2
     · exfalso
       apply hh1
-      (expose_names; exact Units.eq_iff.mp h)
+      (expose_names; exact Units.val_inj.mp h)
     · (expose_names; exact h)
 
-
+/-
 lemma FDRep_simple_iff (V : FDRep k G) : CategoryTheory.Simple V ↔ CategoryTheory.Simple ((CategoryTheory.forget₂ (FDRep k G) (Rep k G)).obj V) := by
   constructor
   intro h
@@ -472,8 +498,9 @@ lemma FDRep_simple_iff (V : FDRep k G) : CategoryTheory.Simple V ↔ CategoryThe
     rw [CategoryTheory.ConcreteCategory.hom_ext_iff] at h2
     rw [CategoryTheory.isIso_iff_mono_and_epi] at h1
     have h11:= h1.2
-    rw? at h11
+    sorry
   sorry
+-/
 
 lemma Rep_simple_iff (V : Rep k G) : CategoryTheory.Simple V ↔ IsSimpleModule (MonoidAlgebra k G) (Rep.toModuleMonoidAlgebra.obj V) := by
   constructor
@@ -483,8 +510,7 @@ lemma Rep_simple_iff (V : Rep k G) : CategoryTheory.Simple V ↔ IsSimpleModule 
   · intro h
     sorry
 
-  sorry
-
+/-
 example (V : FDRep k G) [IsAlgClosed k] (hhhh : CharZero k) (hhh:↑(Fintype.card G) ≠ 0) :
     CategoryTheory.Simple V ↔ ∑ g : G, V.character g * V.character g⁻¹ = Fintype.card G where
   mp h := by
@@ -502,12 +528,9 @@ example (V : FDRep k G) [IsAlgClosed k] (hhhh : CharZero k) (hhh:↑(Fintype.car
     simp only [ne_eq, Nat.cast_eq_zero, Fintype.card_ne_zero, not_false_eq_true,
       inv_mul_cancel₀] at eq
     rw [← Rep_simple_iff,<-FDRep_simple_iff]
-    rw [MonCat.one_of] at eq
+-/
 
-
-    sorry
-
-
+/-
 theorem lemma123 (ζ : (Subgroup.center G) →* kˣ) (hh :  IsAlgClosed k) (hhhh : CharZero k) (hhh:(Fintype.card G) ≠ 0) (hhhhh : Module.finrank k W ≠ 0): (∀ (h : G), ∃ (h' : G) (h₁ : ⁅h',h⁆ ∈ Subgroup.center G), ζ (⟨⁅h', h⁆, h₁⟩) ≠ 1) →
   (∀ (η : Representation k G W), (MonoidHom.restrict η (Subgroup.center G) = (fun (z : Subgroup.center G) ↦ ↑(ζ (z)) • LinearMap.id (R := k) (M := W))) →
     ((CategoryTheory.Simple (FDRep.of η)) ↔ ((Subgroup.index (Subgroup.center G) = (Module.finrank k W)^2 )))) := by
@@ -520,22 +543,17 @@ theorem lemma123 (ζ : (Subgroup.center G) →* kˣ) (hh :  IsAlgClosed k) (hhhh
       rw[h21]
       simp only [LinearMap.map_smul_of_tower, LinearMap.trace_id]
       exact rfl
-    have h6 := lemma121 k G W ζ (by simp[hhhh,hhhhh]) h1 η h2
-    have h7 : ∑ x, (FDRep.of η).character x * (FDRep.of η).character x⁻¹ = ∑ (x : Function.support (FDRep.of η).character) , (FDRep.of η).character x * (FDRep.of η).character x⁻¹ := by
-        refine
-          Finset.sum_congr_set (Function.support (FDRep.of η).character)
-            (fun i ↦ (FDRep.of η).character i * (FDRep.of η).character i⁻¹)
-            (fun i ↦ (FDRep.of η).character ↑i * (FDRep.of η).character (↑i)⁻¹)
-            (fun x ↦ congrFun rfl) ?_
-        intro x hx
-        simp only [Function.mem_support, ne_eq, Decidable.not_not, mul_eq_zero] at hx ⊢
-        left
-        exact hx
+    have h6 := lemma121 k G W ζ (by simp [hhhhh]) h1 η h2
+    have h7 : ∑ x, (FDRep.of η).character x * (FDRep.of η).character x⁻¹ = ∑ (x ∈ Function.support (FDRep.of η).character) , (FDRep.of η).character x * (FDRep.of η).character x⁻¹ := by
+        refine Eq.symm (Fintype.sum_subset ?_)
+        intro i hi
+        simp only [Set.mem_toFinset, Function.mem_support, ne_eq]
+        rw [mul_ne_zero_iff] at hi
+        exact hi.left
     have hinutile : Invertible (α := k) ↑(Fintype.card G) := by
         exact invertibleOfNonzero (Nat.cast_ne_zero.mpr hhh)
     constructor
     · intro h4
-      simp only [FGModuleCat.of_carrier] at h4
       have h5 := FDRep.char_orthonormal (FDRep.of η) (FDRep.of η)
       rw[if_pos (CategoryTheory.Iso.nonempty_iso_refl (FDRep.of η))] at h5
       simp only [invOf_eq_inv, smul_eq_mul] at h5
@@ -579,16 +597,10 @@ theorem lemma123 (ζ : (Subgroup.center G) →* kˣ) (hh :  IsAlgClosed k) (hhhh
       simp only [mul_inv_rev] at h4
       rw[<-mul_assoc] at h4
       have := @inv_mul_cancel₀ _ _ (↑(Fintype.card ↥(Subgroup.center G)):k) (by simp)
-      rw[mul_assoc,this] at h4
 
+      sorry
 
-
-
-
-
-
-  sorry
-
+-/
 
 
 
