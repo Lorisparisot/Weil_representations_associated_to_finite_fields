@@ -2,9 +2,7 @@ import MyProject.Addenda_direct_sum
 import MyProject.Addenda_group_theory
 import MyProject.Addenda_monoid_algebra_theory
 import MyProject.Addenda_representation_theory
-import MyProject.Addenda_representation_theory_DEPRECATED
 import MyProject.Basic
 import MyProject.Heisenberg
 import MyProject.Stage
-import MyProject.Weil_representation_of_general_linear_groups
 import MyProject.convention_dual
