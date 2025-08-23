@@ -43,45 +43,64 @@ namespace Heisenberg
 
 variable {V k}
 /--Intern law over `Heisenberg` -/
-def mul
-  (H1 H2 : Heisenberg V k) : Heisenberg V k:=
-  ⟨H1.z + H2.z + (H1.y H2.x), H1.x + H2.x, H1.y + H2.y⟩
+instance : Mul (Heisenberg V k) where
+  mul H1 H2 :=  ⟨H1.z + H2.z + (H1.y H2.x), H1.x + H2.x, H1.y + H2.y⟩
+
+instance : Add (Heisenberg V k) where
+  add H1 H2 := ⟨H1.z + H2.z, H1.x + H2.x,H1.y + H2.y⟩
+
+lemma mul_apply (H1 H2 : Heisenberg V k) : H1 * H2 = ⟨H1.z + H2.z + (H1.y H2.x), H1.x + H2.x, H1.y + H2.y⟩ := rfl
+
+lemma add_apply (H1 H2 : Heisenberg V k) : H1 + H2 = ⟨H1.z + H2.z, H1.x + H2.x, H1.y + H2.y⟩ := rfl
+
+instance : One (Heisenberg V k) where
+  one := ⟨0, 0, 0⟩
+
+instance : Zero (Heisenberg V k) where
+  zero := ⟨0, 0, 0⟩
+
+instance : AddZeroClass (Heisenberg V k) := by
+  refine { toZero := instZero, toAdd := instAdd, zero_add := ?_, add_zero := ?_ }
+  <;> intro _
+  <;> ext _
+  <;> simp [add_apply]
+  <;> rfl
+
+lemma one_eq : (1 : Heisenberg V k) = ⟨0,0,0⟩ := by
+  rfl
+
+lemma one_apply (H : Heisenberg V k) : H * 1 = H := by
+  ext u
+  <;> rw[one_eq,mul_apply]
+  <;> simp only [add_zero, map_zero]
 
 /--Inverse of an element of `Heisenberg` by `mul` -/
-def inverse (H : Heisenberg V k) : Heisenberg V k :=
-  ⟨ -H.z - (H.y (-H.x)), - H.x ,- H.y⟩
+instance : Inv (Heisenberg V k) where
+  inv H := ⟨ -H.z - (H.y (-H.x)), - H.x ,- H.y⟩
+
+lemma inv_apply (H : Heisenberg V k) : H⁻¹ = ⟨ -H.z - (H.y (-H.x)), - H.x ,- H.y⟩ := rfl
 
 /-- Together with `Heisenberg.mul` and `Heisenberg.inverse`, `Heisenberg` forms a group. -/
 instance group : Group (Heisenberg V k) := {
-  mul := mul,
   mul_assoc := by
     intro a b c
-    change (mul (mul a b) c = mul a (mul b c))
-    rw [mul, mul, mul, mul]
-    ext
-    simp
-    · ring
-    · simp only
-      exact add_assoc a.x b.x c.x
-    · simp
-      ring
-  one := ⟨0, 0, 0⟩,
+    ext u
+    <;> rw[mul_apply,mul_apply,mul_apply,mul_apply]
+    <;> simp only [LinearMap.add_apply, map_add]
+    <;> grind
   one_mul := by
     intro a
-    change (mul ⟨0, 0, 0⟩ a = a)
-    rw [mul]
-    simp
+    rw[one_eq, mul_apply]
+    simp only [zero_add, LinearMap.zero_apply, add_zero]
   mul_one := by
     intro a
-    change (mul a ⟨0, 0, 0⟩ = a)
-    rw [mul]
-    simp
-  inv := inverse,
+    rw[one_eq,mul_apply]
+    simp only [add_zero, map_zero]
   inv_mul_cancel := by
     intro a
-    change (mul (inverse a) a = ⟨0, 0, 0⟩)
-    rw [mul, inverse]
-    simp
+    rw[inv_apply,mul_apply,one_eq]
+    simp only [map_neg, sub_neg_eq_add, neg_add_cancel_comm, LinearMap.neg_apply, add_neg_cancel,
+      neg_add_cancel]
 }
 
 
@@ -92,32 +111,19 @@ def center := {H : Heisenberg V k | H.x = 0 ∧ H.y = 0}
 
 /--`Heisenberg.center` is a subgroup of `Heisenberg` -/
 instance center_is_subgroup : Subgroup (Heisenberg V k) :=
-{ carrier := center V k,
+{ carrier := {H : Heisenberg V k | H.x = 0 ∧ H.y = 0},
   one_mem' := by
-    change ⟨0,0,0⟩ ∈ center V k
+    rw[one_eq]
     constructor
-    · simp
-    · simp,
+    <;> simp only,
   mul_mem' := by
     intro a b ha hb
-    change (mul a b ∈ center V k)
-    unfold mul
-    constructor
-    · simp
-      rw [ha.1, hb.1]
-      simp
-    · simp
-      rw [ha.2, hb.2]
-      simp,
+    rw[mul_apply]
+    simp[Set.mem_setOf_eq,ha.1,hb.1,ha.2,hb.2],
   inv_mem' := by
     intro a ha
-    change (inverse a ∈ center V k)
-    unfold inverse
-    constructor
-    · simp
-      rw [ha.1]
-    · simp
-      rw [ha.2]
+    rw[inv_apply]
+    simp[ha.1,ha.2]
 }
 
 
@@ -125,31 +131,34 @@ instance center_is_subgroup : Subgroup (Heisenberg V k) :=
 def Hom_k_to_H : AddMonoidHom k (Additive (Heisenberg V k)) :=by
   refine AddMonoidHom.mk' (fun z => ⟨z,0,0⟩) ?_
   intro a b
-  simp only
-  change ((⟨a + b, 0, 0⟩ : Heisenberg V k) = mul ⟨a, 0, 0⟩ ⟨b, 0, 0⟩)
-  simp only [mul,LinearMap.zero_apply, add_zero]
+  rw [@Additive.ext_iff,toMul_add,mul_apply]
+  ext u
+  <;>unfold Additive.toMul Additive.ofMul
+  <;> simp only [Equiv.coe_fn_symm_mk, LinearMap.zero_apply, add_zero]
+
 
 /-- The homomorphism `Heisenberg.Hom_k_to_H` is injective. -/
-instance injective_Hom_k_to_H : Function.Injective (Hom_k_to_H V k) := by
+lemma injective_Hom_k_to_H : Function.Injective (Hom_k_to_H V k) := by
   intro k1 k2
   rw[Hom_k_to_H,AddMonoidHom.mk'_apply]
-  intro h
-  change ((⟨k1,0,0⟩ : Heisenberg V k) = ⟨k2,0,0⟩) at h
-  simp only [mk.injEq, and_self, and_true] at h
-  exact h
+  intro _
+  grind only
+  --change ((⟨k1,0,0⟩ : Heisenberg V k) = ⟨k2,0,0⟩) at h
+  --simp only [mk.injEq, and_self, and_true] at h
+  --exact h
 
 
 /-- The map $(z,x,y)↦(x,y)$ defines a homomorphism from `Heisenberg` to $V × V^*$. -/
 def Hom_H_to_V_x_Dual : AddMonoidHom (Additive (Heisenberg V k)) (V × Module.Dual k V ):=by
   refine AddMonoidHom.mk' (fun H => (H.x, H.y)) ?_
   intro H1 H2
-  rw [Prod.mk_add_mk, Prod.mk.injEq]
-  change ((mul H1 H2).x = H1.x + H2.x ∧ (mul H1 H2).y = H1.y + H2.y)
-  rw[mul]
-  simp only [and_self]
+  simp_all only [Prod.mk_add_mk, Prod.mk.injEq]
+  apply And.intro
+  · rfl
+  · rfl
 
 /--The homomorphism `Heisenberg.Hom_H_to_V_x_Dual` is surjective. -/
-instance surjective_Hom_H_to_V_x_Dual : Function.Surjective (Hom_H_to_V_x_Dual V k) := by
+lemma surjective_Hom_H_to_V_x_Dual : Function.Surjective (Hom_H_to_V_x_Dual V k) := by
   intro H
   rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
   use ⟨0, H.1, H.2⟩
@@ -166,8 +175,7 @@ def exact_sequence :
   rw[Hom_k_to_H]
   change ((H.x, H.y) = (0,0)) at h1
   apply Prod.mk.inj at h1
-  rw [AddMonoidHom.mk'_apply]
-  rw[<-h1.1,<-h1.2]
+  rw [AddMonoidHom.mk'_apply,<-h1.1,<-h1.2]
   exact rfl
 
 
@@ -176,23 +184,20 @@ def Hom_H_to_V_x_Dual_sub_V : Subgroup (Heisenberg V k) := by
   refine Subgroup.mk ?_ ?_
   · refine Submonoid.mk ?_ ?_
     · refine Subsemigroup.mk (Set.preimage (Hom_H_to_V_x_Dual V k) ({⟨x,0⟩ | (x : V)})) ?_
-      · simp
+      · simp only [Set.preimage_setOf_eq, Set.mem_setOf_eq, forall_exists_index]
         intro a b x1 hx1 x2 hx2
         rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply, Prod.mk.injEq] at hx1 hx2
         use (a.x + b.x)
-        change ((a.x + b.x, 0) = (Hom_H_to_V_x_Dual V k) (mul a b))
-        rw[Hom_H_to_V_x_Dual, mul,AddMonoidHom.mk'_apply,Prod.mk.injEq]
-        simp only [true_and]
-        rw[<-hx1.2, <-hx2.2,add_zero]
+        rw[Hom_H_to_V_x_Dual, mul_apply,AddMonoidHom.mk'_apply,Prod.mk.injEq,
+          <-hx1.2, <-hx2.2,add_zero,← Prod.mk_inj]
     · simp only [Set.preimage_setOf_eq, Set.mem_setOf_eq]
       use 0
-      change ((0, 0) = (Hom_H_to_V_x_Dual V k) ⟨0,0,0⟩)
-      rw[Hom_H_to_V_x_Dual,Prod.mk_zero_zero, AddMonoidHom.mk'_apply,Prod.mk_zero_zero]
-  · simp
+      rw[Hom_H_to_V_x_Dual,Prod.mk_zero_zero, AddMonoidHom.mk'_apply]
+      rfl
+  · simp only [Set.preimage_setOf_eq, Set.mem_setOf_eq, forall_exists_index]
     intro x x1 h
-    use ((inverse x).x)
-    change ((x.inverse.x, 0) = (Hom_H_to_V_x_Dual V k) x.inverse)
-    rw[Hom_H_to_V_x_Dual,inverse,map_neg, sub_neg_eq_add, AddMonoidHom.mk'_apply, Prod.mk.injEq, zero_eq_neg]
+    use (x⁻¹).x
+    rw[Hom_H_to_V_x_Dual,inv_apply,map_neg, sub_neg_eq_add, AddMonoidHom.mk'_apply, Prod.mk.injEq, zero_eq_neg]
     simp only [true_and]
     rw[Hom_H_to_V_x_Dual, AddMonoidHom.mk'_apply, Prod.mk.injEq] at h
     exact h.2.symm
@@ -205,8 +210,10 @@ instance Hom_H_to_V_x_Dual_sub_V_commutative : IsMulCommutative (Hom_H_to_V_x_Du
   obtain ⟨a,ha⟩ := a
   obtain ⟨b,hb⟩ := b
   rw [MulMemClass.mk_mul_mk, Subtype.mk.injEq]
-  change (mul a b = mul b a)
-  rw[mul, mul, mk.injEq]
+  rw[mul_apply]
+  simp only [MulMemClass.mk_mul_mk]
+  rw[mul_apply]
+  simp only [mk.injEq]
   rw [Hom_H_to_V_x_Dual_sub_V] at ha hb
   simp only [Set.preimage_setOf_eq, Subgroup.mem_mk] at ha hb
   obtain ⟨xa, hxa⟩ := ha
@@ -229,14 +236,13 @@ instance Hom_H_to_V_x_Dual_sub_V_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub
   simp at hx ⊢
   rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
   simp only [Prod.mk.injEq, exists_eq_left]
-  change (0 = (mul (mul g x) (inverse g)).y)
-  rw[mul,mul]
+  rw[mul_apply,mul_apply,inv_apply]
   simp only
-  rw[inverse,add_neg_cancel_comm]
   obtain ⟨x1, hx1⟩ := hx
   rw[Hom_H_to_V_x_Dual] at hx1
   simp only [AddMonoidHom.mk'_apply, Prod.mk.injEq] at hx1
-  exact hx1.2
+  grind only
+
 
 
 /--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_V` is maximal among the commutative
@@ -251,7 +257,7 @@ theorem Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : IsMulC
     apply right
     rw [Hom_H_to_V_x_Dual_sub_V]
     simp only [Set.preimage_setOf_eq, Subgroup.mem_mk]
-    have h1 : ∀ (b : V), mul x (⟨0, b, 0⟩ : Heisenberg V k) = mul ⟨0, b, 0⟩ x := by
+    have h1 : ∀ (b : V), x * (⟨0, b, 0⟩ : Heisenberg V k) = ⟨0, b, 0⟩ * x := by
       intro b
       have h2 : ⟨0, b, 0⟩ ∈ Hom_H_to_V_x_Dual_sub_V V k := by
         rw[Hom_H_to_V_x_Dual_sub_V]
@@ -259,7 +265,7 @@ theorem Hom_H_to_V_x_Dual_sub_V_maximal (Q : Subgroup (Heisenberg V k)) : IsMulC
         use b
         rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
       exact Subgroup.mul_comm_of_mem_isMulCommutative Q left (h.1 h2)
-    unfold mul at h1
+    conv at h1 => rhs; rw[mul_apply,mul_apply]
     simp only [add_zero, zero_add, LinearMap.zero_apply, mk.injEq, add_eq_left, and_true] at h1
     simp only [Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq]
     rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
@@ -283,8 +289,7 @@ def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
       simp only [Set.preimage_setOf_eq, Set.mem_setOf_eq, forall_exists_index]
       intro a b x1 hx1 x2 hx2
       use (a.y + b.y)
-      change ((0, a.y + b.y) = (Hom_H_to_V_x_Dual V k) (mul a b))
-      rw[Hom_H_to_V_x_Dual, mul,AddMonoidHom.mk'_apply,Prod.mk.injEq]
+      rw[Hom_H_to_V_x_Dual, mul_apply ,AddMonoidHom.mk'_apply,Prod.mk.injEq]
       rw [Hom_H_to_V_x_Dual] at hx1 hx2
       simp at hx1 hx2
       rw[<-hx1.1, <-hx2.1,add_zero]
@@ -295,11 +300,9 @@ def Hom_H_to_V_x_Dual_sub_Dual : Subgroup (Heisenberg V k) := by
       rw[Hom_H_to_V_x_Dual,Prod.mk_zero_zero, AddMonoidHom.mk'_apply,Prod.mk_zero_zero]
   · simp
     intro x x1 h
-    use ((inverse x).y)
-    change ((0, x.inverse.y) = (Hom_H_to_V_x_Dual V k) x.inverse)
-    rw[Hom_H_to_V_x_Dual,inverse,map_neg, sub_neg_eq_add, AddMonoidHom.mk'_apply, Prod.mk.injEq, zero_eq_neg]
+    use ((x⁻¹).y)
     rw[Hom_H_to_V_x_Dual, AddMonoidHom.mk'_apply, Prod.mk.injEq] at h
-    rw[h.1]
+    rw[Hom_H_to_V_x_Dual,inv_apply,map_neg, sub_neg_eq_add, AddMonoidHom.mk'_apply, Prod.mk.injEq, zero_eq_neg,h.1]
     simp only [and_self]
 
 /--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_Dual` is commutative. -/
@@ -310,18 +313,14 @@ instance Hom_H_to_V_x_Dual_sub_Dual_commutative : IsMulCommutative (Hom_H_to_V_x
   obtain ⟨a,ha⟩ := a
   obtain ⟨b,hb⟩ := b
   rw [MulMemClass.mk_mul_mk, Subtype.mk.injEq]
-  change (mul a b = mul b a)
-  rw[mul, mul, mk.injEq]
+  rw[mul_apply, mk.injEq]
   rw [Hom_H_to_V_x_Dual_sub_Dual] at ha hb
   simp only [Set.preimage_setOf_eq, Subgroup.mem_mk] at ha hb
   obtain ⟨xa, hxa⟩ := ha
   obtain ⟨xb, hxb⟩ := hb
   rw [Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply, Prod.mk.injEq] at hxa hxb
   rw[<-hxa.2, <- hxb.2, <-hxa.1, <-hxb.1, map_zero, add_zero]
-  simp only [true_and]
-  constructor
-  · rw [map_zero, add_zero, AddCommMonoidWithOne.add_comm]
-  · rw [AddCommMonoid.add_comm]
+  simp[mul_apply,hxa.1.symm,hxb.1.symm,hxa.2,hxb.2,add_comm]
 
 /--The subgroup `Heisenberg.Hom_H_to_V_x_Dual_sub_Dual` is a normal subgroup. -/
 instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_sub_Dual V k) :=by
@@ -334,10 +333,9 @@ instance Hom_H_to_V_x_Dual_sub_Dual_normal : Subgroup.Normal (Hom_H_to_V_x_Dual_
   simp only [Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq]
   rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
   simp only [Prod.mk.injEq, exists_eq_right]
-  change (0 = (mul (mul g x) (inverse g)).x)
-  rw[mul,mul]
+  rw[mul_apply,mul_apply]
   simp only
-  rw[inverse,add_neg_cancel_comm]
+  rw[inv_apply,add_neg_cancel_comm]
   obtain ⟨x1, hx1⟩ := hx
   rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply] at hx1
   simp only [Prod.mk.injEq] at hx1
@@ -355,7 +353,7 @@ instance Hom_H_to_V_x_Dual_sub_Dual_maximal [FiniteDimensional k V] (Q : Subgrou
     apply right
     rw [Hom_H_to_V_x_Dual_sub_Dual]
     simp only [Set.preimage_setOf_eq, Subgroup.mem_mk]
-    have h1 : ∀ (b : Module.Dual k V), mul x (⟨0, 0, b⟩ : Heisenberg V k) = mul ⟨0, 0, b⟩ x := by
+    have h1 : ∀ (b : Module.Dual k V), x * (⟨0, 0, b⟩ : Heisenberg V k) = ⟨0, 0, b⟩ * x := by
       intro b
       have h2 : ⟨0, 0, b⟩ ∈ Hom_H_to_V_x_Dual_sub_Dual V k := by
         rw[Hom_H_to_V_x_Dual_sub_Dual]
@@ -363,17 +361,12 @@ instance Hom_H_to_V_x_Dual_sub_Dual_maximal [FiniteDimensional k V] (Q : Subgrou
         use b
         rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
       exact Subgroup.mul_comm_of_mem_isMulCommutative Q left (h.1 h2)
-    unfold mul at h1
-    simp only [add_zero, map_zero, zero_add, mk.injEq, left_eq_add, true_and] at h1
-    simp only [Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq]
-    rw[Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply]
-    simp only [Prod.mk.injEq, exists_eq_right]
-    have h3 :  ∀ (b : Module.Dual k V), b x.x = 0 := by
-      intro b
-      exact (h1 b).1
+    simp only [mul_apply,add_zero, map_zero, zero_add, mk.injEq, left_eq_add, true_and] at h1
+    simp only [Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq, Hom_H_to_V_x_Dual,AddMonoidHom.mk'_apply,Prod.mk.injEq, exists_eq_right]
     symm
     rw[<-Module.forall_dual_apply_eq_zero_iff k]
-    exact h3
+    intro φ
+    simp_all only
 
 variable{V k}
 
@@ -383,8 +376,8 @@ variable{V k}
  theorem commutator_of_elements (H1 H2 : Heisenberg V k) :
   ⁅H1, H2⁆ = ⟨ H1.y (H2.x) - H2.y (H1.x), 0, 0 ⟩ := by
   rw [commutatorElement_def]
-  change ((mul (mul (mul H1 H2) (inverse H1)) (inverse H2)) = { z := H1.y H2.x - H2.y H1.x, x := 0, y := 0 })
-  rw[mul,mul, mul, inverse, inverse,map_neg]
+  --change ((mul (mul (mul H1 H2) (inverse H1)) (inverse H2)) = { z := H1.y H2.x - H2.y H1.x, x := 0, y := 0 })
+  rw[mul_apply,mul_apply, mul_apply, inv_apply, inv_apply,map_neg]
   simp only [map_neg, sub_neg_eq_add, LinearMap.add_apply, add_neg_cancel_comm, add_neg_cancel,
     mk.injEq, and_self, and_true]
   ring
@@ -432,19 +425,13 @@ instance center_eq :
   constructor
   · intro h1
     rw [Subgroup.mem_center_iff] at h1
-    change ( ∀ (g : Heisenberg V k), mul g h = mul h g) at h1
-    unfold mul at h1
-    simp at h1
-    ring_nf at h1
-    simp at h1
     have h11 : ∀ (g : Heisenberg V k), ((form_commutator V k) (h.x, h.y)) (g.x, g.y) = 0 ∧ g.x + h.x = h.x + g.x ∧ g.y + h.y = h.y + g.y :=by
       unfold form_commutator
       simp
       intro g
       specialize h1 g
-      constructor
-      · exact add_eq_zero_iff_neg_eq.mpr (congrArg Neg.neg (id (Eq.symm h1.left)))
-      · exact h1.right
+      rw[mul_apply,mul_apply] at h1
+      grind only
     have h12 := form_commutator_non_degenerate V k
     rw[LinearMap.BilinForm.Nondegenerate] at h12
     specialize h12 ⟨h.x,h.y⟩
@@ -462,11 +449,10 @@ instance center_eq :
   · intro H
     rw[Subgroup.mem_center_iff]
     intro g
-    change (mul g h = mul h g)
-    unfold mul
-    simp
+    rw[mul_apply,mul_apply]
+    simp only [mk.injEq]
     rw[H.1, H.2]
-    simp
+    simp only [map_zero, add_zero, LinearMap.zero_apply, zero_add, and_self, and_true]
     rw [AddCommMonoidWithOne.add_comm]
 
 
@@ -479,14 +465,10 @@ theorem commutator_caracterisation (p : Heisenberg V k) : p ∈ (commutator (Hei
     SetLike.mem_coe] at h
   specialize h (Subgroup.center (Heisenberg V k))
   rw[Heisenberg.center_eq,center_is_subgroup,Subgroup.coe_set_mk, Subgroup.mem_mk] at h
-  unfold center at h
-  simp only [commutator_of_elements, Submonoid.coe_set_mk, Subsemigroup.coe_set_mk,
-    Set.setOf_subset_setOf, forall_exists_index, Submonoid.mem_mk, Subsemigroup.mem_mk,
-    Set.mem_setOf_eq] at h
+  simp at h
   apply h
   intro a x x1 hh
-  subst hh
-  simp_all only [and_self]
+  grind only
 
 /-- $H(V)$ is in bijection with $H(V*)$. -/
 noncomputable def equiv_Dual:
@@ -505,8 +487,7 @@ noncomputable def anti_iso_Dual : Heisenberg V k ≃* (Heisenberg (Module.Dual k
   intro H1 H2
   simp only [Equiv.toFun_as_coe, Equiv.trans_apply, MulOpposite.opEquiv_apply]
   rw [← MulOpposite.op_mul,MulOpposite.op_inj]
-  change ((equiv_Dual) (mul H1 H2) = mul ((equiv_Dual) H2) ((equiv_Dual) H1))
-  rw[equiv_Dual,mul,mul]
+  rw[equiv_Dual,mul_apply,mul_apply]
   simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, LinearEquiv.coe_coe, map_neg,
     LinearEquiv.invFun_eq_symm, Equiv.coe_fn_mk, map_add, neg_add_rev, LinearMap.neg_apply,
     convention_eval_iso_apply, neg_neg, mk.injEq, add_left_inj, and_true]
@@ -526,7 +507,6 @@ variable [inst5 : Nontrivial V]
   obtain ⟨h11,h12⟩ := (nontrivial_iff_exists_ne 0).mp inst5
   specialize hf ⟨0,h11,0⟩
   rw[Heisenberg.center_eq,Heisenberg.center_is_subgroup,Subgroup.mem_mk] at hf
-  unfold center at hf
   simp only [Submonoid.mem_mk, Subsemigroup.mem_mk, Set.mem_setOf_eq, and_true] at hf
   contradiction
 
