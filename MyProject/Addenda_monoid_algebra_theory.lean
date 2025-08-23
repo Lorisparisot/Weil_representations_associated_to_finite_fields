@@ -31,15 +31,10 @@ we have a `MonoidAlgebra k (Subgroup.center G)` linear bijection between
 
 open Classical DirectSum
 
-variable (k G W : Type) [Field k] [Group G] [Finite G]
+variable (k G W : Type) [Field k] [Group G]
 [AddCommGroup W] [Module k W] [Module.Finite k W]
 
-variable (H : Subgroup G) [IsMulCommutative H]
-
-instance Finite_H : Finite H := Subgroup.instFiniteSubtypeMem H
-
-noncomputable instance Fintype_G : Fintype G := by
-  exact Fintype.ofFinite G
+variable (H : Subgroup G)
 
 
 /--The trivial map from `MonoidAlgebra k H` to `MonoidAlgebra k G`, ie elements from
@@ -66,6 +61,11 @@ theorem Map_kHkG_k_linear (c : k) (x : MonoidAlgebra k H): (Map_kHkG k G H) (c �
     simp only [MonoidAlgebra.mapDomainRingHom_apply, Subgroup.coe_subtype, ZeroHom.toFun_eq_coe,
       AddMonoidHom.toZeroHom_coe, Finsupp.mapDomain.addMonoidHom_apply]
     rw[Finsupp.mapDomain_smul]
+
+variable (k G W : Type) [Field k] [Group G]
+[AddCommGroup W] [Module k W] [Module.Finite k W]
+
+variable (H : Subgroup G) [IsMulCommutative H]
 
 
 /--Coercion from `MonoidAlgebra k H` to `MonoidAlgebra k G` when `H` is a subgroup of `G`-/
@@ -396,6 +396,11 @@ noncomputable def gkH_set_iso_kH_module (g : G) : gkH_set k G g ≃ₗ[(MonoidAl
 @[simp]
 theorem Map_kHkG_single_simp (_ : Subgroup.center G) : (Map_kHkG k G (Subgroup.center G)) (Finsupp.basisSingleOne x) = Finsupp.single (↑x) (1:k) := by
   simp only [Finsupp.coe_basisSingleOne, Map_kHkG_single_apply]
+
+variable (k G W : Type) [Field k] [Group G] [Finite G]
+[AddCommGroup W] [Module k W] [Module.Finite k W]
+
+variable (H : Subgroup G) [IsMulCommutative H]
 
 /-- A system of representatives `system_of_repr_center.set G` of `G⧸ (Subgroup.center G)`
 defines a basis of `MonoidAlgebra k G` on `MonoidAlgebra k (Subgroup.center G)`.-/
