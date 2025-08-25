@@ -28,9 +28,6 @@ The main results are :
 
 variable (V k : Type*) [Field k] [AddCommGroup  V] [Module k V] --[inst4 : FiniteDimensional k V]
 
-
-/- On trouvera ici les propriétés relatives aux groupes d'Heisenberg-/
-
 @[ext]
 structure Heisenberg where
   z : k
@@ -46,12 +43,7 @@ variable {V k}
 instance : Mul (Heisenberg V k) where
   mul H1 H2 :=  ⟨H1.z + H2.z + (H1.y H2.x), H1.x + H2.x, H1.y + H2.y⟩
 
-instance : Add (Heisenberg V k) where
-  add H1 H2 := ⟨H1.z + H2.z, H1.x + H2.x,H1.y + H2.y⟩
-
 lemma mul_apply (H1 H2 : Heisenberg V k) : H1 * H2 = ⟨H1.z + H2.z + (H1.y H2.x), H1.x + H2.x, H1.y + H2.y⟩ := rfl
-
-lemma add_apply (H1 H2 : Heisenberg V k) : H1 + H2 = ⟨H1.z + H2.z, H1.x + H2.x, H1.y + H2.y⟩ := rfl
 
 instance : One (Heisenberg V k) where
   one := ⟨0, 0, 0⟩
