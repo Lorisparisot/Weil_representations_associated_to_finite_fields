@@ -305,9 +305,8 @@ noncomputable def equiv_perm (g : G) : Equiv.Perm (system_of_repr_center.set G) 
   · intro x
     have := equiv_perm_fun_apply G g ((G_to_syst G (g⁻¹ * ↑x)))
     unfold equiv_perm_fun
-    have h1 := G_eq_G_to_center_G_to_syst_simp G ((g⁻¹ * ↑x))
     have h2 :  g⁻¹ * ↑x * ↑(G_to_center G (g⁻¹ * ↑x))⁻¹ = ↑(G_to_syst G (g⁻¹ * ↑x)):= by
-      rw[h1]
+      rw[(G_eq_G_to_center_G_to_syst_simp G ((g⁻¹ * ↑x)))]
       simp only [G_to_center_mul_simp, G_to_center_syst_apply_simp, mul_one, InvMemClass.coe_inv,
         mul_inv_cancel_right, G_to_syst_simp, G_to_syst_simp_id]
     conv=> lhs; rhs;rhs; rw[<-h2]

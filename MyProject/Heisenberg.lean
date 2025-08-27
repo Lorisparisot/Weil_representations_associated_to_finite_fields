@@ -67,19 +67,18 @@ instance group : Group (Heisenberg V k) := {
   mul_assoc := by
     intro a b c
     ext u
-    <;> rw[mul_apply,mul_apply,mul_apply,mul_apply]
-    <;> simp only [LinearMap.add_apply, map_add]
+    <;> simp only [mul_apply, LinearMap.add_apply,map_add]
     <;> grind only
   one_mul := by
-    intro a
+    intro _
     rw[one_eq, mul_apply]
     simp only [zero_add, LinearMap.zero_apply, add_zero]
   mul_one := by
-    intro a
+    intro _
     rw[one_eq,mul_apply]
     simp only [add_zero, map_zero]
   inv_mul_cancel := by
-    intro a
+    intro G_eq_G_to_center_G_to_syst_simp
     rw[inv_apply,mul_apply,one_eq]
     simp only [map_neg, sub_neg_eq_add, neg_add_cancel_comm, LinearMap.neg_apply, add_neg_cancel,
       neg_add_cancel]
@@ -122,7 +121,6 @@ lemma injective_Hom_k_to_H : Function.Injective (Hom_k_to_H V k) := by
   rw[Hom_k_to_H,AddMonoidHom.mk'_apply]
   intro _
   grind only
-  --change ((⟨k1,0,0⟩ : Heisenberg V k) = ⟨k2,0,0⟩) at h
   --simp only [mk.injEq, and_self, and_true] at h
   --exact h
 
